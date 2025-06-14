@@ -37,14 +37,14 @@ export class ImageStorageService {
   async generateSignedUrl(
     filename: string,
     action: 'read' | 'write',
-    contentType?: string
+    contentType?: string,
   ): Promise<string> {
     const options = {
       version: 'v4',
       action,
-      expires: Date.now() + this.UPLOAD_URL_EXPIRATION
+      expires: Date.now() + this.UPLOAD_URL_EXPIRATION,
     } as GetSignedUrlConfig;
- 
+
     if (action === 'write') {
       if (!contentType) {
         throw new Error('ContentType required for write action');
@@ -68,12 +68,12 @@ export class ImageStorageService {
     contentType: string,
   ): Promise<string> {
     try {
-      const options= {
+      const options = {
         version: 'v4',
         action: 'write',
         expires: Date.now() + this.UPLOAD_URL_EXPIRATION,
         contentType,
-      }  as  GetSignedUrlConfig;
+      } as GetSignedUrlConfig;
 
       const file = this.storage.bucket(this.bucketName).file(filename);
       const [url] = await file.getSignedUrl(options);
@@ -95,5 +95,4 @@ export class ImageStorageService {
 
     return extensionMap[contentType] || 'jpg';
   }
-
 }

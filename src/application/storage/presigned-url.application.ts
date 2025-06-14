@@ -1,4 +1,7 @@
-import { GeneratePresignedUrlUseCase } from '@core/user/presigned-url.usecase';
+import {
+  GeneratePresignedUrlInput,
+  GeneratePresignedUrlUseCase,
+} from '@core/storage/generate-presigned-url/usecase';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import {
   GeneratePresignedUrlInputDto,
@@ -15,16 +18,16 @@ export class GeneratePresignedUrV2Application {
     input: GeneratePresignedUrlInputDto,
   ): Promise<PresignedUrlResponseDto> {
     try {
-      const result = await this.generatePresignedUrl.execute(input.contentType);
-
-      return {
-        uploadUrl: result.uploadUrl,
-        filename: result.filename,
+      const useCaseInput: GeneratePresignedUrlInput = {
+        contentType: input.contentType,
+        quantity: input.quantity,
       };
-    } catch (e) {
+
+      return await this.generatePresignedUrl.execute(useCaseInput);
+    } catch (error) {
       throw new BadRequestException(
-        `Erro ao gerar URL de upload: ${e.message}`,
+        `Erro ao gerar URLs de upload: ${error.message}`,
       );
     }
   }
-}
+}   

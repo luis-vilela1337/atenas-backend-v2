@@ -19,7 +19,7 @@ import { FindAllUserUseCase } from '@core/user/find-all.usecase';
 import { FindUserByIDV2UseCase } from '@core/user/find-by-id.usecase';
 import { CreateUserV2UseCase } from '@core/user/create-user.usecase';
 import { UpdateUserV2UseCase } from '@core/user/update-user.usecase';
-import { GeneratePresignedUrlUseCase } from '@core/user/presigned-url.usecase';
+import { GeneratePresignedUrlUseCase } from '@core/storage/generate-presigned-url/usecase';
 import { FindAllInstituitionUseCase } from '@core/insituition/find-all.usecase';
 import { CreateInstituitionUseCase } from '@core/insituition/create.usecase';
 import { FindByIdInstituitionUseCase } from '@core/insituition/find-by-id.usecase';
