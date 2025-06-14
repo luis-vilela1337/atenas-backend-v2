@@ -47,7 +47,7 @@ export class UpdateUserV2UseCase {
     let passwordHash: string | undefined;
     if (input.password) {
       const salt = await bcrypt.genSalt();
-      passwordHash =  await bcrypt.hash(input.password, salt) //TODO colocar service 
+      passwordHash = await bcrypt.hash(input.password, salt); //TODO colocar service
     }
     const updateData = UpdateUserV2Adapter.toEntity(
       input,

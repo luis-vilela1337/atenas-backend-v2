@@ -1,14 +1,6 @@
 import { IAlbumRepository } from '@core/v1/abstracts/services/album.repository';
-import { IAuthServiceProvider } from '@core/v1/abstracts/services/auth.service';
-import { IJwtService } from '@core/v1/abstracts/services/jwt-crypt.service';
 import { IPhotoDeletionHistoryRepository } from '@core/v1/abstracts/services/photo-delete.repository';
-import { IStorageService } from '@core/v1/abstracts/services/storage.service';
 import { IUserRepository } from '@core/v1/abstracts/services/user.repository';
-import { Album, AlbumSchema } from '@infrastructure/data/mongo/entities/album';
-import {
-  PhotoDeletionHistory,
-  PhotoDeletionHistorySchema,
-} from '@infrastructure/data/mongo/entities/photo-deletion';
 import { AlbumRepository } from '@infrastructure/data/mongo/repositories/album.repository';
 import { PhotoDeletionHistoryRepository } from '@infrastructure/data/mongo/repositories/delete-photo.repository';
 import { UserRepository } from '@infrastructure/data/mongo/repositories/user.repository';
@@ -20,14 +12,14 @@ import { ImageStorageService } from '@infrastructure/services/image-storage.serv
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BasicStrategy } from '@presentation/auth/strategies/basic.strategy';
-import { JwtStrategyV1 } from '@presentation/auth/strategies/jwt.strategy';
-import { JwtCustomStrategy } from '@presentation/auth/strategies/jwt.strategy';
+import {
+  JwtCustomStrategy,
+  JwtStrategyV1,
+} from '@presentation/auth/strategies/jwt.strategy';
 import { LocalStrategy } from '@presentation/auth/strategies/local.strategy';
-import { User, UserSchema } from 'src/infra/data/mongo/entities/user';
 
 const providers = [
   {
@@ -41,8 +33,9 @@ const providers = [
   {
     useClass: PhotoDeletionHistoryRepository,
     provide: IPhotoDeletionHistoryRepository,
-  }
+  },
 ];
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -70,7 +63,6 @@ const providers = [
     JwtStrategyV1,
     JwtCustomStrategy,
     LocalStrategy,
-   
   ],
   exports: [
     ...providers.map((el) => el.provide),

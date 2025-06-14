@@ -7,13 +7,13 @@ import { ConfigService } from '@nestjs/config';
 export const migrations = [Generated1747237005972];
 
 const envVars = (cs: ConfigService) => ({
-    secret: cs.get<string>('JWT_SECRET'),
-    host: cs.get<string>('DB_HOST'),
-    port: Number(cs.get<string>('DB_PORT')),
-    username: cs.get<string>('DB_USERNAME'),
-    password: cs.get<string>('DB_PASSWORD'),
-    database: cs.get<string>('DB_DATABASE'),
-  });
+  secret: cs.get<string>('JWT_SECRET'),
+  host: cs.get<string>('DB_HOST'),
+  port: Number(cs.get<string>('DB_PORT')),
+  username: cs.get<string>('DB_USERNAME'),
+  password: cs.get<string>('DB_PASSWORD'),
+  database: cs.get<string>('DB_DATABASE'),
+});
 
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',

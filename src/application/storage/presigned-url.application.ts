@@ -30,4 +30,4 @@ export class GeneratePresignedUrV2Application {
       );
     }
   }
-}   
+}

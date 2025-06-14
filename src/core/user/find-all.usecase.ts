@@ -49,16 +49,21 @@ export class FindAllUserUseCase {
     );
 
     if (sortBy && result.users.length > 0) {
-      result.users = this.sortUsers(result.users, sortBy, order as 'asc' | 'desc');
+      result.users = this.sortUsers(
+        result.users,
+        sortBy,
+        order as 'asc' | 'desc',
+      );
     }
     await Promise.all(
       result.users.map(async (user) => {
         if (user.profileImage) {
           user.profileImage = await this.imageStorageService.generateSignedUrl(
-            user.profileImage,'read'
+            user.profileImage,
+            'read',
           );
         }
-      })
+      }),
     );
     return new PaginatedUsersEntity({
       users: result.users,
@@ -111,7 +116,8 @@ export class FindAllUserUseCase {
     for (const user of paginatedUsers) {
       if (user.profileImage) {
         user.profileImage = await this.imageStorageService.generateSignedUrl(
-          user.profileImage, 'read'
+          user.profileImage,
+          'read',
         );
       }
     }

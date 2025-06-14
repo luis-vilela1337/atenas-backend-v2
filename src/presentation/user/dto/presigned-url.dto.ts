@@ -12,7 +12,7 @@ export class GeneratePresignedUrlInputDto {
     example: 5,
     description: 'Quantidade de URLs presignadas a serem geradas',
     minimum: 1,
-    maximum: 10
+    maximum: 10,
   })
   @Transform(({ value }) => parseInt(value))
   @IsInt({ message: 'Quantidade deve ser um número inteiro' })
@@ -29,13 +29,13 @@ export class PresignedUrlItemDto {
   filename: string;
 
   @ApiProperty({ description: 'Índice sequencial da foto (1-based)' })
-  index: number; 
+  index: number;
 }
- 
+
 export class PresignedUrlResponseDto {
   @ApiProperty({
     type: [PresignedUrlItemDto],
-    description: 'Array de URLs presignadas geradas'
+    description: 'Array de URLs presignadas geradas',
   })
   urls: PresignedUrlItemDto[];
 

@@ -27,7 +27,6 @@ export class InstitutionSQLRepository {
     });
   }
 
-
   async findAllPaginated(
     page = 1,
     limit = 10,
@@ -81,7 +80,7 @@ export class InstitutionSQLRepository {
         .leftJoinAndSelect('inst.events', 'events')
         .where('inst.id = :id', { id })
         .getOne();
-      
+
       if (!inst) {
         await qr.rollbackTransaction();
         return null;
@@ -98,7 +97,7 @@ export class InstitutionSQLRepository {
         });
         await qr.manager.save(toInsert);
       }
-      
+
       const { contractNumber, name, observations } = updateData;
       await qr.manager.update(Institution, id, {
         contractNumber,
@@ -147,7 +146,6 @@ export class InstitutionSQLRepository {
     }
   }
 
-
   async getInstitutionWithUsersAndEvents(
     id: string,
   ): Promise<Institution | null> {
@@ -156,5 +154,4 @@ export class InstitutionSQLRepository {
       relations: ['users', 'events'],
     });
   }
-  
 }

@@ -32,9 +32,8 @@ export class CreateUserV2UseCase {
       throw new ConflictException('Email já está em uso');
     }
 
-
     const salt = await bcrypt.genSalt();
-    const passwordHash =  await bcrypt.hash(input.password, salt) //TODO colocar service 
+    const passwordHash = await bcrypt.hash(input.password, salt); //TODO colocar service
     const userEntity = CreateUserAdapter.toEntity(
       input,
       institution,
