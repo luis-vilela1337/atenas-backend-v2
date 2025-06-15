@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import {
-  PaginatedInstitutionProductsEntity
-} from '@core/institution-products/dto/paginate-institution-products.entity';
+import { PaginatedInstitutionProductsEntity } from '@core/institution-products/dto/paginate-institution-products.entity';
 import { ListInstitutionProductsQueryDto } from '@presentation/institution-product/dto/list-all.dto';
 import { InstitutionProductSQLRepository } from '@infrastructure/data/sql/repositories/institution-product.repostitoy';
 
