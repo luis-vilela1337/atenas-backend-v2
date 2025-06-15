@@ -16,6 +16,7 @@ import { DeleteInstitutionApplication } from '@application/insitutiotion/delete'
 import { GeneratePresignedUrV2Application } from '@application/storage/presigned-url.application';
 import { CreateProductApplication } from '@application/products/create-product.application';
 import { FindAllProductsApplication } from '@application/products/find-all-products.application';
+import { FindProductByIdApplication } from '@application/products/find-by-id-products.application';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { FindAllProductsApplication } from '@application/products/find-all-produ
     //products
     CreateProductApplication,
     FindAllProductsApplication,
+    FindProductByIdApplication,
   ],
   exports: [
     //user
@@ -61,6 +63,7 @@ import { FindAllProductsApplication } from '@application/products/find-all-produ
     //products
     CreateProductApplication,
     FindAllProductsApplication,
+    FindProductByIdApplication,
   ],
 })
 export class ApplicationModule {}

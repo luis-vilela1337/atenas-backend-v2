@@ -11,7 +11,11 @@ export class FindAllProductsApplication {
   ) {}
 
   async execute(input: ListProductsQueryDto): Promise<PaginatedProductsDto> {
-    const useCaseResult = await this.findAllProductsUseCase.execute(input);
-    return ProductMapper.toPaginatedDto(useCaseResult);
+    try {
+      const useCaseResult = await this.findAllProductsUseCase.execute(input);
+      return ProductMapper.toPaginatedDto(useCaseResult);
+    } catch (error) {
+      throw error;
+    }
   }
 }
