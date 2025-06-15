@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -17,6 +18,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { CreateProductApplication } from '@application/products/create-product.application';
+import { DeleteProductApplication } from '@application/products/delete-product.application';
 import {
   CreateProductInputDto,
   CreateProductResponseDto,
@@ -27,6 +29,7 @@ import { PaginatedProductsDto } from '../dto/paginated-products.dto';
 import { FindProductByIdApplication } from '@application/products/find-by-id-products.application';
 import { ProductDto } from '../dto/product.dto';
 import { FindProductByIdParamDto } from '../dto/find-by-id-products.dto';
+import { DeleteProductParamDto } from '../dto/delete-product.dto';
 
 @ApiTags('products')
 @Controller('v2/products')
@@ -35,6 +38,7 @@ export class ProductsController {
     private readonly createProductApp: CreateProductApplication,
     private readonly findAllProductsApp: FindAllProductsApplication,
     private readonly findProductByIdApp: FindProductByIdApplication,
+    private readonly deleteProductApp: DeleteProductApplication,
   ) {}
 
   @Post('/')
@@ -78,5 +82,23 @@ export class ProductsController {
     @Param() params: FindProductByIdParamDto,
   ): Promise<ProductDto> {
     return await this.findProductByIdApp.execute(params.id);
+  }
+
+  @Delete('/:id')
+  @ApiOperation({ summary: 'Deletar produto por ID' })
+  @ApiParam({
+    name: 'id',
+    type: 'string',
+    format: 'uuid',
+    description: 'ID do produto a ser deletado',
+  })
+  @ApiResponse({
+    status: 204,
+    description: 'Produto deletado com sucesso',
+  })
+  @ApiResponse({ status: 404, description: 'Produto não encontrado' })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteProduct(@Param() params: DeleteProductParamDto): Promise<void> {
+    return await this.deleteProductApp.execute(params.id);
   }
 }

@@ -14,6 +14,7 @@ import { DeleteUserByIDV2UseCase } from '@core/user/delete-user.usecase';
 import { CreateProductUseCase } from '@core/products/create/usecase';
 import { FindAllProductsUseCase } from '@core/products/find-all/usecase';
 import { FindProductByIdUseCase } from '@core/products/find-by-id/usecase';
+import { DeleteProductUseCase } from '@core/products/delete/usecase';
 
 @Module({
   imports: [InfraModule],
@@ -35,6 +36,7 @@ import { FindProductByIdUseCase } from '@core/products/find-by-id/usecase';
     CreateProductUseCase,
     FindAllProductsUseCase,
     FindProductByIdUseCase,
+    DeleteProductUseCase,
   ],
   exports: [
     //user
@@ -54,6 +56,7 @@ import { FindProductByIdUseCase } from '@core/products/find-by-id/usecase';
     CreateProductUseCase,
     FindAllProductsUseCase,
     FindProductByIdUseCase,
+    DeleteProductUseCase,
   ],
 })
 export class CoreModule {}

@@ -17,6 +17,7 @@ import { GeneratePresignedUrV2Application } from '@application/storage/presigned
 import { CreateProductApplication } from '@application/products/create-product.application';
 import { FindAllProductsApplication } from '@application/products/find-all-products.application';
 import { FindProductByIdApplication } from '@application/products/find-by-id-products.application';
+import { DeleteProductApplication } from '@application/products/delete-product.application';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { FindProductByIdApplication } from '@application/products/find-by-id-pro
     CreateProductApplication,
     FindAllProductsApplication,
     FindProductByIdApplication,
+    DeleteProductApplication,
   ],
   exports: [
     //user
@@ -64,6 +66,7 @@ import { FindProductByIdApplication } from '@application/products/find-by-id-pro
     CreateProductApplication,
     FindAllProductsApplication,
     FindProductByIdApplication,
+    DeleteProductApplication,
   ],
 })
 export class ApplicationModule {}
