@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException, } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InstitutionProductSQLRepository } from '@infrastructure/data/sql/repositories/institution-product.repostitoy';
 import { ProductDetailsAdapter } from '@core/institution-products/adapter';
 import { UpdateInstitutionProductInputDto } from '@presentation/institution-product/dto/update.dto';
