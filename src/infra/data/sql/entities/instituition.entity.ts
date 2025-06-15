@@ -1,13 +1,14 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
-  OneToMany,
   CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { InstitutionEvent } from './instituition.events';
 import { User } from './user.entity';
+import { InstitutionProduct } from '@infrastructure/data/sql/entities/institution-products.entity';
 
 @Entity({ name: 'institutions' })
 export class Institution {
@@ -40,4 +41,10 @@ export class Institution {
     lazy: false,
   })
   events: InstitutionEvent[];
+
+  @OneToMany(() => InstitutionProduct, (ip) => ip.institution, {
+    cascade: ['remove'],
+    lazy: false,
+  })
+  institutionProducts: InstitutionProduct[];
 }

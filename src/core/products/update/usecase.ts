@@ -3,55 +3,47 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InstitutionProductSQLRepository } from '@infrastructure/data/sql/repositories/institution-product.repostitoy';
-import { ProductDetailsAdapter } from '@core/institution-products/adapter';
-import { UpdateInstitutionProductInputDto } from '@presentation/institution-product/dto/update.dto';
-import { InstitutionProduct } from '@infrastructure/data/sql/entities';
+import { ProductSQLRepository } from '@infrastructure/data/sql/repositories/products.repository';
+import { UpdateProductInputDto } from '@presentation/products/dto/update-product.dto';
+import { Product } from '@infrastructure/data/sql/entities/products.entity';
 
 @Injectable()
-export class UpdateInstitutionProductUseCase {
-  constructor(
-    private readonly institutionProductRepository: InstitutionProductSQLRepository,
-  ) {}
+export class UpdateProductUseCase {
+  constructor(private readonly productRepository: ProductSQLRepository) {}
 
-  async execute(
-    id: string,
-    input: UpdateInstitutionProductInputDto,
-  ): Promise<InstitutionProduct> {
-    const existingRelation = await this.institutionProductRepository.findById(
-      id,
+  async execute(id: string, input: UpdateProductInputDto): Promise<Product> {
+    const existingProduct = await this.productRepository.findById(id);
+    if (!existingProduct) {
+      throw new NotFoundException(`Product with ID ${id} not found`);
+    }
+
+    // Check if another product already has this name (excluding current product)
+    const existingProductWithName = await this.productRepository.findByName(
+      input.name,
     );
-    if (!existingRelation) {
-      throw new NotFoundException(
-        `Institution product relation with ID ${id} not found`,
-      );
+    if (
+      existingProductWithName &&
+      existingProductWithName.id !== existingProduct.id
+    ) {
+      throw new BadRequestException('Já existe um produto com este nome');
     }
 
-    let typedDetails = null;
-    if (input.details) {
-      try {
-        typedDetails = ProductDetailsAdapter.toTypedDetails(
-          existingRelation.flag,
-          input.details,
-        );
-      } catch (error) {
-        throw new BadRequestException(
-          `Invalid details for flag ${existingRelation.flag}: ${error.message}`,
-        );
-      }
+    const updateData: Partial<Product> = {
+      name: input.name.trim(),
+      description: input.description?.trim() || null,
+      photos: input.photos || [],
+      video: input.video || [],
+    };
+
+    const updatedProduct = await this.productRepository.updateProduct(
+      id,
+      updateData,
+    );
+
+    if (!updatedProduct) {
+      throw new BadRequestException('Failed to update product');
     }
 
-    const updatedRelation =
-      await this.institutionProductRepository.updateInstitutionProduct(id, {
-        details: typedDetails,
-      });
-
-    if (!updatedRelation) {
-      throw new BadRequestException(
-        'Failed to update institution product relation',
-      );
-    }
-
-    return updatedRelation;
+    return updatedProduct;
   }
 }

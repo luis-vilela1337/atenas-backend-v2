@@ -18,7 +18,8 @@ import { DeleteProductUseCase } from '@core/products/delete/usecase';
 import { CreateInstitutionProductUseCase } from '@core/institution-products/create/usecase';
 import { FindInstitutionProductByIdUseCase } from '@core/institution-products/find-by-id/usecase';
 import { FindAllInstitutionProductsUseCase } from '@core/institution-products/find-all/usecase';
-import { UpdateInstitutionProductUseCase } from '@core/products/update/usecase';
+import { UpdateInstitutionProductUseCase } from '@core/institution-products/update/usecase';
+import { UpdateProductUseCase } from '@core/products/update/usecase';
 
 @Module({
   imports: [InfraModule],
@@ -41,6 +42,7 @@ import { UpdateInstitutionProductUseCase } from '@core/products/update/usecase';
     FindAllProductsUseCase,
     FindProductByIdUseCase,
     DeleteProductUseCase,
+    UpdateProductUseCase,
     //institution-products
     CreateInstitutionProductUseCase,
     FindInstitutionProductByIdUseCase,
@@ -66,6 +68,7 @@ import { UpdateInstitutionProductUseCase } from '@core/products/update/usecase';
     FindAllProductsUseCase,
     FindProductByIdUseCase,
     DeleteProductUseCase,
+    UpdateProductUseCase,
     //institution-products
     CreateInstitutionProductUseCase,
     FindInstitutionProductByIdUseCase,

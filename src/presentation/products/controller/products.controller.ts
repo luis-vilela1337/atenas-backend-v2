@@ -7,6 +7,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Put,
   Query,
 } from '@nestjs/common';
 import {
@@ -30,6 +31,12 @@ import { FindProductByIdApplication } from '@application/products/find-by-id-pro
 import { ProductDto } from '../dto/product.dto';
 import { FindProductByIdParamDto } from '../dto/find-by-id-products.dto';
 import { DeleteProductParamDto } from '../dto/delete-product.dto';
+import {
+  UpdateProductInputDto,
+  UpdateProductParamDto,
+  UpdateProductResponseDto,
+} from '@presentation/products/dto/update-product.dto';
+import { UpdateProductApplication } from '@application/products/update-product.application';
 
 @ApiTags('products')
 @Controller('v2/products')
@@ -39,6 +46,7 @@ export class ProductsController {
     private readonly findAllProductsApp: FindAllProductsApplication,
     private readonly findProductByIdApp: FindProductByIdApplication,
     private readonly deleteProductApp: DeleteProductApplication,
+    private readonly updateProductApp: UpdateProductApplication,
   ) {}
 
   @Post('/')
@@ -100,5 +108,18 @@ export class ProductsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteProduct(@Param() params: DeleteProductParamDto): Promise<void> {
     return await this.deleteProductApp.execute(params.id);
+  }
+
+  @Put('/:id')
+  @ApiOperation({ summary: 'Atualizar um produto existente' })
+  @ApiParam({ name: 'id', format: 'uuid' })
+  @ApiBody({ type: UpdateProductInputDto })
+  @ApiResponse({ status: 200, type: UpdateProductResponseDto })
+  @HttpCode(HttpStatus.OK)
+  async updateProduct(
+    @Param() param: UpdateProductParamDto,
+    @Body() dto: UpdateProductInputDto,
+  ): Promise<UpdateProductResponseDto> {
+    return await this.updateProductApp.execute(param.id, dto);
   }
 }

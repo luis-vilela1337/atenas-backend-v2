@@ -22,6 +22,7 @@ import { CreateInstitutionProductApplication } from '@application/institution-pr
 import { FindInstitutionProductByIdApplication } from '@application/institution-products/find-by-id';
 import { FindAllInstitutionProductsApplication } from '@application/institution-products/find-all';
 import { UpdateInstitutionProductApplication } from '@application/institution-products/update';
+import { UpdateProductApplication } from '@application/products/update-product.application';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { UpdateInstitutionProductApplication } from '@application/institution-pr
     FindByIdInstitutionApplication,
     UpdateInstitutionApplication,
     DeleteInstitutionApplication,
+    UpdateProductApplication,
     //products
     CreateProductApplication,
     FindAllProductsApplication,
@@ -74,8 +76,8 @@ import { UpdateInstitutionProductApplication } from '@application/institution-pr
     CreateProductApplication,
     FindAllProductsApplication,
     FindProductByIdApplication,
-    DeleteProductApplication, //TODO rota de update de produtos
-
+    DeleteProductApplication,
+    UpdateProductApplication,
     //institution-products
     CreateInstitutionProductApplication,
     FindInstitutionProductByIdApplication,

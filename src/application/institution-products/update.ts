@@ -4,7 +4,7 @@ import {
   UpdateInstitutionProductResponseDto,
 } from '@presentation/institution-product/dto/update.dto';
 import { UpdateInstitutionProductAdapter } from './adapters/update.adapter';
-import { UpdateInstitutionProductUseCase } from '@core/products/update/usecase';
+import { UpdateInstitutionProductUseCase } from '@core/institution-products/update/usecase';
 
 @Injectable()
 export class UpdateInstitutionProductApplication {
