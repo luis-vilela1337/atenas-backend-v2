@@ -8,7 +8,7 @@ import { User } from '@infrastructure/data/sql/entities';
 import { CreateUserV2InputDto } from '@presentation/user/dto/create-user.dto';
 import { InstitutionSQLRepository } from '@infrastructure/data/sql/repositories/institution.repository';
 import { CreateUserAdapter } from '@application/user/adapters/create';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class CreateUserV2UseCase {

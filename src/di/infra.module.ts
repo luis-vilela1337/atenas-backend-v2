@@ -1,5 +1,6 @@
 import { entities } from '@infrastructure/data/sql/entities';
 import { InstitutionSQLRepository } from '@infrastructure/data/sql/repositories/institution.repository';
+import { ProductSQLRepository } from '@infrastructure/data/sql/repositories/products.repository';
 import { UserSQLRepository } from '@infrastructure/data/sql/repositories/user.repository';
 import { AuthService as AuthServiceV2 } from '@infrastructure/services/auth.service';
 import { ImageStorageService } from '@infrastructure/services/image-storage.service';
@@ -31,6 +32,7 @@ import { LocalStrategy } from '@presentation/auth/strategies/local.strategy';
     ConfigService,
     UserSQLRepository,
     InstitutionSQLRepository,
+    ProductSQLRepository,
     AuthServiceV2,
     ImageStorageService,
     JwtCustomStrategy,
@@ -40,11 +42,11 @@ import { LocalStrategy } from '@presentation/auth/strategies/local.strategy';
     ConfigService,
     UserSQLRepository,
     ImageStorageService,
+    ProductSQLRepository,
     AuthServiceV2,
     InstitutionSQLRepository,
     JwtCustomStrategy,
     LocalStrategy,
-    'JWT_REFRESH_SERVICE',
   ],
 })
 export class InfraModule {}

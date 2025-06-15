@@ -2,6 +2,7 @@ import { Repository } from 'typeorm';
 import { User, UserRole, UserStatus } from '../entities';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UserSQLRepository {
@@ -224,13 +225,11 @@ export class UserSQLRepository {
   }
 
   private async hashRefreshToken(token: string): Promise<string> {
-    const bcrypt = await import('bcrypt');
     const salt = await bcrypt.genSalt();
     return bcrypt.hash(token, salt);
   }
 
   private async compareHash(token: string, hash: string): Promise<boolean> {
-    const bcrypt = await import('bcrypt');
     return bcrypt.compare(token, hash);
   }
 }

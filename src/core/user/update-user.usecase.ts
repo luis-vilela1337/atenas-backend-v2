@@ -10,7 +10,7 @@ import { User } from '@infrastructure/data/sql/entities';
 
 import { UpdateUserV2InputDto } from '@presentation/user/dto/update-user.dto';
 import { UpdateUserV2Adapter } from '@application/user/adapters/update';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UpdateUserV2UseCase {

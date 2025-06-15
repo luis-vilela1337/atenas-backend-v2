@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 
 import { User } from '@infrastructure/data/sql/entities/user.entity';
 import { UserSQLRepository } from '@infrastructure/data/sql/repositories/user.repository';
@@ -10,8 +10,6 @@ export class AuthService {
   constructor(
     private readonly usersRepo: UserSQLRepository,
     private readonly jwtService: JwtService,
-    @Inject('JWT_REFRESH_SERVICE')
-    private readonly jwtRefreshService: JwtService,
   ) {}
 
   async validateUser(
