@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { Storage, GetSignedUrlConfig } from '@google-cloud/storage';
+import { GetSignedUrlConfig, Storage } from '@google-cloud/storage';
 import { ConfigService } from '@nestjs/config';
 import * as crypto from 'crypto';
+import { MediaType } from '@presentation/user/dto/presigned-url.dto';
 
 @Injectable()
 export class ImageStorageService {
@@ -26,12 +27,46 @@ export class ImageStorageService {
     });
   }
 
-  generateRandomFilename(contentType: string): string {
+  generateRandomFilename(
+    contentType: string,
+    mediaType: MediaType = MediaType.IMAGE,
+  ): string {
     const timestamp = Date.now();
     const randomBytes = crypto.randomBytes(16).toString('hex');
     const extension = this.getFileExtension(contentType);
+    const prefix = mediaType === MediaType.VIDEO ? 'video' : 'image';
 
-    return `image-${randomBytes}-${timestamp}.${extension}`;
+    return `${prefix}-${randomBytes}-${timestamp}.${extension}`;
+  }
+
+  async generateUploadSignedUrl(
+    filename: string,
+    contentType: string,
+    mediaType: MediaType = MediaType.IMAGE,
+  ): Promise<string> {
+    try {
+      const options: GetSignedUrlConfig = {
+        version: 'v4',
+        action: 'write',
+        expires: Date.now() + this.UPLOAD_URL_EXPIRATION,
+        contentType,
+      };
+
+      // Add content length restrictions for videos
+      if (mediaType === MediaType.VIDEO) {
+        // 100MB limit for videos
+        options.extensionHeaders = {
+          'x-goog-content-length-range': '0,104857600', // 100MB in bytes
+        };
+      }
+
+      const file = this.storage.bucket(this.bucketName).file(filename);
+      const [url] = await file.getSignedUrl(options);
+
+      return url;
+    } catch (error) {
+      throw new Error(`Falha ao gerar URL de upload: ${error.message}`);
+    }
   }
 
   async generateSignedUrl(
@@ -50,9 +85,18 @@ export class ImageStorageService {
         throw new Error('ContentType required for write action');
       }
 
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+      const allowedTypes = [
+        'image/jpeg',
+        'image/png',
+        'image/webp',
+        'video/mp4',
+        'video/quicktime',
+        'video/x-msvideo',
+        'video/webm',
+      ];
+
       if (!allowedTypes.includes(contentType)) {
-        throw new Error('Invalid image type');
+        throw new Error('Invalid media type');
       }
 
       options.contentType = contentType;
@@ -63,36 +107,24 @@ export class ImageStorageService {
     return url;
   }
 
-  async generateUploadSignedUrl(
-    filename: string,
-    contentType: string,
-  ): Promise<string> {
-    try {
-      const options = {
-        version: 'v4',
-        action: 'write',
-        expires: Date.now() + this.UPLOAD_URL_EXPIRATION,
-        contentType,
-      } as GetSignedUrlConfig;
-
-      const file = this.storage.bucket(this.bucketName).file(filename);
-      const [url] = await file.getSignedUrl(options);
-
-      return url;
-    } catch (error) {
-      throw new Error(`Falha ao gerar URL de upload: ${error.message}`);
-    }
-  }
-
   private getFileExtension(contentType: string): string {
     const extensionMap: Record<string, string> = {
+      // Images
       'image/jpeg': 'jpg',
       'image/jpg': 'jpg',
       'image/png': 'png',
       'image/gif': 'gif',
       'image/webp': 'webp',
+      // Videos
+      'video/mp4': 'mp4',
+      'video/quicktime': 'mov',
+      'video/x-msvideo': 'avi',
+      'video/webm': 'webm',
     };
 
-    return extensionMap[contentType] || 'jpg';
+    return (
+      extensionMap[contentType] ||
+      (contentType.startsWith('video/') ? 'mp4' : 'jpg')
+    );
   }
 }
