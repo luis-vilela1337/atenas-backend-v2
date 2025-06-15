@@ -1,23 +1,81 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsObject, IsOptional, IsUUID } from 'class-validator';
 import { ProductFlag } from '@infrastructure/data/sql/types/product-flag.enum';
-import { IsEnum, IsObject, IsOptional } from 'class-validator';
+import { ProductDetails } from '@infrastructure/data/sql/entities';
+
+export class UpdateInstitutionProductParamDto {
+  @ApiProperty({
+    description: 'ID da relação produto-instituição',
+    format: 'uuid',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  @IsUUID('4', { message: 'ID deve ser um UUID válido' })
+  id: string;
+}
 
 export class UpdateInstitutionProductInputDto {
-  @ApiProperty({
-    description: 'Tipo de produto',
-    enum: ProductFlag,
-    required: false,
+  @ApiPropertyOptional({
+    description: 'Detalhes específicos do produto para a instituição',
+    type: Object,
+    example: {
+      minPhoto: 10,
+      maxPhoto: 100,
+      valorEncadernacao: 35.99,
+      valorFoto: 3.5,
+    },
   })
-  @IsEnum(ProductFlag)
   @IsOptional()
-  flag?: ProductFlag;
+  @IsObject({ message: 'Details deve ser um objeto válido' })
+  details?: Record<string, any> | null;
+}
+
+export class UpdateInstitutionProductResponseDto {
+  @ApiProperty({
+    description: 'ID da relação produto-instituição',
+    format: 'uuid',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  id: string;
 
   @ApiProperty({
-    description: 'Detalhes de configuração do produto (JSON)',
-    required: false,
-    type: Object,
+    description: 'ID do produto',
+    format: 'uuid',
+    example: '123e4567-e89b-12d3-a456-426614174001',
   })
-  @IsObject()
-  @IsOptional()
-  details?: Record<string, any>;
+  productId: string;
+
+  @ApiProperty({
+    description: 'ID da instituição',
+    format: 'uuid',
+    example: '123e4567-e89b-12d3-a456-426614174002',
+  })
+  institutionId: string;
+
+  @ApiProperty({
+    description: 'Flag do produto',
+    enum: ProductFlag,
+    example: ProductFlag.ALBUM,
+  })
+  flag: ProductFlag;
+
+  @ApiPropertyOptional({
+    description: 'Detalhes específicos do produto',
+    type: Object,
+    nullable: true,
+  })
+  details: ProductDetails | null;
+
+  @ApiProperty({
+    description: 'Data de criação',
+    type: 'string',
+    format: 'date-time',
+  })
+  createdAt: Date;
+
+  @ApiProperty({
+    description: 'Data de atualização',
+    type: 'string',
+    format: 'date-time',
+  })
+  updatedAt: Date;
 }

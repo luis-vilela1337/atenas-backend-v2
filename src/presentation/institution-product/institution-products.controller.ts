@@ -5,6 +5,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
   Query,
 } from '@nestjs/common';
@@ -29,6 +30,12 @@ import {
   ListInstitutionProductsQueryDto,
   PaginatedInstitutionProductsDto,
 } from '@presentation/institution-product/dto/list-all.dto';
+import {
+  UpdateInstitutionProductInputDto,
+  UpdateInstitutionProductParamDto,
+  UpdateInstitutionProductResponseDto,
+} from '@presentation/institution-product/dto/update.dto';
+import { UpdateInstitutionProductApplication } from '@application/institution-products/update';
 
 @ApiTags('institution-products')
 @Controller('v2/institution-products')
@@ -37,6 +44,7 @@ export class InstitutionProductsController {
     private readonly createInstitutionProductApp: CreateInstitutionProductApplication,
     private readonly findInstitutionProductByIdApp: FindInstitutionProductByIdApplication,
     private readonly findAllInstitutionProductsApp: FindAllInstitutionProductsApplication,
+    private readonly updateInstitutionProductApp: UpdateInstitutionProductApplication,
   ) {}
 
   @Get('/')
@@ -61,6 +69,31 @@ export class InstitutionProductsController {
     @Body() dto: CreateInstitutionProductInputDto,
   ): Promise<CreateInstitutionProductResponseDto> {
     return await this.createInstitutionProductApp.execute(dto);
+  }
+  @Patch('/:id')
+  @ApiOperation({
+    summary: 'Atualizar detalhes de uma relação produto-instituição',
+  })
+  @ApiParam({
+    name: 'id',
+    type: 'string',
+    format: 'uuid',
+    description: 'ID da relação produto-instituição',
+  })
+  @ApiBody({ type: UpdateInstitutionProductInputDto })
+  @ApiResponse({
+    status: 200,
+    type: UpdateInstitutionProductResponseDto,
+    description: 'Relação atualizada com sucesso',
+  })
+  @ApiResponse({ status: 404, description: 'Relação não encontrada' })
+  @ApiResponse({ status: 400, description: 'Dados de entrada inválidos' })
+  @HttpCode(HttpStatus.OK)
+  async updateInstitutionProduct(
+    @Param() params: UpdateInstitutionProductParamDto,
+    @Body() dto: UpdateInstitutionProductInputDto,
+  ): Promise<UpdateInstitutionProductResponseDto> {
+    return await this.updateInstitutionProductApp.execute(params.id, dto);
   }
 
   @Get('/:id')
