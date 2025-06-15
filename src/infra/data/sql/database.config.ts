@@ -4,12 +4,12 @@ import 'dotenv/config';
 import { Generated1747237005972 } from '../migrations/1747237005972-generated';
 import { ConfigService } from '@nestjs/config';
 import { Generated1749949791857 } from '@infrastructure/data/migrations/1749949791857-generated';
-import { CreateInstitutionProducts1747237005973 } from '@infrastructure/data/migrations/1747237005973-create-institution-products';
+import { Generated1750028242868 } from '@infrastructure/data/migrations/1750028242868-generated';
 
 export const migrations = [
   Generated1747237005972,
   Generated1749949791857,
-  CreateInstitutionProducts1747237005973,
+  Generated1750028242868,
 ];
 const envVars = (cs: ConfigService) => ({
   host: cs.get<string>('DB_HOST'),
