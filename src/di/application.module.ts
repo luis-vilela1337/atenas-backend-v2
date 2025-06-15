@@ -18,6 +18,8 @@ import { CreateProductApplication } from '@application/products/create-product.a
 import { FindAllProductsApplication } from '@application/products/find-all-products.application';
 import { FindProductByIdApplication } from '@application/products/find-by-id-products.application';
 import { DeleteProductApplication } from '@application/products/delete-product.application';
+import { CreateInstitutionProductApplication } from '@application/institution-products/create';
+import { FindInstitutionProductByIdApplication } from '@application/institution-products/find-by-id';
 
 @Module({
   imports: [
@@ -46,6 +48,8 @@ import { DeleteProductApplication } from '@application/products/delete-product.a
     FindAllProductsApplication,
     FindProductByIdApplication,
     DeleteProductApplication,
+    CreateInstitutionProductApplication,
+    FindInstitutionProductByIdApplication,
   ],
   exports: [
     //user
@@ -66,7 +70,11 @@ import { DeleteProductApplication } from '@application/products/delete-product.a
     CreateProductApplication,
     FindAllProductsApplication,
     FindProductByIdApplication,
-    DeleteProductApplication,
+    DeleteProductApplication, //TODO rota de update de produtos
+
+    //institution-products
+    CreateInstitutionProductApplication,
+    FindInstitutionProductByIdApplication,
   ],
 })
 export class ApplicationModule {}

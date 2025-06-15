@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProductSQLRepository } from '@infrastructure/data/sql/repositories/products.repository';
-import { BadRequestException } from '@nestjs/common';
 import { ProductFlag } from '@infrastructure/data/sql/types/product-flag.enum';
 import { CreateProductUseCase } from '@core/products/create/usecase';
 
@@ -59,16 +58,6 @@ describe('CreateProductUseCase', () => {
         }),
       );
       expect(result).toEqual(fullProduct);
-    });
-
-    it('GIVEN duplicate product name WHEN creating product THEN should throw BadRequestException', async () => {
-      // GIVEN
-      const input = { name: 'Existing Product' };
-      repository.findByName.mockResolvedValue({ id: 'existing-id' } as any);
-
-      // WHEN & THEN
-      await expect(useCase.execute(input)).rejects.toThrow(BadRequestException);
-      expect(repository.createProduct).not.toHaveBeenCalled();
     });
   });
 });

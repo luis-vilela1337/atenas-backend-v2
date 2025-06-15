@@ -11,6 +11,7 @@ import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtCustomStrategy } from '@presentation/auth/strategies/jwt.strategy';
 import { LocalStrategy } from '@presentation/auth/strategies/local.strategy';
+import { InstitutionProductSQLRepository } from '@infrastructure/data/sql/repositories/institution-product.repostitoy';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { LocalStrategy } from '@presentation/auth/strategies/local.strategy';
     UserSQLRepository,
     InstitutionSQLRepository,
     ProductSQLRepository,
+    InstitutionProductSQLRepository,
     AuthServiceV2,
     ImageStorageService,
     JwtCustomStrategy,
@@ -45,6 +47,7 @@ import { LocalStrategy } from '@presentation/auth/strategies/local.strategy';
     ProductSQLRepository,
     AuthServiceV2,
     InstitutionSQLRepository,
+    InstitutionProductSQLRepository,
     JwtCustomStrategy,
     LocalStrategy,
   ],
