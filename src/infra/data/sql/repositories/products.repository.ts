@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository, InjectDataSource } from '@nestjs/typeorm';
-import { Repository, DataSource } from 'typeorm';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { Product } from '../entities/products.entity';
 import { UpdateProductData } from '../types/product.type';
 
@@ -21,6 +21,12 @@ export class ProductSQLRepository {
   async findById(id: string): Promise<Product | null> {
     return await this.product.findOne({
       where: { id },
+    });
+  }
+
+  async findByName(name: string): Promise<Product | null> {
+    return await this.product.findOne({
+      where: { name },
     });
   }
 

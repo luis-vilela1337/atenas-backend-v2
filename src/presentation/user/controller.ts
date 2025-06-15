@@ -33,15 +33,15 @@ import {
 } from './dto/presigned-url.dto';
 import { GeneratePresignedUrV2Application } from '@application/storage/presigned-url.application';
 import {
-  ApiTags,
+  ApiBody,
   ApiOperation,
-  ApiResponse,
   ApiParam,
   ApiQuery,
-  ApiBody,
+  ApiResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 
-@Controller('user/users')
+@Controller('v2/users')
 @ApiTags('users')
 export class UsersControllerV2 {
   constructor(

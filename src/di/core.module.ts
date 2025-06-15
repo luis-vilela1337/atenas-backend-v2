@@ -26,6 +26,7 @@ import { FindByIdInstituitionUseCase } from '@core/insituition/find-by-id.usecas
 import { UpdateInstituitionUseCase } from '@core/insituition/update.usecase';
 import { DeleteInstituitionUseCase } from '@core/insituition/delete.usecase';
 import { DeleteUserByIDV2UseCase } from '@core/user/delete-user.usecase';
+import { CreateProductUseCase } from '@core/products/create/usecase';
 
 @Module({
   imports: [InfraModule],
@@ -53,11 +54,14 @@ import { DeleteUserByIDV2UseCase } from '@core/user/delete-user.usecase';
     UpdateUserV2UseCase,
     GeneratePresignedUrlUseCase,
     DeleteUserByIDV2UseCase,
+    //institution
     FindAllInstituitionUseCase,
     FindByIdInstituitionUseCase,
     UpdateInstituitionUseCase,
     DeleteInstituitionUseCase,
     CreateInstituitionUseCase,
+    //products
+    CreateProductUseCase,
   ],
   exports: [
     AuthUseCase,
@@ -83,11 +87,14 @@ import { DeleteUserByIDV2UseCase } from '@core/user/delete-user.usecase';
     UpdateUserV2UseCase,
     GeneratePresignedUrlUseCase,
     DeleteUserByIDV2UseCase,
+    //institution
     FindAllInstituitionUseCase,
     CreateInstituitionUseCase,
     FindByIdInstituitionUseCase,
     UpdateInstituitionUseCase,
     DeleteInstituitionUseCase,
+    //products
+    CreateProductUseCase,
   ],
 })
 export class CoreModule {}

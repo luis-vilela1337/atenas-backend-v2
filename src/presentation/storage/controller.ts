@@ -1,12 +1,12 @@
 import { GeneratePresignedUrV2Application } from '@application/storage/presigned-url.application';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Body, Controller, Post } from '@nestjs/common';
 import {
   GeneratePresignedUrlInputDto,
   PresignedUrlResponseDto,
 } from '@presentation/user/dto/presigned-url.dto';
 
-@Controller('user/storage')
+@Controller('v2/storage')
 @ApiTags('storage')
 export class StorageControllerV2 {
   constructor(
