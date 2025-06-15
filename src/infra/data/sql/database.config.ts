@@ -3,11 +3,10 @@ import { entities } from './entities';
 import 'dotenv/config';
 import { Generated1747237005972 } from '../migrations/1747237005972-generated';
 import { ConfigService } from '@nestjs/config';
+import { Generated1749949791857 } from '@infrastructure/data/migrations/1749949791857-generated';
 
-export const migrations = [Generated1747237005972];
-
+export const migrations = [Generated1747237005972, Generated1749949791857];
 const envVars = (cs: ConfigService) => ({
-  secret: cs.get<string>('JWT_SECRET'),
   host: cs.get<string>('DB_HOST'),
   port: Number(cs.get<string>('DB_PORT')),
   username: cs.get<string>('DB_USERNAME'),
@@ -15,17 +14,15 @@ const envVars = (cs: ConfigService) => ({
   database: cs.get<string>('DB_DATABASE'),
 });
 
+const configService = new ConfigService();
+const dbConfig = envVars(configService);
+
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
-  host: envVars.host,
-  port: envVars.port,
-  username: envVars.username,
-  password: envVars.password,
-  database: envVars.database,
+  ...dbConfig,
   entities: entities,
   migrations: migrations,
   synchronize: false,
-  // logging: process.env.NODE_ENV === 'development',
 };
 
 export const AppDataSource = new DataSource(dataSourceOptions);

@@ -23,11 +23,11 @@
     "test:e2e": "jest --config test/jest-e2e.json",
     "test:all": "npm run test && npm run test:integration && npm run test:e2e",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli",
-    "migration:run": "yarn run typeorm migration:run -d ./src/infra/data/sql/database.config.ts",
-    "migration:create": "yarn run typeorm migration:create ./src/infra/data/migrations/migration",
-    "migration:generate": "yarn run typeorm migration:generate  -d ./src/infra/data/sql/database.config.ts ./src/infra/data/migrations/generated",
-    "migration:down": "yarn run typeorm migration:revert -d ./src/infra/data/sql/database.config.ts",
-    "migration:show": "yarn run typeorm migration:show -d ./src/infra/data/sql/database.config.ts"
+    "migration:run": "pnpm run typeorm migration:run -d ./src/infra/data/sql/database.config.ts",
+    "migration:create": "pnpm run typeorm migration:create ./src/infra/data/migrations/migration",
+    "migration:generate": "pnpm run typeorm migration:generate  -d ./src/infra/data/sql/database.config.ts ./src/infra/data/migrations/generated",
+    "migration:down": "pnpm run typeorm migration:revert -d ./src/infra/data/sql/database.config.ts",
+    "migration:show": "pnpm run typeorm migration:show -d ./src/infra/data/sql/database.config.ts"
   },
   "dependencies": {
     "@google-cloud/storage": "^7.13.0",

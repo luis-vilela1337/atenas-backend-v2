@@ -5,13 +5,13 @@ import {
 } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import * as bodyParser from 'body-parser';
-import { AlbumController } from '@presentation/user/http/controllers/album.controller';
-import 'dotenv';
 import { ErrorFormatterInterceptor } from '@application/exceptions/global.exception';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationExceptionFilter } from './validation-exception.filter';
 import { RootModule } from '@di/root.module';
+import { config } from 'dotenv';
 
+config();
 const configClassValidator = (app: INestApplication) =>
   app.useGlobalPipes(
     new ValidationPipe({
@@ -61,16 +61,10 @@ async function bootstrap() {
   SwaggerModule.setup('api-docs', app, document);
 
   configClassValidator(app);
-  // await (await app.resolve(AlbumController)).updateFilesCron();
-  // await (await app.resolve(UserController)).updateUser({email:"julio@atenasformaturas.com.br" ,
-  //   numeroContrato:"Julio", isAdm:"true",
-  //   nomeEscola:"Atenas",
-  //   nomeUsuario:"Julio",
-  // telefone:"(32) 42342-3423",
-  // turma:"adm",
-  // senha: "senhalegal"})
+
   app.useGlobalInterceptors(new ErrorFormatterInterceptor());
 
   await app.listen(3000);
 }
+
 bootstrap();

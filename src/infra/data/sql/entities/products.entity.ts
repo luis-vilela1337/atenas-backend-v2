@@ -1,8 +1,8 @@
 import {
-  Entity,
   Column,
-  PrimaryGeneratedColumn,
   CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { ProductFlag } from '../types/product-flag.enum';
@@ -28,8 +28,8 @@ export class Product {
   @Column({ type: 'text', array: true, nullable: true })
   photos: string[];
 
-  @Column({ type: 'text', nullable: true })
-  video: string;
+  @Column({ type: 'text', array: true, nullable: true })
+  video: string[];
 
   @CreateDateColumn({
     type: 'timestamp',

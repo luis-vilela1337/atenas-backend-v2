@@ -1,11 +1,11 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
-  ManyToOne,
   CreateDateColumn,
-  UpdateDateColumn,
+  Entity,
   JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Institution } from './instituition.entity';
 
@@ -15,6 +15,7 @@ export class InstitutionEvent {
   id: string;
 
   @ManyToOne(() => Institution, (institution) => institution.events, {
+    nullable: false,
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'institution_id' })
