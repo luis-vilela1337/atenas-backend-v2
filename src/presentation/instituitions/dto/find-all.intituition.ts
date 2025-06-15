@@ -2,6 +2,7 @@ import { IsOptional, IsInt, Min, Max, IsIn, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
 import { InstitutionResponseDto } from './find-by-id.insituition';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Institution } from '@infrastructure/data/sql/entities';
 
 export class ListInstituitionQueryDto {
   @ApiPropertyOptional({ description: 'Página (>=1)', example: 1 })

@@ -3,6 +3,7 @@ import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { Product } from '../entities/products.entity';
 import { UpdateProductData } from '../types/product.type';
+import { ProductFlag } from '../types/product-flag.enum';
 
 @Injectable()
 export class ProductSQLRepository {
@@ -30,10 +31,44 @@ export class ProductSQLRepository {
     });
   }
 
-  async findAll(): Promise<Product[]> {
-    return await this.product.find({
-      order: { created_at: 'DESC' },
-    });
+  async findAllPaginated(
+    page = 1,
+    limit = 10,
+    filters?: {
+      flag?: ProductFlag;
+      search?: string;
+    },
+  ): Promise<{
+    products: Product[];
+    total: number;
+    totalPages: number;
+  }> {
+    const skip = (page - 1) * limit;
+    const queryBuilder = this.product
+      .createQueryBuilder('product')
+      .skip(skip)
+      .take(limit);
+
+    if (filters?.flag) {
+      queryBuilder.andWhere('product.flag = :flag', { flag: filters.flag });
+    }
+
+    if (filters?.search) {
+      queryBuilder.andWhere('product.name ILIKE :search', {
+        search: `%${filters.search}%`,
+      });
+    }
+
+    queryBuilder.orderBy('product.created_at', 'DESC');
+
+    const [products, total] = await queryBuilder.getManyAndCount();
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      products,
+      total,
+      totalPages,
+    };
   }
 
   async updateProduct(
