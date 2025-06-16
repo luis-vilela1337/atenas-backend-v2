@@ -1,0 +1,582 @@
+{
+  "info": {
+    "name": "Institution Products API - Automated Tests",
+    "description": "Bateria automatizada para testes de relações produto-instituição",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Generate random data for each execution",
+          "const timestamp = Date.now();",
+          "const random = Math.floor(Math.random() * 1000);",
+          "const randomPrice1 = (Math.random() * 50 + 10).toFixed(2);",
+          "const randomPrice2 = (Math.random() * 10 + 1).toFixed(2);",
+          "const randomMin = Math.floor(Math.random() * 20 + 5);",
+          "const randomMax = Math.floor(Math.random() * 100 + 50);",
+          "",
+          "pm.collectionVariables.set('timestamp', timestamp);",
+          "pm.collectionVariables.set('random', random);",
+          "pm.collectionVariables.set('randomPrice1', randomPrice1);",
+          "pm.collectionVariables.set('randomPrice2', randomPrice2);",
+          "pm.collectionVariables.set('randomMin', randomMin);",
+          "pm.collectionVariables.set('randomMax', randomMax);",
+          "",
+          "// Contract numbers",
+          "pm.collectionVariables.set('contractInatel', `CNT-${timestamp}-001`);",
+          "pm.collectionVariables.set('contractUnifei', `CNT-${timestamp}-002`);",
+          "",
+          "// Institution names",
+          "pm.collectionVariables.set('inatelName', `Inatel Campus ${random}`);",
+          "pm.collectionVariables.set('unifeiName', `Unifei Branch ${random}`);",
+          "",
+          "// Product names", 
+          "pm.collectionVariables.set('albumName', `Álbum Premium ${timestamp}`);",
+          "pm.collectionVariables.set('genericName', `Produto Custom ${timestamp}`);"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "Setup - Create Products",
+      "item": [
+        {
+          "name": "1. Create Album Product",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('albumProductId', response.id);",
+                  "    console.log('Album Product ID:', response.id);",
+                  "}",
+                  "",
+                  "pm.test('Album product created', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"{{albumName}}\",\n  \"flag\": \"ALBUM\",\n  \"description\": \"Álbum premium para instituições - Batch {{timestamp}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/v2/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["v2", "products"]
+            }
+          }
+        },
+        {
+          "name": "2. Create Generic Product",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('genericProductId', response.id);",
+                  "    console.log('Generic Product ID:', response.id);",
+                  "}",
+                  "",
+                  "pm.test('Generic product created', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"{{genericName}}\",\n  \"flag\": \"GENERIC\",\n  \"description\": \"Produto genérico customizável - Batch {{timestamp}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/v2/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["v2", "products"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Setup - Create Institutions",
+      "item": [
+        {
+          "name": "3. Create Institution - Inatel",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('inatelId', response.id);",
+                  "    console.log('Inatel Institution ID:', response.id);",
+                  "}",
+                  "",
+                  "pm.test('Inatel institution created', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"contractNumber\": \"{{contractInatel}}\",\n  \"name\": \"{{inatelName}}\",\n  \"observations\": \"Parceria para álbuns - Test {{timestamp}}\",\n  \"events\": [\n    { \"name\": \"Formatura Engenharia {{random}}\" },\n    { \"name\": \"Formatura Admin {{random}}\" }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/v2/institutions",
+              "host": ["{{baseUrl}}"],
+              "path": ["v2", "institutions"]
+            }
+          }
+        },
+        {
+          "name": "4. Create Institution - Unifei",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('unifeiId', response.id);",
+                  "    console.log('Unifei Institution ID:', response.id);",
+                  "}",
+                  "",
+                  "pm.test('Unifei institution created', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"contractNumber\": \"{{contractUnifei}}\",\n  \"name\": \"{{unifeiName}}\",\n  \"observations\": \"Contrato produtos personalizados - Test {{timestamp}}\",\n  \"events\": [\n    { \"name\": \"Semana Engenharia {{random}}\" },\n    { \"name\": \"Feira Ciências {{random}}\" }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/v2/institutions",
+              "host": ["{{baseUrl}}"],
+              "path": ["v2", "institutions"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Institution Products Tests",
+      "item": [
+        {
+          "name": "5. Create Institution-Product (Inatel + Album)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('inatelAlbumRelationId', response.id);",
+                  "    console.log('Inatel-Album Relation ID:', response.id);",
+                  "}",
+                  "",
+                  "pm.test('Institution-Product relation created', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test('Response has correct structure', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.expect(jsonData).to.have.property('productId');",
+                  "    pm.expect(jsonData).to.have.property('institutionId');",
+                  "    pm.expect(jsonData).to.have.property('flag');",
+                  "    pm.expect(jsonData.flag).to.eql('ALBUM');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"{{albumProductId}}\",\n  \"institutionId\": \"{{inatelId}}\",\n  \"flag\": \"ALBUM\",\n  \"details\": {\n    \"minPhoto\": {{randomMin}},\n    \"maxPhoto\": {{randomMax}},\n    \"valorEncadernacao\": {{randomPrice1}},\n    \"valorFoto\": {{randomPrice2}},\n    \"formatoAlbum\": \"A4\",\n    \"testBatch\": \"{{timestamp}}\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/v2/institution-products",
+              "host": ["{{baseUrl}}"],
+              "path": ["v2", "institution-products"]
+            }
+          }
+        },
+        {
+          "name": "6. Create Institution-Product (Unifei + Generic)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('unifeiGenericRelationId', response.id);",
+                  "    console.log('Unifei-Generic Relation ID:', response.id);",
+                  "}",
+                  "",
+                  "pm.test('Second relation created', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"{{genericProductId}}\",\n  \"institutionId\": \"{{unifeiId}}\",\n  \"flag\": \"GENERIC\",\n  \"details\": {\n    \"event_id\": \"{{random}}\",\n    \"minPhoto\": {{randomMin}},\n    \"maxPhoto\": {{randomMax}},\n    \"valorPhoto\": {{randomPrice2}},\n    \"precoPadrao\": {{randomPrice1}},\n    \"descontoVol\": 0.15,\n    \"personalizacoes\": [\"logo\", \"texto\"]\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/v2/institution-products",
+              "host": ["{{baseUrl}}"],
+              "path": ["v2", "institution-products"]
+            }
+          }
+        },
+        {
+          "name": "7. Create Institution-Product (Inatel + Generic)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('inatelGenericRelationId', response.id);",
+                  "    console.log('Inatel-Generic Relation ID:', response.id);",
+                  "}",
+                  "",
+                  "pm.test('Third relation created', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"{{genericProductId}}\",\n  \"institutionId\": \"{{inatelId}}\",\n  \"flag\": \"GENERIC\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/v2/institution-products",
+              "host": ["{{baseUrl}}"],
+              "path": ["v2", "institution-products"]
+            }
+          }
+        },
+        {
+          "name": "8. Get Institution-Product by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Institution-Product found', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Correct data returned', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.flag).to.eql('ALBUM');",
+                  "    pm.expect(jsonData.details).to.have.property('minPhoto');",
+                  "    pm.expect(jsonData.details.minPhoto).to.eql(parseInt(pm.collectionVariables.get('randomMin')));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/v2/institution-products/{{inatelAlbumRelationId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["v2", "institution-products", "{{inatelAlbumRelationId}}"]
+            }
+          }
+        },
+        {
+          "name": "9. List All Institution-Products",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('List returned successfully', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Pagination structure present', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('data');",
+                  "    pm.expect(jsonData).to.have.property('pagination');",
+                  "    pm.expect(jsonData.data).to.be.an('array');",
+                  "    pm.expect(jsonData.data.length).to.be.at.least(1);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/v2/institution-products?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["v2", "institution-products"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "10. Filter by Product ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Product filter working', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const jsonData = pm.response.json();",
+                  "    if (jsonData.data.length > 0) {",
+                  "        jsonData.data.forEach(relation => {",
+                  "            pm.expect(relation.product.id).to.eql(pm.collectionVariables.get('albumProductId'));",
+                  "        });",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/v2/institution-products?productId={{albumProductId}}&page=1&limit=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["v2", "institution-products"],
+              "query": [
+                { "key": "productId", "value": "{{albumProductId}}" },
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "5" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "11. Filter by Institution ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Institution filter working', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const jsonData = pm.response.json();",
+                  "    if (jsonData.data.length > 0) {",
+                  "        jsonData.data.forEach(relation => {",
+                  "            pm.expect(relation.institution.id).to.eql(pm.collectionVariables.get('inatelId'));",
+                  "        });",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/v2/institution-products?institutionId={{inatelId}}&page=1&limit=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["v2", "institution-products"],
+              "query": [
+                { "key": "institutionId", "value": "{{inatelId}}" },
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "5" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "12. Filter by Flag",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Flag filter working', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const jsonData = pm.response.json();",
+                  "    if (jsonData.data.length > 0) {",
+                  "        jsonData.data.forEach(relation => {",
+                  "            pm.expect(relation.flag).to.eql('ALBUM');",
+                  "        });",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/v2/institution-products?flag=ALBUM&page=1&limit=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["v2", "institution-products"],
+              "query": [
+                { "key": "flag", "value": "ALBUM" },
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "5" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "13. Combined Filters",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Combined filters working', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const jsonData = pm.response.json();",
+                  "    if (jsonData.data.length > 0) {",
+                  "        const relation = jsonData.data[0];",
+                  "        pm.expect(relation.flag).to.eql('GENERIC');",
+                  "        pm.expect(relation.institution.id).to.eql(pm.collectionVariables.get('unifeiId'));",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/v2/institution-products?institutionId={{unifeiId}}&flag=GENERIC&page=1&limit=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["v2", "institution-products"],
+              "query": [
+                { "key": "institutionId", "value": "{{unifeiId}}" },
+                { "key": "flag", "value": "GENERIC" },
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "5" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "14. Update Institution-Product Details",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Institution-Product updated', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Updated details correct', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.details).to.have.property('minPhoto');",
+                  "    pm.expect(jsonData.details.minPhoto).to.eql(15);",
+                  "    pm.expect(jsonData.details).to.have.property('maxPhoto');",
+                  "    pm.expect(jsonData.details.maxPhoto).to.eql(200);",
+                  "    pm.expect(jsonData.details.formatoAlbum).to.eql('A3');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"details\": {\n    \"minPhoto\": 15,\n    \"maxPhoto\": 200,\n    \"valorEncadernacao\": 55.99,\n    \"valorFoto\": 5.25,\n    \"formatoAlbum\": \"A3\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/v2/institution-products/{{inatelAlbumRelationId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["v2", "institution-products", "{{inatelAlbumRelationId}}"]
+            }
+          }
+        },
+        {
+          "name": "15. Verify Update",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Updated data persisted', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.details.minPhoto).to.eql(15);",
+                  "    pm.expect(jsonData.details.maxPhoto).to.eql(200);",
+                  "    pm.expect(jsonData.details.formatoAlbum).to.eql('A3');",
+                  "});",
+                  "",
+                  "console.log('✅ All Institution-Products tests completed successfully!');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/v2/institution-products/{{inatelAlbumRelationId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["v2", "institution-products", "{{inatelAlbumRelationId}}"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

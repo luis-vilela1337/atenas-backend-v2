@@ -1,0 +1,662 @@
+{
+  "info": {
+    "name": "Atenas API - Test Suite",
+    "description": "Automated test battery for Atenas Backend API",
+    "version": "2.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [{"key": "token", "value": "{{jwt_token}}", "type": "string"}]
+  },
+  "variable": [
+    {"key": "base_url", "value": "{{base_url}}", "type": "string"},
+    {"key": "jwt_token", "value": "", "type": "string"}
+  ],
+  "item": [
+    {
+      "name": "🧪 Test Battery - Full CRUD",
+      "item": [
+        {
+          "name": "00 - Setup Authentication",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Login successful', () => pm.response.to.have.status(200));",
+                  "pm.test('Token received', () => {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.data).to.have.property('accessToken');",
+                  "});",
+                  "if (pm.response.code === 200) {",
+                  "    const token = pm.response.json().data.accessToken;",
+                  "    pm.environment.set('jwt_token', token);",
+                  "    console.log('✅ Authentication setup complete');",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {"type": "noauth"},
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\": \"admin@atenas.com\", \"password\": \"123456\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/user/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["user", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "01 - Create Institution",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const random = Math.floor(Math.random() * 10000);",
+                  "const timestamp = Date.now().toString().slice(-6);",
+                  "pm.environment.set('test_institution_name', `TestInst${random}`);",
+                  "pm.environment.set('test_contract_number', `CONT-${timestamp}-${random}`);",
+                  "pm.environment.set('test_institution_email', `inst${random}@test.com`);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Institution created', () => pm.response.to.have.status(201));",
+                  "pm.test('Has institution ID', () => {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.data).to.have.property('id');",
+                  "});",
+                  "if (pm.response.code === 201) {",
+                  "    const institutionId = pm.response.json().data.id;",
+                  "    pm.environment.set('test_institution_id', institutionId);",
+                  "    console.log('✅ Institution created: ' + institutionId);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"{{test_institution_name}}\",\n  \"contractNumber\": \"{{test_contract_number}}\",\n  \"address\": \"Test Address 123\",\n  \"phone\": \"11999887766\",\n  \"email\": \"{{test_institution_email}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v2/institutions",
+              "host": ["{{base_url}}"],
+              "path": ["v2", "institutions"]
+            }
+          }
+        },
+        {
+          "name": "02 - Create Product",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const random = Math.floor(Math.random() * 10000);",
+                  "pm.environment.set('test_product_name', `TestProduct${random}`);",
+                  "pm.environment.set('test_product_price', (Math.random() * 500 + 50).toFixed(2));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Product created', () => pm.response.to.have.status(201));",
+                  "if (pm.response.code === 201) {",
+                  "    const productId = pm.response.json().data.id;",
+                  "    pm.environment.set('test_product_id', productId);",
+                  "    console.log('✅ Product created: ' + productId);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"{{test_product_name}}\",\n  \"flag\": \"test\",\n  \"description\": \"Auto-generated test product\",\n  \"price\": {{test_product_price}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v2/products",
+              "host": ["{{base_url}}"],
+              "path": ["v2", "products"]
+            }
+          }
+        },
+        {
+          "name": "03 - Create User",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const random = Math.floor(Math.random() * 10000);",
+                  "const timestamp = Date.now();",
+                  "pm.environment.set('test_user_name', `TestUser${random}`);",
+                  "pm.environment.set('test_user_identifier', `${timestamp}${random}`.substring(0, 11));",
+                  "pm.environment.set('test_user_email', `user${random}@test.com`);",
+                  "pm.environment.set('test_user_phone', `11${String(timestamp).substring(-8)}`);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('User created', () => pm.response.to.have.status(201));",
+                  "pm.test('User data valid', () => {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.data.name).to.equal(pm.environment.get('test_user_name'));",
+                  "    pm.expect(response.data.email).to.equal(pm.environment.get('test_user_email'));",
+                  "});",
+                  "if (pm.response.code === 201) {",
+                  "    const userId = pm.response.json().data.id;",
+                  "    pm.environment.set('test_user_id', userId);",
+                  "    console.log('✅ User created: ' + userId);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"{{test_user_name}}\",\n  \"identifier\": \"{{test_user_identifier}}\",\n  \"email\": \"{{test_user_email}}\",\n  \"password\": \"testPass123\",\n  \"phone\": \"{{test_user_phone}}\",\n  \"role\": \"client\",\n  \"institutionId\": \"{{test_institution_id}}\",\n  \"observations\": \"Auto-generated test user\",\n  \"creditValue\": 100.00\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v2/users",
+              "host": ["{{base_url}}"],
+              "path": ["v2", "users"]
+            }
+          }
+        },
+        {
+          "name": "04 - Create Institution-Product Relation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Relation created', () => pm.response.to.have.status(201));",
+                  "if (pm.response.code === 201) {",
+                  "    const relationId = pm.response.json().data.id;",
+                  "    pm.environment.set('test_relation_id', relationId);",
+                  "    console.log('✅ Relation created: ' + relationId);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"{{test_product_id}}\",\n  \"institutionId\": \"{{test_institution_id}}\",\n  \"flag\": \"active\",\n  \"details\": \"Auto-generated test relation\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v2/institution-products",
+              "host": ["{{base_url}}"],
+              "path": ["v2", "institution-products"]
+            }
+          }
+        },
+        {
+          "name": "05 - Read Operations Test",
+          "item": [
+            {
+              "name": "Get User by ID",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('User retrieved', () => pm.response.to.have.status(200));",
+                      "pm.test('User data complete', () => {",
+                      "    const response = pm.response.json();",
+                      "    pm.expect(response.data.id).to.equal(pm.environment.get('test_user_id'));",
+                      "    pm.expect(response.data).to.have.property('name');",
+                      "    pm.expect(response.data).to.have.property('email');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/v2/users/{{test_user_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["v2", "users", "{{test_user_id}}"]
+                }
+              }
+            },
+            {
+              "name": "List Users with Pagination",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('Users list retrieved', () => pm.response.to.have.status(200));",
+                      "pm.test('Pagination structure valid', () => {",
+                      "    const response = pm.response.json();",
+                      "    pm.expect(response).to.have.property('data');",
+                      "    pm.expect(response).to.have.property('pagination');",
+                      "    pm.expect(response.pagination).to.have.property('total');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/v2/users?page=1&limit=5",
+                  "host": ["{{base_url}}"],
+                  "path": ["v2", "users"],
+                  "query": [
+                    {"key": "page", "value": "1"},
+                    {"key": "limit", "value": "5"}
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "06 - Update Operations Test",
+          "item": [
+            {
+              "name": "Update User",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "const random = Math.floor(Math.random() * 10000);",
+                      "pm.environment.set('updated_user_name', `UpdatedUser${random}`);"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('User updated', () => pm.response.to.have.status(200));",
+                      "pm.test('Update data valid', () => {",
+                      "    const response = pm.response.json();",
+                      "    pm.expect(response.data.name).to.equal(pm.environment.get('updated_user_name'));",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"{{updated_user_name}}\",\n  \"observations\": \"Updated via automated test\",\n  \"creditValue\": 250.75\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/v2/users/{{test_user_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["v2", "users", "{{test_user_id}}"]
+                }
+              }
+            },
+            {
+              "name": "Update Institution-Product Relation",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('Relation updated', () => pm.response.to.have.status(200));",
+                      "pm.test('Update successful', () => {",
+                      "    const response = pm.response.json();",
+                      "    pm.expect(response.data.details).to.include('Updated');",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "PATCH",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"flag\": \"updated\",\n  \"details\": \"Updated via automated test\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/v2/institution-products/{{test_relation_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["v2", "institution-products", "{{test_relation_id}}"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "07 - Storage Test",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Presigned URL generated', () => pm.response.to.have.status(201));",
+                  "pm.test('URL structure valid', () => {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.data).to.have.property('presignedUrl');",
+                  "    pm.expect(response.data.presignedUrl).to.include('https://');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fileName\": \"test-document.pdf\",\n  \"contentType\": \"application/pdf\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v2/storage/presigned-url",
+              "host": ["{{base_url}}"],
+              "path": ["v2", "storage", "presigned-url"]
+            }
+          }
+        },
+        {
+          "name": "08 - Cleanup - Delete Created Resources",
+          "item": [
+            {
+              "name": "Delete User",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('User deleted', () => pm.response.to.have.status(200));",
+                      "console.log('✅ User cleanup complete');"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/v2/users/{{test_user_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["v2", "users", "{{test_user_id}}"]
+                }
+              }
+            },
+            {
+              "name": "Delete Product",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('Product deleted', () => pm.response.to.have.status(204));",
+                      "console.log('✅ Product cleanup complete');"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/v2/products/{{test_product_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["v2", "products", "{{test_product_id}}"]
+                }
+              }
+            },
+            {
+              "name": "Delete Institution",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('Institution deleted', () => pm.response.to.have.status(200));",
+                      "console.log('✅ Institution cleanup complete');",
+                      "console.log('🎯 Test battery completed successfully!');"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/v2/institutions/{{test_institution_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["v2", "institutions", "{{test_institution_id}}"]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "🎛️ Manual Testing Endpoints",
+      "item": [
+        {
+          "name": "Authentication",
+          "item": [
+            {
+              "name": "Login",
+              "request": {
+                "auth": {"type": "noauth"},
+                "method": "POST",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {"mode": "raw", "raw": "{\"email\": \"admin@atenas.com\", \"password\": \"123456\"}"},
+                "url": {
+                  "raw": "{{base_url}}/user/auth/login",
+                  "host": ["{{base_url}}"],
+                  "path": ["user", "auth", "login"]
+                }
+              }
+            },
+            {
+              "name": "Logout",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/user/auth/logout",
+                  "host": ["{{base_url}}"],
+                  "path": ["user", "auth", "logout"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Users",
+          "item": [
+            {
+              "name": "List Users",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/v2/users?page=1&limit=10",
+                  "host": ["{{base_url}}"],
+                  "path": ["v2", "users"],
+                  "query": [
+                    {"key": "page", "value": "1"},
+                    {"key": "limit", "value": "10"}
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Get User by ID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/v2/users/{{user_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["v2", "users", "{{user_id}}"]
+                }
+              }
+            },
+            {
+              "name": "Create User",
+              "request": {
+                "method": "POST",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"João Silva\",\n  \"identifier\": \"12345678901\",\n  \"email\": \"joao.silva@example.com\",\n  \"password\": \"senhaSegura123\",\n  \"phone\": \"11999999999\",\n  \"role\": \"client\",\n  \"institutionId\": \"uuid-da-instituicao\",\n  \"observations\": \"Observações sobre o usuário\",\n  \"fatherName\": \"José Silva\",\n  \"fatherPhone\": \"11888888888\",\n  \"motherName\": \"Maria Silva\",\n  \"motherPhone\": \"11777777777\",\n  \"driveLink\": \"https://drive.google.com/folder/example\",\n  \"creditValue\": 100.50\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/v2/users",
+                  "host": ["{{base_url}}"],
+                  "path": ["v2", "users"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Institutions",
+          "item": [
+            {
+              "name": "List Institutions",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/v2/institutions?page=1&limit=10",
+                  "host": ["{{base_url}}"],
+                  "path": ["v2", "institutions"],
+                  "query": [
+                    {"key": "page", "value": "1"},
+                    {"key": "limit", "value": "10"}
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Create Institution",
+              "request": {
+                "method": "POST",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Universidade Federal do ABC\",\n  \"contractNumber\": \"CONT-2025-001\",\n  \"address\": \"Rua das Flores, 123\",\n  \"phone\": \"11999887766\",\n  \"email\": \"contato@ufabc.edu.br\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/v2/institutions",
+                  "host": ["{{base_url}}"],
+                  "path": ["v2", "institutions"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Products",
+          "item": [
+            {
+              "name": "List Products",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/v2/products?page=1&limit=10",
+                  "host": ["{{base_url}}"],
+                  "path": ["v2", "products"],
+                  "query": [
+                    {"key": "page", "value": "1"},
+                    {"key": "limit", "value": "10"}
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Create Product",
+              "request": {
+                "method": "POST",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Fotos de Formatura\",\n  \"flag\": \"graduation\",\n  \"description\": \"Pacote completo de fotos para cerimônia de formatura\",\n  \"price\": 299.99\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/v2/products",
+                  "host": ["{{base_url}}"],
+                  "path": ["v2", "products"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "System",
+          "item": [
+            {
+              "name": "Health Check",
+              "request": {
+                "auth": {"type": "noauth"},
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/health",
+                  "host": ["{{base_url}}"],
+                  "path": ["health"]
+                }
+              }
+            },
+            {
+              "name": "API Docs",
+              "request": {
+                "auth": {"type": "noauth"},
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api-docs",
+                  "host": ["{{base_url}}"],
+                  "path": ["api-docs"]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

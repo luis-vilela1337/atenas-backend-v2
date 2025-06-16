@@ -92,6 +92,9 @@ importers:
       mongoose:
         specifier: ^8.6.3
         version: 8.15.2
+      multer:
+        specifier: ^2.0.1
+        version: 2.0.1
       mysql2:
         specifier: ^3.14.1
         version: 3.14.1

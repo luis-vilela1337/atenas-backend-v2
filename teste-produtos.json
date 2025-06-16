@@ -1,0 +1,386 @@
+{
+  "info": {
+    "name": "Atenas Products API - Automated Tests",
+    "description": "Bateria automatizada de testes para produtos",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Create Product - Album",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Captura o ID do produto criado",
+              "if (pm.response.code === 201) {",
+              "    const response = pm.response.json();",
+              "    pm.collectionVariables.set('albumProductId', response.id);",
+              "    console.log('Album Product ID saved:', response.id);",
+              "}",
+              "",
+              "// Valida response",
+              "pm.test('Product created successfully', function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test('Response has required fields', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('id');",
+              "    pm.expect(jsonData).to.have.property('name');",
+              "    pm.expect(jsonData).to.have.property('flag');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Álbum de Formatura Premium\",\n  \"flag\": \"ALBUM\",\n  \"description\": \"Álbum de fotos para formatura com acabamento premium\",\n  \"photos\": [\n    \"https://exemplo.com/foto1.jpg\",\n    \"https://exemplo.com/foto2.jpg\"\n  ],\n  \"video\": [\n    \"https://exemplo.com/video1.mp4\"\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/v2/products",
+          "host": ["{{baseUrl}}"],
+          "path": ["v2", "products"]
+        }
+      }
+    },
+    {
+      "name": "2. Create Product - Caneca",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 201) {",
+              "    const response = pm.response.json();",
+              "    pm.collectionVariables.set('canecaProductId', response.id);",
+              "    console.log('Caneca Product ID saved:', response.id);",
+              "}",
+              "",
+              "pm.test('Product created successfully', function () {",
+              "    pm.response.to.have.status(201);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Caneca Personalizada\",\n  \"flag\": \"GENERIC\",\n  \"description\": \"Caneca de porcelana com impressão personalizada\",\n  \"photos\": [\n    \"https://exemplo.com/caneca1.jpg\"\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/v2/products",
+          "host": ["{{baseUrl}}"],
+          "path": ["v2", "products"]
+        }
+      }
+    },
+    {
+      "name": "3. Create Product - Simple",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 201) {",
+              "    const response = pm.response.json();",
+              "    pm.collectionVariables.set('simpleProductId', response.id);",
+              "    console.log('Simple Product ID saved:', response.id);",
+              "}",
+              "",
+              "pm.test('Product created successfully', function () {",
+              "    pm.response.to.have.status(201);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Produto Teste Simples\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/v2/products",
+          "host": ["{{baseUrl}}"],
+          "path": ["v2", "products"]
+        }
+      }
+    },
+    {
+      "name": "4. Get Product by ID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Product found successfully', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Product data is correct', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.name).to.include('Álbum');",
+              "    pm.expect(jsonData.flag).to.eql('ALBUM');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/v2/products/{{albumProductId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["v2", "products", "{{albumProductId}}"]
+        }
+      }
+    },
+    {
+      "name": "5. List All Products",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Products listed successfully', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Response has pagination', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('data');",
+              "    pm.expect(jsonData).to.have.property('pagination');",
+              "    pm.expect(jsonData.data).to.be.an('array');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/v2/products?page=1&limit=10",
+          "host": ["{{baseUrl}}"],
+          "path": ["v2", "products"],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "limit",
+              "value": "10"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "6. List Products - Search Filter",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Search results returned', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Search filter working', function () {",
+              "    const jsonData = pm.response.json();",
+              "    if (jsonData.data.length > 0) {",
+              "        pm.expect(jsonData.data[0].name.toLowerCase()).to.include('álbum');",
+              "    }",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/v2/products?search=Álbum&page=1&limit=5",
+          "host": ["{{baseUrl}}"],
+          "path": ["v2", "products"],
+          "query": [
+            {
+              "key": "search",
+              "value": "Álbum"
+            },
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "limit",
+              "value": "5"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "7. List Products - Flag Filter",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Flag filter working', function () {",
+              "    pm.response.to.have.status(200);",
+              "    const jsonData = pm.response.json();",
+              "    if (jsonData.data.length > 0) {",
+              "        jsonData.data.forEach(product => {",
+              "            pm.expect(product.flag).to.eql('ALBUM');",
+              "        });",
+              "    }",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/v2/products?flag=ALBUM&page=1&limit=5",
+          "host": ["{{baseUrl}}"],
+          "path": ["v2", "products"],
+          "query": [
+            {
+              "key": "flag",
+              "value": "ALBUM"
+            },
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "limit",
+              "value": "5"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "8. Update Product",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Product updated successfully', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Updated fields are correct', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.name).to.include('ATUALIZADO');",
+              "    pm.expect(jsonData.description).to.include('Nova descrição');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Álbum de Formatura Premium ATUALIZADO\",\n  \"description\": \"Nova descrição do álbum com mais detalhes\",\n  \"photos\": [\n    \"https://exemplo.com/foto1-nova.jpg\",\n    \"https://exemplo.com/foto2-nova.jpg\",\n    \"https://exemplo.com/foto3.jpg\"\n  ],\n  \"video\": [\n    \"https://exemplo.com/video-atualizado.mp4\"\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/v2/products/{{canecaProductId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["v2", "products", "{{canecaProductId}}"]
+        }
+      }
+    },
+    {
+      "name": "9. Delete Product",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Product deleted successfully', function () {",
+              "    pm.response.to.have.status(204);",
+              "});",
+              "",
+              "// Limpa a variável após deletar",
+              "pm.collectionVariables.unset('simpleProductId');"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "{{baseUrl}}/v2/products/{{simpleProductId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["v2", "products", "{{simpleProductId}}"]
+        }
+      }
+    },
+    {
+      "name": "10. Verify Delete - Should Return 404",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Product not found after deletion', function () {",
+              "    pm.response.to.have.status(404);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/v2/products/{{simpleProductId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["v2", "products", "{{simpleProductId}}"]
+        }
+      }
+    }
+  ]
+}

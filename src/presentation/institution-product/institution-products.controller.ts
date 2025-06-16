@@ -1,22 +1,5 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Param,
-  Patch,
-  Post,
-  Query,
-} from '@nestjs/common';
-import {
-  ApiBody,
-  ApiOperation,
-  ApiParam,
-  ApiQuery,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Query, } from '@nestjs/common';
+import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags, } from '@nestjs/swagger';
 import {
   CreateInstitutionProductInputDto,
   CreateInstitutionProductResponseDto,
@@ -36,6 +19,8 @@ import {
   UpdateInstitutionProductResponseDto,
 } from '@presentation/institution-product/dto/update.dto';
 import { UpdateInstitutionProductApplication } from '@application/institution-products/update';
+import { DeleteInstitutionProductApplication } from '@application/institution-products/delete';
+import { DeleteInstitutionProductParamDto } from '@presentation/institution-product/dto/delete';
 
 @ApiTags('institution-products')
 @Controller('v2/institution-products')
@@ -45,6 +30,7 @@ export class InstitutionProductsController {
     private readonly findInstitutionProductByIdApp: FindInstitutionProductByIdApplication,
     private readonly findAllInstitutionProductsApp: FindAllInstitutionProductsApplication,
     private readonly updateInstitutionProductApp: UpdateInstitutionProductApplication,
+    private readonly deleteInstitutionProductApp: DeleteInstitutionProductApplication,
   ) {}
 
   @Get('/')
@@ -115,5 +101,21 @@ export class InstitutionProductsController {
     @Param() params: FindInstitutionProductByIdParamDto,
   ): Promise<InstitutionProductDto> {
     return await this.findInstitutionProductByIdApp.execute(params.id);
+  }
+
+  @Delete('/:id')
+  @ApiOperation({ summary: 'Excluir uma relação produto-instituição' })
+  @ApiParam({
+    name: 'id',
+    type: 'string',
+    format: 'uuid',
+    description: 'ID da relação produto-instituição',
+  })
+  @ApiResponse({ status: 204, description: 'Relação excluída com sucesso' })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteInstitutionProduct(
+    @Param() params: DeleteInstitutionProductParamDto,
+  ): Promise<void> {
+    return await this.deleteInstitutionProductApp.execute(params.id);
   }
 }

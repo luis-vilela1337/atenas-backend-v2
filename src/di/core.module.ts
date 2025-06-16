@@ -20,6 +20,7 @@ import { FindInstitutionProductByIdUseCase } from '@core/institution-products/fi
 import { FindAllInstitutionProductsUseCase } from '@core/institution-products/find-all/usecase';
 import { UpdateInstitutionProductUseCase } from '@core/institution-products/update/usecase';
 import { UpdateProductUseCase } from '@core/products/update/usecase';
+import { DeleteInstitutionProductUseCase } from '@core/institution-products/delete/usecase';
 
 @Module({
   imports: [InfraModule],
@@ -48,6 +49,7 @@ import { UpdateProductUseCase } from '@core/products/update/usecase';
     FindInstitutionProductByIdUseCase,
     FindAllInstitutionProductsUseCase,
     UpdateInstitutionProductUseCase,
+    DeleteInstitutionProductUseCase,
   ],
   exports: [
     //user
@@ -74,6 +76,7 @@ import { UpdateProductUseCase } from '@core/products/update/usecase';
     FindInstitutionProductByIdUseCase,
     FindAllInstitutionProductsUseCase,
     UpdateInstitutionProductUseCase,
+    DeleteInstitutionProductUseCase,
   ],
 })
 export class CoreModule {}

@@ -23,6 +23,7 @@ import { FindInstitutionProductByIdApplication } from '@application/institution-
 import { FindAllInstitutionProductsApplication } from '@application/institution-products/find-all';
 import { UpdateInstitutionProductApplication } from '@application/institution-products/update';
 import { UpdateProductApplication } from '@application/products/update-product.application';
+import { DeleteInstitutionProductApplication } from '@application/institution-products/delete';
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { UpdateProductApplication } from '@application/products/update-product.a
     FindInstitutionProductByIdApplication,
     FindAllInstitutionProductsApplication,
     UpdateInstitutionProductApplication,
+    DeleteInstitutionProductApplication,
   ],
   exports: [
     //user
@@ -83,6 +85,7 @@ import { UpdateProductApplication } from '@application/products/update-product.a
     FindInstitutionProductByIdApplication,
     FindAllInstitutionProductsApplication,
     UpdateInstitutionProductApplication,
+    DeleteInstitutionProductApplication,
   ],
 })
 export class ApplicationModule {}

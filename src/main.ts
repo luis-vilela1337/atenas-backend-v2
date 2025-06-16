@@ -4,7 +4,6 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import * as bodyParser from 'body-parser';
 import { ErrorFormatterInterceptor } from '@application/exceptions/global.exception';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationExceptionFilter } from './validation-exception.filter';
@@ -40,9 +39,7 @@ const configClassValidator = (app: INestApplication) =>
 async function bootstrap() {
   const app = await NestFactory.create(RootModule);
   app.useGlobalFilters(new ValidationExceptionFilter());
-  const payloadSize = Number(150);
-  app.use(bodyParser.json({ limit: `${payloadSize}mb` }));
-  app.use(bodyParser.urlencoded({ limit: `${payloadSize}mb`, extended: true }));
+
   app.enableCors({
     origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
