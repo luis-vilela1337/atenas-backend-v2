@@ -2,7 +2,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CreateInstitutionProductUseCase } from './usecase';
 import { ProductSQLRepository } from '@infrastructure/data/sql/repositories/products.repository';
 import { InstitutionSQLRepository } from '@infrastructure/data/sql/repositories/institution.repository';
-import { BadRequestException, ConflictException, NotFoundException, } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 import { ProductFlag } from '@infrastructure/data/sql/types/product-flag.enum';
 import { InstitutionProductSQLRepository } from '@infrastructure/data/sql/repositories/institution-product.repostitoy';
 import { ProductDetailsAdapter } from '@core/institution-products/adapter';

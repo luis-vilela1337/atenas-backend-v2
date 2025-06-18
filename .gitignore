@@ -42,3 +42,5 @@ mykey.json
 deploy.sh
 
 keys.json
+
+!.env.example

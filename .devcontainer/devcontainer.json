@@ -1,0 +1,53 @@
+{
+  "name": "Atenas Backend Dev Environment",
+  "dockerComposeFile": "../docker-compose.dev.yaml",
+  "service": "app",
+  "workspaceFolder": "/usr/src/app",
+  "shutdownAction": "stopCompose",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.vscode-typescript-next",
+        "bradlc.vscode-tailwindcss",
+        "esbenp.prettier-vscode",
+        "ms-vscode.vscode-eslint",
+        "ms-vscode.vscode-json",
+        "formulahendry.auto-rename-tag",
+        "ms-vscode.vscode-jest",
+        "mtxr.sqltools",
+        "mtxr.sqltools-driver-pg"
+      ],
+      "settings": {
+        "typescript.preferences.importModuleSpecifier": "relative",
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": true
+        },
+        "files.watcherExclude": {
+          "**/node_modules/**": true,
+          "**/dist/**": true
+        }
+      }
+    }
+  },
+  "forwardPorts": [3000, 5432, 8080, 9229],
+  "portsAttributes": {
+    "3000": {
+      "label": "NestJS App",
+      "onAutoForward": "notify"
+    },
+    "5432": {
+      "label": "PostgreSQL"
+    },
+    "8080": {
+      "label": "Adminer DB UI"
+    },
+    "9229": {
+      "label": "Debug Port"
+    }
+  },
+  "postCreateCommand": "pnpm install",
+  "postStartCommand": "pnpm run migration:run",
+  "remoteUser": "node"
+}
