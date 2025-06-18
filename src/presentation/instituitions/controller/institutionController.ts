@@ -1,23 +1,23 @@
 import {
-  Controller,
-  Get,
-  Post,
-  Put,
-  Delete,
   Body,
-  Param,
-  Query,
+  Controller,
+  Delete,
+  Get,
   HttpCode,
   HttpStatus,
+  Param,
   ParseUUIDPipe,
+  Post,
+  Put,
+  Query,
 } from '@nestjs/common';
 import {
-  ApiTags,
+  ApiBody,
   ApiOperation,
-  ApiResponse,
   ApiParam,
   ApiQuery,
-  ApiBody,
+  ApiResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 import { UpdateInstituitionDto } from '../dto/update.instituition';
 import { CreateInstituitionDto } from '../dto/create.instituition';
@@ -33,7 +33,7 @@ import { DeleteInstitutionApplication } from '@application/insitutiotion/delete'
 import { CreateInstitutionApplication } from '@application/insitutiotion/create';
 
 @ApiTags('institutions')
-@Controller('v2/institutions')
+@Controller('v1/institutions')
 export class InstitutionController {
   constructor(
     private readonly findAllInstitutionApp: FindAllInstitutionApplication,

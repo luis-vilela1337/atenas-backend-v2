@@ -1,11 +1,11 @@
 import { AuthService } from '@infrastructure/services/auth.service';
-import { Controller, UseGuards, Post, Request } from '@nestjs/common';
+import { Controller, Post, Request, UseGuards } from '@nestjs/common';
 import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
   ApiBearerAuth,
   ApiBody,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 import { AuthResponseDto } from '../dto/auth-response.dto';
 import { LogoutResponseDto } from '../dto/logout-response.dto';
@@ -13,7 +13,7 @@ import { JwtCustomAuthGuard } from '../guards/jwt-auth.guard';
 import { LocalAuthGuard } from '../guards/local-auth.guard';
 
 @ApiTags('auth')
-@Controller('user/auth')
+@Controller('v1/auth')
 @ApiBearerAuth()
 export class AuthControllerV2 {
   constructor(private readonly authService: AuthService) {}

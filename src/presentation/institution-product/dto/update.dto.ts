@@ -17,11 +17,55 @@ export class UpdateInstitutionProductInputDto {
   @ApiPropertyOptional({
     description: 'Detalhes específicos do produto para a instituição',
     type: Object,
-    example: {
-      minPhoto: 10,
-      maxPhoto: 100,
-      valorEncadernacao: 35.99,
-      valorFoto: 3.5,
+    examples: {
+      album: {
+        value: {
+          minPhoto: 10,
+          maxPhoto: 100,
+          valorEncadernacao: 35.99,
+          valorFoto: 3.5,
+        },
+      },
+      generic: {
+        value: {
+          isAvailableUnit: true,
+          events: [
+            {
+              id: 'ada18814-fdfd-4cc0-86cb-ad20bd0b23b1',
+              minPhotos: 5,
+              valorPhoto: 5.0,
+              date: '2025-01-15',
+            },
+            {
+              id: 'df8eefb2-3cb2-4a67-9e4b-f23dfd4d6578',
+              minPhotos: 10,
+              valorPhoto: 10.0,
+              date: '2025-01-16',
+            },
+          ],
+        },
+      },
+      digitalFilesNew: {
+        value: {
+          isAvailableUnit: true,
+          events: [
+            {
+              id: 'ada18814-fdfd-4cc0-86cb-ad20bd0b23b1',
+              minPhotos: 15,
+              valorPhoto: 7.5,
+              date: '2025-01-20',
+            },
+          ],
+        },
+      },
+      digitalFilesLegacy: {
+        value: {
+          isAvailableUnit: false,
+          minPhotos: 25,
+          valorPhoto: 4.0,
+          eventId: 'event-123',
+        },
+      },
     },
   })
   @IsOptional()

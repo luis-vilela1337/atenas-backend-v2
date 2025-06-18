@@ -1,10 +1,6 @@
 import { ImageStorageService } from '@infrastructure/services/image-storage.service';
 import { Injectable } from '@nestjs/common';
-import {
-  MediaType,
-  PresignedUrlItemDto,
-  PresignedUrlResponseDto,
-} from '@presentation/user/dto/presigned-url.dto';
+import { MediaType, PresignedUrlItemDto, PresignedUrlResponseDto, } from '@presentation/user/dto/presigned-url.dto';
 
 export interface GeneratePresignedUrlInput {
   contentType: string;
@@ -14,6 +10,7 @@ export interface GeneratePresignedUrlInput {
 
 @Injectable()
 export class GeneratePresignedUrlUseCase {
+  private readonly bucketName: string;
   constructor(private readonly imageStorageService: ImageStorageService) {}
 
   async execute(
@@ -52,10 +49,10 @@ export class GeneratePresignedUrlUseCase {
       contentType,
       mediaType,
     );
-    const uploadUrl = await this.imageStorageService.generateUploadSignedUrl(
+    const uploadUrl = await this.imageStorageService.generateSignedUrl(
       filename,
+      'write',
       contentType,
-      mediaType,
     );
 
     return {

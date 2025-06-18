@@ -1,11 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsEnum,
-  IsNotEmpty,
-  IsObject,
-  IsOptional,
-  IsUUID,
-} from 'class-validator';
+import { IsNotEmpty, IsUUID } from 'class-validator';
 import { ProductFlag } from '@infrastructure/data/sql/types/product-flag.enum';
 
 export class CreateInstitutionProductInputDto {
@@ -26,30 +20,6 @@ export class CreateInstitutionProductInputDto {
   @IsUUID(4)
   @IsNotEmpty()
   institutionId: string;
-
-  @ApiProperty({
-    description: 'Tipo de produto',
-    enum: ProductFlag,
-    example: ProductFlag.ALBUM,
-  })
-  @IsEnum(ProductFlag)
-  @IsNotEmpty()
-  flag: ProductFlag;
-
-  @ApiProperty({
-    description: 'Detalhes de configuração do produto (JSON)',
-    required: false,
-    type: Object,
-    example: {
-      minPhoto: 5,
-      maxPhoto: 50,
-      valorEncadernacao: 25.99,
-      valorFoto: 2.5,
-    },
-  })
-  @IsObject()
-  @IsOptional()
-  details?: Record<string, any>;
 }
 
 export class CreateInstitutionProductResponseDto {

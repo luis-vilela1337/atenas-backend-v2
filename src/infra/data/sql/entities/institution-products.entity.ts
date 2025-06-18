@@ -20,20 +20,25 @@ export interface AlbumDetails {
   valorFoto: number;
 }
 
-export interface GenericDetails {
-  event_id: string;
-  minPhoto: number;
-  maxPhoto: number;
+export interface EventConfiguration {
+  id: string;
+  minPhotos: number;
   valorPhoto: number;
+  date: string;
+}
+
+export interface GenericDetails {
+  isAvailableUnit?: boolean;
+  events: EventConfiguration[];
 }
 
 export interface DigitalFilesDetails {
   isAvailableUnit: boolean;
-  minPhotos: number;
-  valorPhoto: number;
-  eventId: string;
+  events?: EventConfiguration[];
+  minPhotos?: number;
+  valorPhoto?: number;
+  eventId?: string;
 }
-
 export type ProductDetails =
   | AlbumDetails
   | GenericDetails

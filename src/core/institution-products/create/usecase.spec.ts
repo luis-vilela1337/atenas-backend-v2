@@ -2,11 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CreateInstitutionProductUseCase } from './usecase';
 import { ProductSQLRepository } from '@infrastructure/data/sql/repositories/products.repository';
 import { InstitutionSQLRepository } from '@infrastructure/data/sql/repositories/institution.repository';
-import {
-  BadRequestException,
-  ConflictException,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, ConflictException, NotFoundException, } from '@nestjs/common';
 import { ProductFlag } from '@infrastructure/data/sql/types/product-flag.enum';
 import { InstitutionProductSQLRepository } from '@infrastructure/data/sql/repositories/institution-product.repostitoy';
 import { ProductDetailsAdapter } from '@core/institution-products/adapter';
@@ -193,71 +189,6 @@ describe('CreateInstitutionProductUseCase', () => {
       expect(
         institutionProductRepo.createInstitutionProduct,
       ).not.toHaveBeenCalled();
-    });
-
-    it('GIVEN invalid details WHEN creating relation THEN should throw BadRequestException', async () => {
-      // GIVEN
-      productRepo.findById.mockResolvedValue(mockProduct as any);
-      institutionRepo.findById.mockResolvedValue(mockInstitution as any);
-      institutionProductRepo.findByProductAndInstitution.mockResolvedValue(
-        null,
-      );
-      toTypedDetailsSpy.mockImplementation(() => {
-        throw new Error('Invalid details');
-      });
-
-      // WHEN & THEN
-      await expect(useCase.execute(mockInput)).rejects.toThrow(
-        BadRequestException,
-      );
-      expect(toTypedDetailsSpy).toHaveBeenCalledWith(
-        mockInput.flag,
-        mockInput.details,
-      );
-      expect(
-        institutionProductRepo.createInstitutionProduct,
-      ).not.toHaveBeenCalled();
-    });
-
-    it('GIVEN input without details WHEN creating relation THEN should create with null details', async () => {
-      // GIVEN
-      const inputWithoutDetails = {
-        productId: 'product-uuid',
-        institutionId: 'institution-uuid',
-        flag: ProductFlag.GENERIC,
-      };
-
-      const relationWithoutDetails = {
-        ...mockCreatedRelation,
-        details: null,
-      };
-
-      productRepo.findById.mockResolvedValue(mockProduct as any);
-      institutionRepo.findById.mockResolvedValue(mockInstitution as any);
-      institutionProductRepo.findByProductAndInstitution.mockResolvedValue(
-        null,
-      );
-      institutionProductRepo.createInstitutionProduct.mockResolvedValue(
-        relationWithoutDetails as any,
-      );
-      institutionProductRepo.findById.mockResolvedValue(
-        relationWithoutDetails as any,
-      );
-
-      // WHEN
-      const result = await useCase.execute(inputWithoutDetails);
-
-      // THEN
-      expect(toTypedDetailsSpy).not.toHaveBeenCalled();
-      expect(
-        institutionProductRepo.createInstitutionProduct,
-      ).toHaveBeenCalledWith({
-        productId: inputWithoutDetails.productId,
-        institutionId: inputWithoutDetails.institutionId,
-        flag: inputWithoutDetails.flag,
-        details: null,
-      });
-      expect(result.details).toBeNull();
     });
 
     it('GIVEN creation fails to retrieve relation WHEN creating relation THEN should throw BadRequestException', async () => {

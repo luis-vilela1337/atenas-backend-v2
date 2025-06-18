@@ -6,7 +6,7 @@ import {
   PresignedUrlResponseDto,
 } from '@presentation/user/dto/presigned-url.dto';
 
-@Controller('v2/storage')
+@Controller('v1/storage')
 @ApiTags('storage')
 export class StorageControllerV2 {
   constructor(

@@ -39,7 +39,7 @@ import {
 import { UpdateProductApplication } from '@application/products/update-product.application';
 
 @ApiTags('products')
-@Controller('v2/products')
+@Controller('v1/products')
 export class ProductsController {
   constructor(
     private readonly createProductApp: CreateProductApplication,

@@ -1,5 +1,23 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Query, } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags, } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
+import {
+  ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import {
   CreateInstitutionProductInputDto,
   CreateInstitutionProductResponseDto,
@@ -22,8 +40,8 @@ import { UpdateInstitutionProductApplication } from '@application/institution-pr
 import { DeleteInstitutionProductApplication } from '@application/institution-products/delete';
 import { DeleteInstitutionProductParamDto } from '@presentation/institution-product/dto/delete';
 
-@ApiTags('institution-products')
-@Controller('v2/institution-products')
+@ApiTags('institution/products')
+@Controller('v1/institution/products')
 export class InstitutionProductsController {
   constructor(
     private readonly createInstitutionProductApp: CreateInstitutionProductApplication,

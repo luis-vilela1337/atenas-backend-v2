@@ -7,7 +7,6 @@ import {
 import { ProductSQLRepository } from '@infrastructure/data/sql/repositories/products.repository';
 import { InstitutionSQLRepository } from '@infrastructure/data/sql/repositories/institution.repository';
 import { InstitutionProductSQLRepository } from '@infrastructure/data/sql/repositories/institution-product.repostitoy';
-import { ProductDetailsAdapter } from '@core/institution-products/adapter';
 import { CreateInstitutionProductInputDto } from '@presentation/institution-product/dto/create.dto';
 import { InstitutionProduct } from '@infrastructure/data/sql/entities';
 
@@ -50,26 +49,11 @@ export class CreateInstitutionProductUseCase {
       );
     }
 
-    let typedDetails = null;
-    if (input.details) {
-      try {
-        typedDetails = ProductDetailsAdapter.toTypedDetails(
-          input.flag,
-          input.details,
-        );
-      } catch (error) {
-        throw new BadRequestException(
-          `Invalid details for flag ${input.flag}: ${error.message}`,
-        );
-      }
-    }
-
     const createdRelation =
       await this.institutionProductRepository.createInstitutionProduct({
         productId: input.productId,
         institutionId: input.institutionId,
-        flag: input.flag,
-        details: typedDetails,
+        flag: product.flag,
       });
 
     const fullRelation = await this.institutionProductRepository.findById(

@@ -27,10 +27,6 @@ import {
 import { UpdateUserV2Application } from '@application/user/update-user.application';
 import { DeleteUserV2Application } from '@application/user/delete-user.application';
 import { DeleteUserResponseDto } from './dto/delete-user.dto';
-import {
-  GeneratePresignedUrlInputDto,
-  PresignedUrlResponseDto,
-} from './dto/presigned-url.dto';
 import { GeneratePresignedUrV2Application } from '@application/storage/presigned-url.application';
 import {
   ApiBody,
@@ -41,7 +37,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-@Controller('v2/users')
+@Controller('v1/users')
 @ApiTags('users')
 export class UsersControllerV2 {
   constructor(
@@ -112,15 +108,5 @@ export class UsersControllerV2 {
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<DeleteUserResponseDto> {
     return await this.deleteUserApplication.execute(id);
-  }
-
-  @Post('/presigned-url')
-  @ApiOperation({ summary: 'Gerar URL pré-assinada para upload' })
-  @ApiBody({ type: GeneratePresignedUrlInputDto })
-  @ApiResponse({ status: 201, type: PresignedUrlResponseDto })
-  async generatePresignedUrl(
-    @Body() dto: GeneratePresignedUrlInputDto,
-  ): Promise<PresignedUrlResponseDto> {
-    return await this.presignedUrlApplication.execute(dto);
   }
 }

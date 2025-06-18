@@ -2,7 +2,7 @@ import { DataSource, Repository } from 'typeorm';
 import { Institution, InstitutionEvent } from '../entities';
 import { Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
-import { UpdateInstitutionData } from '../types/insituition.type';
+import { UpdateInstituitionDto } from '@presentation/instituitions/dto/update.instituition';
 
 @Injectable()
 export class InstitutionSQLRepository {
@@ -68,7 +68,7 @@ export class InstitutionSQLRepository {
 
   async updateInstitution(
     id: string,
-    updateData: UpdateInstitutionData,
+    updateData: UpdateInstituitionDto,
   ): Promise<Institution | null> {
     const qr = this.dataSource.createQueryRunner();
     await qr.connect();
@@ -108,7 +108,7 @@ export class InstitutionSQLRepository {
       await qr.commitTransaction();
       return this.institution.findOne({
         where: { id },
-        relations: ['events'],
+        relations: ['events', 'users'],
       });
     } catch (err) {
       await qr.rollbackTransaction();

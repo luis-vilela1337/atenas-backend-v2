@@ -74,11 +74,11 @@ export class ImageStorageService {
     action: 'read' | 'write',
     contentType?: string,
   ): Promise<string> {
-    const options = {
+    const options: GetSignedUrlConfig = {
       version: 'v4',
       action,
       expires: Date.now() + this.UPLOAD_URL_EXPIRATION,
-    } as GetSignedUrlConfig;
+    };
 
     if (action === 'write') {
       if (!contentType) {
@@ -99,7 +99,7 @@ export class ImageStorageService {
         throw new Error('Invalid media type');
       }
 
-      options.contentType = contentType;
+      // options.contentType = contentType;
     }
 
     const file = this.storage.bucket(this.bucketName).file(filename);
