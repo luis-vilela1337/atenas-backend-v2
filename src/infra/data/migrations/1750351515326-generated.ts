@@ -1,9 +1,15 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class Generated1750028242868 implements MigrationInterface {
-  name = 'Generated1750028242868';
+export class Generated1750351515326 implements MigrationInterface {
+  name = 'Generated1750351515326';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(
+      `ALTER TABLE "institution_events" DROP CONSTRAINT "FK_77c1c951b4b517aedab08a117ae"`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "users" DROP CONSTRAINT "FK_822972ceea1fda0973b8acc7bbe"`,
+    );
     await queryRunner.query(
       `CREATE TYPE "public"."products_flag_enum" AS ENUM('ALBUM', 'GENERIC', 'DIGITAL_FILES')`,
     );
@@ -29,6 +35,18 @@ export class Generated1750028242868 implements MigrationInterface {
       `CREATE INDEX "idx_institution_product_flag" ON "institution_products" ("flag") `,
     );
     await queryRunner.query(
+      `ALTER TABLE "users" ADD "currentHashedRefreshToken" character varying(255)`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "users" DROP CONSTRAINT "UQ_2e7b7debda55e0e7280dc93663d"`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "institution_events" ADD CONSTRAINT "FK_77c1c951b4b517aedab08a117ae" FOREIGN KEY ("institution_id") REFERENCES "institutions"("id") ON DELETE CASCADE ON UPDATE NO ACTION`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "users" ADD CONSTRAINT "FK_822972ceea1fda0973b8acc7bbe" FOREIGN KEY ("institution_id") REFERENCES "institutions"("id") ON DELETE CASCADE ON UPDATE NO ACTION`,
+    );
+    await queryRunner.query(
       `ALTER TABLE "institution_products" ADD CONSTRAINT "FK_a314cd20fe007dba6b3cc4f945f" FOREIGN KEY ("product_id") REFERENCES "products"("id") ON DELETE CASCADE ON UPDATE NO ACTION`,
     );
     await queryRunner.query(
@@ -42,6 +60,18 @@ export class Generated1750028242868 implements MigrationInterface {
     );
     await queryRunner.query(
       `ALTER TABLE "institution_products" DROP CONSTRAINT "FK_a314cd20fe007dba6b3cc4f945f"`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "users" DROP CONSTRAINT "FK_822972ceea1fda0973b8acc7bbe"`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "institution_events" DROP CONSTRAINT "FK_77c1c951b4b517aedab08a117ae"`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "users" ADD CONSTRAINT "UQ_2e7b7debda55e0e7280dc93663d" UNIQUE ("identifier")`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "users" DROP COLUMN "currentHashedRefreshToken"`,
     );
     await queryRunner.query(
       `DROP INDEX "public"."idx_institution_product_flag"`,
@@ -61,5 +91,11 @@ export class Generated1750028242868 implements MigrationInterface {
     );
     await queryRunner.query(`DROP TABLE "products"`);
     await queryRunner.query(`DROP TYPE "public"."products_flag_enum"`);
+    await queryRunner.query(
+      `ALTER TABLE "users" ADD CONSTRAINT "FK_822972ceea1fda0973b8acc7bbe" FOREIGN KEY ("institution_id") REFERENCES "institutions"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "institution_events" ADD CONSTRAINT "FK_77c1c951b4b517aedab08a117ae" FOREIGN KEY ("institution_id") REFERENCES "institutions"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
+    );
   }
 }
