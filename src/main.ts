@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  INestApplication,
-  ValidationPipe,
-} from '@nestjs/common';
+import { BadRequestException, INestApplication, ValidationPipe, } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { ErrorFormatterInterceptor } from '@application/exceptions/global.exception';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -61,7 +57,11 @@ async function bootstrap() {
 
   app.useGlobalInterceptors(new ErrorFormatterInterceptor());
 
-  await app.listen(3000);
+  const port = process.env.PORT || 3000;
+  await app.listen(port, '0.0.0.0');
+
+  console.log(`🚀 Application running on port ${port}`);
+  console.log(`📚 Swagger available at: /api-docs`);
 }
 
 bootstrap();
