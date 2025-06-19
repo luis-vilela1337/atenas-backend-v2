@@ -64,4 +64,4 @@ async function bootstrap() {
   console.log(`📚 Swagger available at: /api-docs`);
 }
 
-await bootstrap();
+bootstrap();
