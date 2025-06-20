@@ -22,9 +22,9 @@ export interface AlbumDetails {
 
 export interface EventConfiguration {
   id: string;
-  minPhotos: number;
-  valorPhoto: number;
-  date: string;
+  minPhotos?: number;
+  valorPhoto?: number;
+  date?: string;
 }
 
 export interface GenericDetails {
@@ -37,6 +37,7 @@ export interface DigitalFilesDetails {
   events?: EventConfiguration[];
   minPhotos?: number;
   valorPhoto?: number;
+  valorTotal?: number;
   eventId?: string;
 }
 export type ProductDetails =
