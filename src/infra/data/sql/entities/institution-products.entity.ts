@@ -24,7 +24,6 @@ export interface EventConfiguration {
   id: string;
   minPhotos?: number;
   valorPhoto?: number;
-  date?: string;
 }
 
 export interface GenericDetails {
