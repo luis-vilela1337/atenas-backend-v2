@@ -18,7 +18,6 @@ export interface RawEventConfiguration {
   id: string;
   minPhotos: number;
   valorPhoto: number;
-  date: string;
 }
 
 export interface RawGenericDetails {
@@ -34,6 +33,7 @@ export interface RawDigitalFilesDetails {
   valorPhoto?: number;
   eventId?: string;
 }
+
 export class ProductDetailsAdapter {
   static toTypedDetails(
     flag: ProductFlag,
@@ -148,7 +148,7 @@ export class ProductDetailsAdapter {
         throw new Error(`Invalid event configuration at index ${i}`);
       }
 
-      const required = ['id', 'minPhotos', 'valorPhoto', 'date'];
+      const required = ['id', 'minPhotos', 'valorPhoto'];
       const missing = required.filter((field) => !(field in event));
       if (missing.length > 0) {
         throw new Error(
@@ -165,18 +165,10 @@ export class ProductDetailsAdapter {
         );
       }
 
-      // Validate date format
-      if (!this.isValidISODate(event.date)) {
-        throw new Error(
-          `Invalid date format for event at index ${i}: ${event.date}`,
-        );
-      }
-
       validatedEvents.push({
         id: this.validateString(event.id, 'id'),
         minPhotos: this.validateNumber(event.minPhotos, 'minPhotos'),
         valorPhoto: this.validateNumber(event.valorPhoto, 'valorPhoto'),
-        date: this.validateString(event.date, 'date'),
       });
     }
 
@@ -232,15 +224,6 @@ export class ProductDetailsAdapter {
     const uuidRegex =
       /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     return uuidRegex.test(str);
-  }
-
-  private static isValidISODate(dateString: string): boolean {
-    const date = new Date(dateString);
-    return (
-      date instanceof Date &&
-      !isNaN(date.getTime()) &&
-      dateString === date.toISOString().split('T')[0]
-    );
   }
 
   static isAlbumDetails(details: ProductDetails): details is AlbumDetails {
