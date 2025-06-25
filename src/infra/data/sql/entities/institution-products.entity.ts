@@ -19,6 +19,7 @@ export interface AlbumDetails {
   valorEncadernacao: number;
   valorFoto: number;
 }
+
 export interface EventConfiguration {
   id: string;
   minPhotos?: number;
@@ -34,9 +35,7 @@ export interface GenericDetails {
 export interface DigitalFilesDetails {
   isAvailableUnit: boolean;
   events?: EventConfiguration[];
-  minPhotos?: number;
   valorPackTotal?: number;
-  eventId?: string;
 }
 
 export type ProductDetails =

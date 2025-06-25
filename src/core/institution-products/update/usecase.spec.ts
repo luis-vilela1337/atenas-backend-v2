@@ -73,149 +73,6 @@ describe('UpdateInstitutionProductUseCase', () => {
       jest.restoreAllMocks();
     });
 
-    describe('GENERIC flag validation with events structure', () => {
-      it('GIVEN GENERIC flag relation WHEN updating with valid events structure THEN should update successfully', async () => {
-        // GIVEN
-        const genericRelation = {
-          ...mockExistingRelation,
-          flag: ProductFlag.GENERIC,
-        };
-        const genericUpdateInput = {
-          details: {
-            isAvailableUnit: true,
-            events: [
-              {
-                id: 'ada18814-fdfd-4cc0-86cb-ad20bd0b23b1',
-                minPhotos: 5,
-                valorPhoto: 5.0,
-                date: '2025-01-15',
-              },
-              {
-                id: 'df8eefb2-3cb2-4a67-9e4b-f23dfd4d6578',
-                minPhotos: 10,
-                valorPhoto: 10.0,
-                date: '2025-01-16',
-              },
-            ],
-          },
-        };
-
-        repository.findById.mockResolvedValue(genericRelation as any);
-        toTypedDetailsSpy.mockReturnValue(genericUpdateInput.details as any);
-        const updatedGenericRelation = {
-          ...genericRelation,
-          details: genericUpdateInput.details,
-        };
-        repository.updateInstitutionProduct.mockResolvedValue(
-          updatedGenericRelation as any,
-        );
-
-        // WHEN
-        const result = await useCase.execute(
-          'relation-uuid',
-          genericUpdateInput,
-        );
-
-        // THEN
-        expect(toTypedDetailsSpy).toHaveBeenCalledWith(
-          ProductFlag.GENERIC,
-          genericUpdateInput.details,
-        );
-        expect(result.flag).toBe(ProductFlag.GENERIC);
-        expect(result.details).toEqual(genericUpdateInput.details);
-      });
-    });
-
-    describe('DIGITAL_FILES flag validation with conditional structure', () => {
-      it('GIVEN DIGITAL_FILES flag with isAvailableUnit=true WHEN updating with events structure THEN should update successfully', async () => {
-        // GIVEN
-        const digitalFilesRelation = {
-          ...mockExistingRelation,
-          flag: ProductFlag.DIGITAL_FILES,
-        };
-        const digitalFilesUpdateInput = {
-          details: {
-            isAvailableUnit: true,
-            events: [
-              {
-                id: 'ada18814-fdfd-4cc0-86cb-ad20bd0b23b1',
-                minPhotos: 15,
-                valorPhoto: 7.5,
-                date: '2025-01-20',
-              },
-            ],
-          },
-        };
-
-        repository.findById.mockResolvedValue(digitalFilesRelation as any);
-        toTypedDetailsSpy.mockReturnValue(
-          digitalFilesUpdateInput.details as any,
-        );
-        const updatedDigitalFilesRelation = {
-          ...digitalFilesRelation,
-          details: digitalFilesUpdateInput.details,
-        };
-        repository.updateInstitutionProduct.mockResolvedValue(
-          updatedDigitalFilesRelation as any,
-        );
-
-        // WHEN
-        const result = await useCase.execute(
-          'relation-uuid',
-          digitalFilesUpdateInput,
-        );
-
-        // THEN
-        expect(toTypedDetailsSpy).toHaveBeenCalledWith(
-          ProductFlag.DIGITAL_FILES,
-          digitalFilesUpdateInput.details,
-        );
-        expect(result.flag).toBe(ProductFlag.DIGITAL_FILES);
-        expect(result.details).toEqual(digitalFilesUpdateInput.details);
-      });
-
-      it('GIVEN DIGITAL_FILES flag with isAvailableUnit=false WHEN updating with legacy structure THEN should update successfully', async () => {
-        // GIVEN
-        const digitalFilesRelation = {
-          ...mockExistingRelation,
-          flag: ProductFlag.DIGITAL_FILES,
-        };
-        const digitalFilesUpdateInput = {
-          details: {
-            isAvailableUnit: false,
-            minPhotos: 25,
-            valorPhoto: 4.0,
-            eventId: 'updated-event-789',
-          },
-        };
-
-        repository.findById.mockResolvedValue(digitalFilesRelation as any);
-        toTypedDetailsSpy.mockReturnValue(
-          digitalFilesUpdateInput.details as any,
-        );
-        const updatedDigitalFilesRelation = {
-          ...digitalFilesRelation,
-          details: digitalFilesUpdateInput.details,
-        };
-        repository.updateInstitutionProduct.mockResolvedValue(
-          updatedDigitalFilesRelation as any,
-        );
-
-        // WHEN
-        const result = await useCase.execute(
-          'relation-uuid',
-          digitalFilesUpdateInput,
-        );
-
-        // THEN
-        expect(toTypedDetailsSpy).toHaveBeenCalledWith(
-          ProductFlag.DIGITAL_FILES,
-          digitalFilesUpdateInput.details,
-        );
-        expect(result.flag).toBe(ProductFlag.DIGITAL_FILES);
-        expect(result.details).toEqual(digitalFilesUpdateInput.details);
-      });
-    });
     it('GIVEN valid relation ID and details WHEN updating institution-product details THEN should update successfully', async () => {
       // GIVEN
       repository.findById.mockResolvedValue(mockExistingRelation as any);
@@ -243,7 +100,7 @@ describe('UpdateInstitutionProductUseCase', () => {
         { details: mockUpdateInput.details },
       );
       expect(result).toEqual(updatedRelation);
-      expect(result.flag).toBe(ProductFlag.ALBUM); // Flag should remain unchanged
+      expect(result.flag).toBe(ProductFlag.ALBUM);
     });
 
     it('GIVEN non-existent relation ID WHEN updating institution-product details THEN should throw NotFoundException', async () => {
@@ -308,7 +165,7 @@ describe('UpdateInstitutionProductUseCase', () => {
         { details: null },
       );
       expect(result.details).toBeNull();
-      expect(result.flag).toBe(ProductFlag.ALBUM); // Flag should remain unchanged
+      expect(result.flag).toBe(ProductFlag.ALBUM);
     });
 
     it('GIVEN repository update failure WHEN updating institution-product details THEN should throw BadRequestException', async () => {
@@ -328,91 +185,142 @@ describe('UpdateInstitutionProductUseCase', () => {
       );
     });
 
-    it('GIVEN GENERIC flag relation WHEN updating with valid generic details THEN should update successfully', async () => {
-      // GIVEN
-      const genericRelation = {
-        ...mockExistingRelation,
-        flag: ProductFlag.GENERIC,
-        details: {
-          event_id: 'event-123',
-          minPhoto: 10,
-          maxPhoto: 100,
-          valorPhoto: 5.0,
-        },
-      };
-      const genericUpdateInput = {
-        details: {
-          event_id: 'updated-event-456',
-          minPhoto: 15,
-          maxPhoto: 150,
-          valorPhoto: 7.5,
-        },
-      };
-      repository.findById.mockResolvedValue(genericRelation as any);
-      toTypedDetailsSpy.mockReturnValue(genericUpdateInput.details as any);
-      const updatedGenericRelation = {
-        ...genericRelation,
-        details: genericUpdateInput.details,
-      };
-      repository.updateInstitutionProduct.mockResolvedValue(
-        updatedGenericRelation as any,
-      );
+    describe('GENERIC flag validation with events structure', () => {
+      it('GIVEN GENERIC flag relation WHEN updating with valid events structure THEN should update successfully', async () => {
+        // GIVEN
+        const genericRelation = {
+          ...mockExistingRelation,
+          flag: ProductFlag.GENERIC,
+        };
+        const genericUpdateInput = {
+          details: {
+            isAvailableUnit: true,
+            events: [
+              {
+                id: 'ada18814-fdfd-4cc0-86cb-ad20bd0b23b1',
+                minPhotos: 5,
+                valorPhoto: 5.0,
+              },
+              {
+                id: 'df8eefb2-3cb2-4a67-9e4b-f23dfd4d6578',
+                valorPack: 15.0,
+              },
+            ],
+          },
+        };
 
-      // WHEN
-      const result = await useCase.execute('relation-uuid', genericUpdateInput);
+        repository.findById.mockResolvedValue(genericRelation as any);
+        toTypedDetailsSpy.mockReturnValue(genericUpdateInput.details as any);
+        const updatedGenericRelation = {
+          ...genericRelation,
+          details: genericUpdateInput.details,
+        };
+        repository.updateInstitutionProduct.mockResolvedValue(
+          updatedGenericRelation as any,
+        );
 
-      // THEN
-      expect(toTypedDetailsSpy).toHaveBeenCalledWith(
-        ProductFlag.GENERIC,
-        genericUpdateInput.details,
-      );
-      expect(result.flag).toBe(ProductFlag.GENERIC);
-      expect(result.details).toEqual(genericUpdateInput.details);
+        // WHEN
+        const result = await useCase.execute(
+          'relation-uuid',
+          genericUpdateInput,
+        );
+
+        // THEN
+        expect(toTypedDetailsSpy).toHaveBeenCalledWith(
+          ProductFlag.GENERIC,
+          genericUpdateInput.details,
+        );
+        expect(result.flag).toBe(ProductFlag.GENERIC);
+        expect(result.details).toEqual(genericUpdateInput.details);
+      });
     });
 
-    it('GIVEN DIGITAL_FILES flag relation WHEN updating with valid digital files details THEN should update successfully', async () => {
-      // GIVEN
-      const digitalFilesRelation = {
-        ...mockExistingRelation,
-        flag: ProductFlag.DIGITAL_FILES,
-        details: {
-          isAvailableUnit: true,
-          minPhotos: 20,
-          valorPhoto: 3.5,
-          eventId: 'event-456',
-        },
-      };
-      const digitalFilesUpdateInput = {
-        details: {
-          isAvailableUnit: false,
-          minPhotos: 25,
-          valorPhoto: 4.0,
-          eventId: 'updated-event-789',
-        },
-      };
-      repository.findById.mockResolvedValue(digitalFilesRelation as any);
-      toTypedDetailsSpy.mockReturnValue(digitalFilesUpdateInput.details as any);
-      const updatedDigitalFilesRelation = {
-        ...digitalFilesRelation,
-        details: digitalFilesUpdateInput.details,
-      };
-      repository.updateInstitutionProduct.mockResolvedValue(
-        updatedDigitalFilesRelation as any,
-      );
+    describe('DIGITAL_FILES flag validation with conditional structure', () => {
+      it('GIVEN DIGITAL_FILES flag with isAvailableUnit=true WHEN updating with events structure THEN should update successfully', async () => {
+        // GIVEN
+        const digitalFilesRelation = {
+          ...mockExistingRelation,
+          flag: ProductFlag.DIGITAL_FILES,
+        };
+        const digitalFilesUpdateInput = {
+          details: {
+            isAvailableUnit: true,
+            events: [
+              {
+                id: 'ada18814-fdfd-4cc0-86cb-ad20bd0b23b1',
+                minPhotos: 15,
+                valorPhoto: 7.5,
+              },
+            ],
+          },
+        };
 
-      // WHEN
-      const result = await useCase.execute(
-        'relation-uuid',
-        digitalFilesUpdateInput,
-      );
+        repository.findById.mockResolvedValue(digitalFilesRelation as any);
+        toTypedDetailsSpy.mockReturnValue(
+          digitalFilesUpdateInput.details as any,
+        );
+        const updatedDigitalFilesRelation = {
+          ...digitalFilesRelation,
+          details: digitalFilesUpdateInput.details,
+        };
+        repository.updateInstitutionProduct.mockResolvedValue(
+          updatedDigitalFilesRelation as any,
+        );
 
-      // THEN
-      expect(toTypedDetailsSpy).toHaveBeenCalledWith(
-        ProductFlag.DIGITAL_FILES,
-        digitalFilesUpdateInput.details,
-      );
-      expect(result.flag).toBe(ProductFlag.DIGITAL_FILES);
-      expect(result.details).toEqual(digitalFilesUpdateInput.details);
+        // WHEN
+        const result = await useCase.execute(
+          'relation-uuid',
+          digitalFilesUpdateInput,
+        );
+
+        // THEN
+        expect(toTypedDetailsSpy).toHaveBeenCalledWith(
+          ProductFlag.DIGITAL_FILES,
+          digitalFilesUpdateInput.details,
+        );
+        expect(result.flag).toBe(ProductFlag.DIGITAL_FILES);
+        expect(result.details).toEqual(digitalFilesUpdateInput.details);
+      });
+
+      it('GIVEN DIGITAL_FILES flag with isAvailableUnit=false WHEN updating with legacy structure THEN should update successfully', async () => {
+        // GIVEN
+        const digitalFilesRelation = {
+          ...mockExistingRelation,
+          flag: ProductFlag.DIGITAL_FILES,
+        };
+        const digitalFilesUpdateInput = {
+          details: {
+            isAvailableUnit: false,
+            valorPackTotal: 40.0,
+          },
+        };
+
+        repository.findById.mockResolvedValue(digitalFilesRelation as any);
+        toTypedDetailsSpy.mockReturnValue(
+          digitalFilesUpdateInput.details as any,
+        );
+        const updatedDigitalFilesRelation = {
+          ...digitalFilesRelation,
+          details: digitalFilesUpdateInput.details,
+        };
+        repository.updateInstitutionProduct.mockResolvedValue(
+          updatedDigitalFilesRelation as any,
+        );
+
+        // WHEN
+        const result = await useCase.execute(
+          'relation-uuid',
+          digitalFilesUpdateInput,
+        );
+
+        // THEN
+        expect(toTypedDetailsSpy).toHaveBeenCalledWith(
+          ProductFlag.DIGITAL_FILES,
+          digitalFilesUpdateInput.details,
+        );
+        expect(result.flag).toBe(ProductFlag.DIGITAL_FILES);
+        expect(result.details).toEqual(digitalFilesUpdateInput.details);
+      });
     });
   });
 });

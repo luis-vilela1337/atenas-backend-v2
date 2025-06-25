@@ -16,8 +16,10 @@ export interface RawAlbumDetails {
 
 export interface RawEventConfiguration {
   id: string;
-  minPhotos: number;
-  valorPhoto: number;
+  minPhotos?: number;
+  valorPhoto?: number;
+  // quando isAvailable for false
+  valorPack?: number;
 }
 
 export interface RawGenericDetails {
@@ -29,9 +31,7 @@ export interface RawDigitalFilesDetails {
   isAvailableUnit: boolean;
   events?: RawEventConfiguration[];
   // Legacy fields for backward compatibility
-  minPhotos?: number;
-  valorPhoto?: number;
-  eventId?: string;
+  valorPackTotal?: number;
 }
 
 export class ProductDetailsAdapter {
@@ -74,6 +74,107 @@ export class ProductDetailsAdapter {
       valorFoto: this.validateNumber(raw.valorFoto, 'valorFoto'),
     };
   }
+
+  private static validateGenericDetails(raw: any): GenericDetails {
+    const required = ['events'];
+    this.validateRequiredFields(raw, required, 'GENERIC');
+
+    if (!Array.isArray(raw.events)) {
+      throw new Error('GENERIC details must contain an events array');
+    }
+
+    const events = this.validateEventsArray(raw.events, 'GENERIC');
+
+    return {
+      isAvailableUnit: raw.isAvailableUnit || true,
+      events,
+    };
+  }
+
+  private static validateDigitalFilesDetails(raw: any): DigitalFilesDetails {
+    const required = ['isAvailableUnit'];
+    this.validateRequiredFields(raw, required, 'DIGITAL_FILES');
+
+    const isAvailableUnit = this.validateBoolean(
+      raw.isAvailableUnit,
+      'isAvailableUnit',
+    );
+
+    if (isAvailableUnit) {
+      if (!Array.isArray(raw.events)) {
+        throw new Error(
+          'DIGITAL_FILES with isAvailableUnit=true must contain an events array',
+        );
+      }
+
+      const events = this.validateEventsArray(raw.events, 'DIGITAL_FILES');
+
+      return {
+        isAvailableUnit,
+        events,
+      };
+    } else {
+      return {
+        isAvailableUnit,
+        valorPackTotal: raw.valorPackTotal ? this.validateNumber(raw.valorPackTotal, 'valorPackTotal') : undefined,
+      };
+    }
+  }
+
+  private static validateEventsArray(
+    events: any[],
+    context: string,
+  ): EventConfiguration[] {
+    if (events.length === 0) {
+      throw new Error(`Events array cannot be empty for ${context}`);
+    }
+
+    const validatedEvents: EventConfiguration[] = [];
+
+    for (let i = 0; i < events.length; i++) {
+      const event = events[i];
+      if (!event || typeof event !== 'object') {
+        throw new Error(`Invalid event configuration at index ${i}`);
+      }
+
+      const required = ['id'];
+      const missing = required.filter((field) => !(field in event));
+      if (missing.length > 0) {
+        throw new Error(
+          `Missing required fields for event at index ${i}: ${missing.join(
+            ', ',
+          )}`,
+        );
+      }
+
+      if (!this.isValidUUID(event.id)) {
+        throw new Error(
+          `Invalid UUID format for event ID at index ${i}: ${event.id}`,
+        );
+      }
+
+      const validatedEvent: EventConfiguration = {
+        id: this.validateString(event.id, 'id'),
+      };
+
+      if (event.minPhotos !== undefined) {
+        validatedEvent.minPhotos = this.validateNumber(event.minPhotos, 'minPhotos');
+      }
+
+      if (event.valorPhoto !== undefined) {
+        validatedEvent.valorPhoto = this.validateNumber(event.valorPhoto, 'valorPhoto');
+      }
+
+      if (event.valorPack !== undefined) {
+        validatedEvent.valorPack = this.validateNumber(event.valorPack, 'valorPack');
+      }
+
+      validatedEvents.push(validatedEvent);
+    }
+
+    return validatedEvents;
+  }
+
   private static validateRequiredFields(
     obj: any,
     required: string[],
@@ -146,117 +247,5 @@ export class ProductDetailsAdapter {
       'isAvailableUnit' in details &&
       typeof details.isAvailableUnit === 'boolean'
     );
-  }
-  private static validateGenericDetails(raw: any): GenericDetails {
-    const required = ['events'];
-    this.validateRequiredFields(raw, required, 'GENERIC');
-
-    if (!Array.isArray(raw.events)) {
-      throw new Error('GENERIC details must contain an events array');
-    }
-
-    const events = this.validateEventsArray(raw.events, 'GENERIC');
-
-    return {
-      isAvailableUnit: raw.isAvailableUnit || true,
-      events,
-    };
-  }
-
-  private static validateDigitalFilesDetails(raw: any): DigitalFilesDetails {
-    const required = ['isAvailableUnit'];
-    this.validateRequiredFields(raw, required, 'DIGITAL_FILES');
-
-    const isAvailableUnit = this.validateBoolean(
-      raw.isAvailableUnit,
-      'isAvailableUnit',
-    );
-
-    if (isAvailableUnit) {
-      // New format: use events array structure
-      if (!Array.isArray(raw.events)) {
-        throw new Error(
-          'DIGITAL_FILES with isAvailableUnit=true must contain an events array',
-        );
-      }
-
-      const events = this.validateEventsArray(raw.events, 'DIGITAL_FILES');
-
-      return {
-        isAvailableUnit,
-        events,
-      };
-    } else {
-      // Legacy format: use individual fields
-      const legacyRequired = ['eventId'];
-      this.validateRequiredFields(
-        raw,
-        legacyRequired,
-        'DIGITAL_FILES (legacy)',
-      );
-
-      return {
-        isAvailableUnit,
-        minPhotos: raw.minPhotos ? this.validateNumber(raw.minPhotos, 'minPhotos') : undefined,
-        valorPackTotal: raw.valorPackTotal ? this.validateNumber(raw.valorPackTotal, 'valorPackTotal') : undefined,
-        eventId: this.validateString(raw.eventId, 'eventId'),
-      };
-    }
-  }
-
-  private static validateEventsArray(
-    events: any[],
-    context: string,
-  ): EventConfiguration[] {
-    if (events.length === 0) {
-      throw new Error(`Events array cannot be empty for ${context}`);
-    }
-
-    const validatedEvents: EventConfiguration[] = [];
-
-    for (let i = 0; i < events.length; i++) {
-      const event = events[i];
-      if (!event || typeof event !== 'object') {
-        throw new Error(`Invalid event configuration at index ${i}`);
-      }
-
-      const required = ['id'];
-      const missing = required.filter((field) => !(field in event));
-      if (missing.length > 0) {
-        throw new Error(
-          `Missing required fields for event at index ${i}: ${missing.join(
-            ', ',
-          )}`,
-        );
-      }
-
-      // Validate event ID is UUID
-      if (!this.isValidUUID(event.id)) {
-        throw new Error(
-          `Invalid UUID format for event ID at index ${i}: ${event.id}`,
-        );
-      }
-
-      const validatedEvent: EventConfiguration = {
-        id: this.validateString(event.id, 'id'),
-      };
-
-      // Optional fields validation
-      if (event.minPhotos !== undefined) {
-        validatedEvent.minPhotos = this.validateNumber(event.minPhotos, 'minPhotos');
-      }
-
-      if (event.valorPhoto !== undefined) {
-        validatedEvent.valorPhoto = this.validateNumber(event.valorPhoto, 'valorPhoto');
-      }
-
-      if (event.valorPack !== undefined) {
-        validatedEvent.valorPack = this.validateNumber(event.valorPack, 'valorPack');
-      }
-
-      validatedEvents.push(validatedEvent);
-    }
-
-    return validatedEvents;
   }
 }

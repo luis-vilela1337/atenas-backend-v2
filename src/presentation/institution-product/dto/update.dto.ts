@@ -14,14 +14,62 @@ export class UpdateInstitutionProductParamDto {
 }
 
 export class UpdateInstitutionProductInputDto {
+  @ApiPropertyOptional({
+    description: 'Detalhes específicos do produto para a instituição',
+    type: Object,
+    examples: {
+      album: {
+        value: {
+          minPhoto: 10,
+          maxPhoto: 100,
+          valorEncadernacao: 35.99,
+          valorFoto: 3.5,
+        },
+      },
+      generic: {
+        value: {
+          isAvailableUnit: true,
+          events: [
+            {
+              id: 'ada18814-fdfd-4cc0-86cb-ad20bd0b23b1',
+              minPhotos: 5,
+              valorPhoto: 5.0,
+            },
+            {
+              id: 'df8eefb2-3cb2-4a67-9e4b-f23dfd4d6578',
+              valorPack: 15.0,
+            },
+          ],
+        },
+      },
+      digitalFilesNew: {
+        value: {
+          isAvailableUnit: true,
+          events: [
+            {
+              id: 'ada18814-fdfd-4cc0-86cb-ad20bd0b23b1',
+              minPhotos: 15,
+              valorPhoto: 7.5,
+            },
+          ],
+        },
+      },
+      digitalFilesLegacy: {
+        value: {
+          isAvailableUnit: false,
+          valorPackTotal: 40.0,
+        },
+      },
+    },
+  })
   @IsOptional()
   @IsObject({ message: 'Details deve ser um objeto válido' })
-  details?: Record<string, any> | null;
+  details?: ProductDetails | null;
 }
 
 export class UpdateInstitutionProductResponseDto {
   @ApiProperty({
-    description: 'ID da relação produto-instituição',
+    description: 'ID único da relação produto-instituição',
     format: 'uuid',
     example: '123e4567-e89b-12d3-a456-426614174000',
   })
@@ -30,14 +78,14 @@ export class UpdateInstitutionProductResponseDto {
   @ApiProperty({
     description: 'ID do produto',
     format: 'uuid',
-    example: '123e4567-e89b-12d3-a456-426614174001',
+    example: '987fcdeb-51a2-43d7-c456-426614174111',
   })
   productId: string;
 
   @ApiProperty({
     description: 'ID da instituição',
     format: 'uuid',
-    example: '123e4567-e89b-12d3-a456-426614174002',
+    example: '456e7890-e89b-12d3-a456-426614174222',
   })
   institutionId: string;
 
@@ -49,23 +97,24 @@ export class UpdateInstitutionProductResponseDto {
   flag: ProductFlag;
 
   @ApiPropertyOptional({
-    description: 'Detalhes específicos do produto',
+    description: 'Detalhes específicos do produto para a instituição',
     type: Object,
     nullable: true,
   })
-  details: ProductDetails | null;
+  details?: ProductDetails | null;
 
   @ApiProperty({
-    description: 'Data de criação',
-    type: 'string',
-    format: 'date-time',
+    description: 'Data de criação da relação',
+    type: Date,
+    example: '2024-01-15T10:00:00Z',
   })
   createdAt: Date;
 
-  @ApiProperty({
-    description: 'Data de atualização',
-    type: 'string',
-    format: 'date-time',
+  @ApiPropertyOptional({
+    description: 'Data da última atualização',
+    type: Date,
+    example: '2024-01-16T15:30:00Z',
+    nullable: true,
   })
-  updatedAt: Date;
+  updatedAt?: Date;
 }
