@@ -1,15 +1,17 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcryptjs';
 
 import { User } from '@infrastructure/data/sql/entities/user.entity';
 import { UserSQLRepository } from '@infrastructure/data/sql/repositories/user.repository';
-import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersRepo: UserSQLRepository,
     private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
   ) {}
 
   async validateUser(
@@ -30,14 +32,60 @@ export class AuthService {
 
   async login(user: Omit<User, 'passwordHash'>) {
     const payload = { sub: user.id, email: user.email, role: user.role };
-    const accessToken = await this.jwtService.signAsync(payload);
-    // const refreshToken = await this.jwtRefreshService.signAsync(payload);
-    // await this.usersRepo.setCurrentRefreshToken(refreshToken, user.id);
-    return { accessToken, user };
+    
+    // Access Token (15 min)
+    const accessToken = await this.jwtService.signAsync(payload, {
+      expiresIn: '15m',
+    });
+    
+    // Refresh Token (7 days) - DIFFERENT SECRET
+    const refreshToken = await this.jwtService.signAsync(payload, {
+      secret: this.configService.get<string>('JWT_REFRESH_SECRET') || this.configService.get<string>('JWT_SECRET') + '_refresh',
+      expiresIn: '7d',
+    });
+
+    // Store hashed refresh token
+    const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
+    await this.usersRepo.setCurrentRefreshToken(hashedRefreshToken, user.id);
+
+    return { accessToken, refreshToken, user };
   }
 
-  async refresh(user: { userId: string; email: string; role: string }) {
-    const payload = { sub: user.userId, email: user.email, role: user.role };
-    // return { token: await this.jwtService.createTokenV2(payload) };
+  async refresh(userId: string, refreshToken: string) {
+    const user = await this.usersRepo.findById(userId);
+    if (!user || !user.currentHashedRefreshToken) {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
+
+    const isRefreshTokenValid = await bcrypt.compare(
+      refreshToken,
+      user.currentHashedRefreshToken,
+    );
+
+    if (!isRefreshTokenValid) {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
+
+    const payload = { sub: user.id, email: user.email, role: user.role };
+    const accessToken = await this.jwtService.signAsync(payload, {
+      expiresIn: '15m',
+    });
+
+    return { token: accessToken };
+  }
+
+  async logout(userId: string) {
+    await this.usersRepo.removeRefreshToken(userId);
+  }
+
+  async validateRefreshToken(token: string): Promise<any> {
+    try {
+      const payload = await this.jwtService.verifyAsync(token, {
+        secret: this.configService.get<string>('JWT_REFRESH_SECRET') || this.configService.get<string>('JWT_SECRET') + '_refresh',
+      });
+      return payload;
+    } catch (error) {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
   }
 }

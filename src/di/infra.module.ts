@@ -10,7 +10,13 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtCustomStrategy } from '@presentation/auth/strategies/jwt.strategy';
+import { JwtRefreshStrategy } from '@presentation/auth/strategies/jwt-refresh.strategy';
 import { LocalStrategy } from '@presentation/auth/strategies/local.strategy';
+import { JwtCustomAuthGuard } from '@presentation/auth/guards/jwt-auth.guard';
+import { JwtRefreshGuard } from '@presentation/auth/guards/jwt-refresh.guard';
+import { AdminGuard } from '@presentation/auth/guards/admin.guard';
+import { ClientGuard } from '@presentation/auth/guards/client.guard';
+import { RolesGuard } from '@presentation/auth/guards/roles.guard';
 import { InstitutionProductSQLRepository } from '@infrastructure/data/sql/repositories/institution-product.repostitoy';
 
 @Module({
@@ -24,7 +30,7 @@ import { InstitutionProductSQLRepository } from '@infrastructure/data/sql/reposi
       inject: [ConfigService],
       useFactory: (cs: ConfigService) => ({
         secret: cs.get<string>('JWT_SECRET'),
-        signOptions: { expiresIn: '1h' },
+        signOptions: { expiresIn: '15m' },
       }),
     }),
     TypeOrmModule.forFeature(entities),
@@ -37,8 +43,16 @@ import { InstitutionProductSQLRepository } from '@infrastructure/data/sql/reposi
     InstitutionProductSQLRepository,
     AuthServiceV2,
     ImageStorageService,
+    // Strategies
     JwtCustomStrategy,
+    JwtRefreshStrategy,
     LocalStrategy,
+    // Guards
+    JwtCustomAuthGuard,
+    JwtRefreshGuard,
+    AdminGuard,
+    ClientGuard,
+    RolesGuard,
   ],
   exports: [
     ConfigService,
@@ -48,8 +62,16 @@ import { InstitutionProductSQLRepository } from '@infrastructure/data/sql/reposi
     AuthServiceV2,
     InstitutionSQLRepository,
     InstitutionProductSQLRepository,
+    // Strategies
     JwtCustomStrategy,
+    JwtRefreshStrategy,
     LocalStrategy,
+    // Guards
+    JwtCustomAuthGuard,
+    JwtRefreshGuard,
+    AdminGuard,
+    ClientGuard,
+    RolesGuard,
   ],
 })
 export class InfraModule {}

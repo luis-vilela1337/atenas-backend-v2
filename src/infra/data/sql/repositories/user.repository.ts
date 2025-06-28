@@ -203,27 +203,6 @@ export class UserSQLRepository {
     return await this.findByRole('client');
   }
 
-  async setCurrentRefreshToken(
-    refreshToken: string,
-    userId: string,
-  ): Promise<void> {
-    const hashed = await this.hashRefreshToken(refreshToken);
-    await this.user.update(userId, { currentHashedRefreshToken: hashed });
-  }
-
-  async getUserIfRefreshTokenMatches(
-    refreshToken: string,
-    userId: string,
-  ): Promise<User | null> {
-    const user = await this.findById(userId);
-    if (!user || !user.currentHashedRefreshToken) return null;
-    const isMatch = await this.compareHash(
-      refreshToken,
-      user.currentHashedRefreshToken,
-    );
-    return isMatch ? user : null;
-  }
-
   private async hashRefreshToken(token: string): Promise<string> {
     const salt = await bcrypt.genSalt();
     return bcrypt.hash(token, salt);
@@ -231,5 +210,33 @@ export class UserSQLRepository {
 
   private async compareHash(token: string, hash: string): Promise<boolean> {
     return bcrypt.compare(token, hash);
+  }
+
+  async setCurrentRefreshToken(refreshToken: string, userId: string): Promise<void> {
+    await this.user.update(userId, { currentHashedRefreshToken: refreshToken });
+  }
+  
+  async removeRefreshToken(userId: string): Promise<void> {
+    await this.user.update(userId, { currentHashedRefreshToken: null });
+  }
+  
+  async getUserIfRefreshTokenMatches(
+    refreshToken: string,
+    userId: string,
+  ): Promise<User | null> {
+    const user = await this.user.findOne({
+      where: { id: userId },
+    });
+  
+    if (!user || !user.currentHashedRefreshToken) {
+      return null;
+    }
+  
+    const isRefreshTokenMatching = await bcrypt.compare(
+      refreshToken,
+      user.currentHashedRefreshToken,
+    );
+  
+    return isRefreshTokenMatching ? user : null;
   }
 }

@@ -24,6 +24,8 @@ import { FindAllInstitutionProductsApplication } from '@application/institution-
 import { UpdateInstitutionProductApplication } from '@application/institution-products/update';
 import { UpdateProductApplication } from '@application/products/update-product.application';
 import { DeleteInstitutionProductApplication } from '@application/institution-products/delete';
+import { RefreshTokenApplication } from '@application/auth/refresh-token.application';
+import { LogoutApplication } from '@application/auth/logout.application';
 
 @Module({
   imports: [
@@ -58,6 +60,9 @@ import { DeleteInstitutionProductApplication } from '@application/institution-pr
     FindAllInstitutionProductsApplication,
     UpdateInstitutionProductApplication,
     DeleteInstitutionProductApplication,
+     // auth
+     RefreshTokenApplication,
+     LogoutApplication,
   ],
   exports: [
     //user
@@ -86,6 +91,9 @@ import { DeleteInstitutionProductApplication } from '@application/institution-pr
     FindAllInstitutionProductsApplication,
     UpdateInstitutionProductApplication,
     DeleteInstitutionProductApplication,
+     // auth
+     RefreshTokenApplication,
+     LogoutApplication,
   ],
 })
 export class ApplicationModule {}

@@ -4,7 +4,7 @@ export class AuthResponseDto {
   @ApiProperty({ description: 'Token de acesso JWT' })
   token: string;
 
-  @ApiProperty({ description: 'Token de refrehs JWT' })
+  @ApiProperty({ description: 'Token de refresh JWT' })
   refreshToken: string;
 
   @ApiProperty({ description: 'Dados do usuário autenticado' })
@@ -20,6 +20,6 @@ export class AuthResponseDto {
     refreshToken: string,
     user: { id: string; name: string; email: string; role: string },
   ): AuthResponseDto {
-    return { token, user, refreshToken };
+    return { token, refreshToken, user };
   }
 }
