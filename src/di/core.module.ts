@@ -23,6 +23,9 @@ import { UpdateProductUseCase } from '@core/products/update/usecase';
 import { DeleteInstitutionProductUseCase } from '@core/institution-products/delete/usecase';
 import { RefreshTokenUseCase } from '@core/auth/refresh-token.usecase';
 import { LogoutUseCase } from '@core/auth/logout.usecase';
+import { CreateUserEventPhotoUseCase } from '@core/user-event-photos/create/usecase';
+import { FindUserEventPhotosByUserUseCase } from '@core/user-event-photos/find-by-user/usecase';
+import { DeleteUserEventPhotoUseCase } from '@core/user-event-photos/delete/usecase';
 
 @Module({
   imports: [InfraModule],
@@ -55,6 +58,10 @@ import { LogoutUseCase } from '@core/auth/logout.usecase';
     //auth
     RefreshTokenUseCase,
     LogoutUseCase,
+    // user-event
+    CreateUserEventPhotoUseCase,
+    FindUserEventPhotosByUserUseCase,
+    DeleteUserEventPhotoUseCase
   ],
   exports: [
     //user
@@ -85,6 +92,10 @@ import { LogoutUseCase } from '@core/auth/logout.usecase';
     //auth
     RefreshTokenUseCase,
     LogoutUseCase,
+    // user-event
+    CreateUserEventPhotoUseCase,
+    FindUserEventPhotosByUserUseCase,
+    DeleteUserEventPhotoUseCase
   ],
 })
 export class CoreModule {}

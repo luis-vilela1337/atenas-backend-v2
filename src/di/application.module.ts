@@ -26,6 +26,8 @@ import { UpdateProductApplication } from '@application/products/update-product.a
 import { DeleteInstitutionProductApplication } from '@application/institution-products/delete';
 import { RefreshTokenApplication } from '@application/auth/refresh-token.application';
 import { LogoutApplication } from '@application/auth/logout.application';
+import { UserEventPhotosApplication } from '@application/user-event-photos/user-event-photos.application';
+import { ImageStorageService } from '@infrastructure/services/image-storage.service';
 
 @Module({
   imports: [
@@ -41,6 +43,7 @@ import { LogoutApplication } from '@application/auth/logout.application';
     CreateUserV2Application,
     UpdateUserV2Application,
     DeleteUserV2Application,
+    ImageStorageService,
     //storage
     GeneratePresignedUrV2Application,
     //institution
@@ -63,6 +66,7 @@ import { LogoutApplication } from '@application/auth/logout.application';
      // auth
      RefreshTokenApplication,
      LogoutApplication,
+     UserEventPhotosApplication,
   ],
   exports: [
     //user
@@ -94,6 +98,8 @@ import { LogoutApplication } from '@application/auth/logout.application';
      // auth
      RefreshTokenApplication,
      LogoutApplication,
+    //  userEvent
+     UserEventPhotosApplication
   ],
 })
 export class ApplicationModule {}

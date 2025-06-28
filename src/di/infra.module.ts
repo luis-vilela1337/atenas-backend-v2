@@ -18,6 +18,8 @@ import { AdminGuard } from '@presentation/auth/guards/admin.guard';
 import { ClientGuard } from '@presentation/auth/guards/client.guard';
 import { RolesGuard } from '@presentation/auth/guards/roles.guard';
 import { InstitutionProductSQLRepository } from '@infrastructure/data/sql/repositories/institution-product.repostitoy';
+import { InstitutionEventSQLRepository } from '@infrastructure/data/sql/repositories/institution-event.repository';
+import { UserEventPhotoSQLRepository } from '@infrastructure/data/sql/repositories/user-event-photo.repository';
 
 @Module({
   imports: [
@@ -41,6 +43,8 @@ import { InstitutionProductSQLRepository } from '@infrastructure/data/sql/reposi
     InstitutionSQLRepository,
     ProductSQLRepository,
     InstitutionProductSQLRepository,
+    InstitutionEventSQLRepository,
+    UserEventPhotoSQLRepository,
     AuthServiceV2,
     ImageStorageService,
     // Strategies
@@ -62,6 +66,8 @@ import { InstitutionProductSQLRepository } from '@infrastructure/data/sql/reposi
     AuthServiceV2,
     InstitutionSQLRepository,
     InstitutionProductSQLRepository,
+    InstitutionEventSQLRepository,
+    UserEventPhotoSQLRepository,
     // Strategies
     JwtCustomStrategy,
     JwtRefreshStrategy,

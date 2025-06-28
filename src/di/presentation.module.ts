@@ -9,6 +9,7 @@ import { AuthControllerV2 } from '@presentation/auth/http/controller';
 import { StorageControllerV2 } from '@presentation/storage/controller';
 import { InstitutionProductsController } from '@presentation/institution-product/institution-products.controller';
 import { ProductsController } from '@presentation/products/controller/products.controller';
+import { UserEventPhotosController } from '@presentation/user-event-photos/controller';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ProductsController } from '@presentation/products/controller/products.c
     StorageControllerV2,
     InstitutionProductsController,
     ProductsController,
+    UserEventPhotosController,
   ],
 })
 export class PresentationModule {}
