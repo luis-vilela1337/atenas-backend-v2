@@ -47,7 +47,7 @@ import { ImageStorageService } from '@infrastructure/services/image-storage.serv
     //storage
     GeneratePresignedUrV2Application,
     //institution
-    FindAllInstitutionApplication,
+    FindAllInstitutionApplication, 
     CreateInstitutionApplication,
     FindByIdInstitutionApplication,
     UpdateInstitutionApplication,

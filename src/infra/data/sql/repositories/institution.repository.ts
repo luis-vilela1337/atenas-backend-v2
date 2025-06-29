@@ -56,6 +56,8 @@ export class InstitutionSQLRepository {
       'institution.users',
     );
 
+    queryBuilder.orderBy('institution.updatedAt', 'DESC');
+
     const [institutions, total] = await queryBuilder.getManyAndCount();
     const totalPages = Math.ceil(total / limit);
 

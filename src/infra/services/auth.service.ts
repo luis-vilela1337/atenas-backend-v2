@@ -5,6 +5,7 @@ import * as bcrypt from 'bcryptjs';
 
 import { User } from '@infrastructure/data/sql/entities/user.entity';
 import { UserSQLRepository } from '@infrastructure/data/sql/repositories/user.repository';
+import { ImageStorageService } from '@infrastructure/services/image-storage.service';
 
 @Injectable()
 export class AuthService {
@@ -12,6 +13,7 @@ export class AuthService {
     private readonly usersRepo: UserSQLRepository,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly imageStorageService: ImageStorageService,
   ) {}
 
   async validateUser(
@@ -22,6 +24,15 @@ export class AuthService {
       const user = await this.usersRepo.findByEmail(email);
       if (user && (await bcrypt.compare(password, user.passwordHash))) {
         const { passwordHash, ...safe } = user;
+        
+        // Generate presigned URL for profile image
+        if (safe.profileImage) {
+          safe.profileImage = await this.imageStorageService.generateSignedUrl(
+            safe.profileImage,
+            'read',
+          );
+        }
+        
         return safe;
       }
       return null;
@@ -48,6 +59,7 @@ export class AuthService {
     const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
     await this.usersRepo.setCurrentRefreshToken(hashedRefreshToken, user.id);
 
+    // Note: user already has presigned URL from validateUser
     return { accessToken, refreshToken, user };
   }
 

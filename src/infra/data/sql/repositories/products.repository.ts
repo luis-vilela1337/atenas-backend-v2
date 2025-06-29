@@ -59,7 +59,8 @@ export class ProductSQLRepository {
       });
     }
 
-    queryBuilder.orderBy('product.created_at', 'DESC');
+    queryBuilder.orderBy('product.updated_at', 'DESC');
+
 
     const [products, total] = await queryBuilder.getManyAndCount();
     const totalPages = Math.ceil(total / limit);

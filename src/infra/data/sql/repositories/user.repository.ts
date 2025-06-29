@@ -36,7 +36,6 @@ export class UserSQLRepository {
       relations: ['institution'],
     });
   }
-
   async findAllPaginated(
     page = 1,
     limit = 10,
@@ -52,44 +51,49 @@ export class UserSQLRepository {
       .leftJoinAndSelect('user.institution', 'institution')
       .skip(skip)
       .take(limit);
-
+  
     if (filters?.role) {
       queryBuilder.andWhere('user.role = :role', { role: filters.role });
     }
-
+  
     if (filters?.status) {
       queryBuilder.andWhere('user.status = :status', {
         status: filters.status,
       });
     }
-
+  
     if (filters?.institutionId) {
       queryBuilder.andWhere('user.institution.id = :institutionId', {
         institutionId: filters.institutionId,
       });
     }
-
+  
+    queryBuilder.orderBy('user.updatedAt', 'DESC');
+  
     const [users, total] = await queryBuilder.getManyAndCount();
     const totalPages = Math.ceil(total / limit);
-
+  
     return {
       users,
       total,
       totalPages,
     };
   }
-
+  
   async findByRole(role: UserRole): Promise<User[]> {
     return await this.user.find({
       where: { role },
       relations: ['institution'],
+      // ADD THIS LINE:
+      order: { updatedAt: 'DESC' },
     });
   }
-
+  
   async findByStatus(status: UserStatus): Promise<User[]> {
     return await this.user.find({
       where: { status },
       relations: ['institution'],
+      order: { updatedAt: 'DESC' },
     });
   }
 

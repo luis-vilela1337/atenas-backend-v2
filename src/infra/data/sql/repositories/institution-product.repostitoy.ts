@@ -100,7 +100,7 @@ export class InstitutionProductSQLRepository {
       });
     }
 
-    queryBuilder.orderBy('ip.createdAt', 'DESC');
+    queryBuilder.orderBy('ip.updatedAt', 'DESC');
 
     const [institutionProducts, total] = await queryBuilder.getManyAndCount();
     const totalPages = Math.ceil(total / limit);
@@ -160,7 +160,7 @@ export class InstitutionProductSQLRepository {
     return await this.institutionProduct.find({
       where: { institution: { id: institutionId } },
       relations: ['product', 'institution'],
-      order: { createdAt: 'DESC' },
+      order: { updatedAt: 'DESC' },
     });
   }
 
@@ -168,7 +168,7 @@ export class InstitutionProductSQLRepository {
     return await this.institutionProduct.find({
       where: { product: { id: productId } },
       relations: ['product', 'institution'],
-      order: { createdAt: 'DESC' },
+      order: { updatedAt: 'DESC' },
     });
   }
 }

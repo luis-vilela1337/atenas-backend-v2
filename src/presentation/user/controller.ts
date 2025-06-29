@@ -15,7 +15,6 @@ import {
 import { ListUsersQueryDto } from './dto/list-users-query.dto';
 import { PaginatedUsersDto } from './dto/paginated-users.dto';
 import { FindAllUserV2Application } from '@application/user/find-all.application';
-import { FindUserByIdV2Application } from '@application/user/find-user-by-id.application';
 import {
   CreateUserResponseV2Dto,
   CreateUserV2InputDto,
@@ -38,6 +37,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { AdminGuard } from '@presentation/auth/guards/admin.guard';
+import { FindUserByIdV2Application } from '@application/user/find-user-by-id.application';
 
 @Controller('v1/users')
 @ApiTags('users')
@@ -48,7 +48,6 @@ export class UsersControllerV2 {
     private readonly createUserApplication: CreateUserV2Application,
     private readonly updateUserApplication: UpdateUserV2Application,
     private readonly deleteUserApplication: DeleteUserV2Application,
-    private readonly presignedUrlApplication: GeneratePresignedUrV2Application,
   ) {}
 
   @Get('/')
