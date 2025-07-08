@@ -68,24 +68,35 @@ export class AuthService {
     if (!user || !user.currentHashedRefreshToken) {
       throw new UnauthorizedException('Invalid refresh token');
     }
-
+  
     const isRefreshTokenValid = await bcrypt.compare(
       refreshToken,
       user.currentHashedRefreshToken,
     );
-
+  
     if (!isRefreshTokenValid) {
       throw new UnauthorizedException('Invalid refresh token');
     }
-
+  
     const payload = { sub: user.id, email: user.email, role: user.role };
     const accessToken = await this.jwtService.signAsync(payload, {
       expiresIn: '15m',
     });
-
-    return { token: accessToken };
+  
+    const { passwordHash, currentHashedRefreshToken, ...safeUser } = user;
+    
+    if (safeUser.profileImage) {
+      safeUser.profileImage = await this.imageStorageService.generateSignedUrl(
+        safeUser.profileImage,
+        'read',
+      );
+    }
+  
+    return { 
+      token: accessToken, 
+      user: safeUser 
+    };
   }
-
   async logout(userId: string) {
     await this.usersRepo.removeRefreshToken(userId);
   }

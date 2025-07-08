@@ -8,6 +8,13 @@ export interface RefreshTokenInput {
 
 export interface RefreshTokenOutput {
   token: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+    profileImage?: string | null;
+  };
 }
 
 @Injectable()
@@ -15,11 +22,11 @@ export class RefreshTokenUseCase {
   constructor(private readonly authService: AuthService) {}
 
   async execute(input: RefreshTokenInput): Promise<RefreshTokenOutput> {
-    const { token } = await this.authService.refresh(
+    const { token, user } = await this.authService.refresh(
       input.userId,
       input.refreshToken
     );
 
-    return { token };
+    return { token, user };
   }
 }

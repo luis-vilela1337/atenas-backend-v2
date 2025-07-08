@@ -43,11 +43,11 @@ export class AuthControllerV2 {
   @ApiBody({ type: RefreshTokenDto })
   @ApiResponse({ status: 200, type: RefreshResponseDto })
   async refresh(@Request() req): Promise<RefreshResponseDto> {
-    const { token } = await this.refreshTokenApp.execute({
+    const { token, user } = await this.refreshTokenApp.execute({
       userId: req.user.userId,
       refreshToken: req.user.refreshToken,
     });
-    return RefreshResponseDto.adapterToResponse(token);
+    return RefreshResponseDto.adapterToResponse(token, user);
   }
 
   @UseGuards(JwtCustomAuthGuard)
