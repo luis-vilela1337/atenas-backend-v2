@@ -16,7 +16,7 @@ export class UserMapper {
       status: user.status,
       createdAt: user.createdAt,
       profileImage: user.profileImage || '',
-      userContract: user.institution.contractNumber + user.identifier,
+      userContract: `${user.institution.contractNumber}-${user.identifier}`,
     };
   }
 
