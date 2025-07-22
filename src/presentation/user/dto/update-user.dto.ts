@@ -92,7 +92,6 @@ export class UpdateUserV2InputDto {
   @IsOptional()
   @IsString()
   @Length(1, 255)
-  @Matches(/\.(jpg|jpeg|png|gif|webp)$/i)
   profileImage?: string;
 
   status?: UserStatus;

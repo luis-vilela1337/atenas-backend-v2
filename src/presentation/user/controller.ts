@@ -55,7 +55,7 @@ export class UsersControllerV2 {
   @ApiQuery({ type: ListUsersQueryDto })
   @ApiResponse({ status: 200, type: PaginatedUsersDto })
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AdminGuard)  
+  @UseGuards(AdminGuard)
   async listUsers(
     @Query() query: ListUsersQueryDto,
   ): Promise<PaginatedUsersDto> {
@@ -67,7 +67,6 @@ export class UsersControllerV2 {
   @ApiParam({ name: 'id', type: 'string', format: 'uuid' })
   @ApiResponse({ status: 200, type: Object })
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AdminGuard)  
   async listUserById(@Param('id') id: string) {
     return await this.findUserById.execute(id);
   }
@@ -77,7 +76,7 @@ export class UsersControllerV2 {
   @ApiBody({ type: CreateUserV2InputDto })
   @ApiResponse({ status: 201, type: CreateUserResponseV2Dto })
   @HttpCode(HttpStatus.CREATED)
-  @UseGuards(AdminGuard)  
+  @UseGuards(AdminGuard)
   async createUser(
     @Body() createUserDto: CreateUserV2InputDto,
   ): Promise<CreateUserResponseV2Dto> {
@@ -93,7 +92,7 @@ export class UsersControllerV2 {
   @ApiBody({ type: UpdateUserV2InputDto })
   @ApiResponse({ status: 200, type: UpdateUserV2ResponseDto })
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AdminGuard)  
+  @UseGuards(AdminGuard)
   async updateUser(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserV2InputDto,
@@ -109,7 +108,7 @@ export class UsersControllerV2 {
   @ApiParam({ name: 'id', type: 'string', format: 'uuid' })
   @ApiResponse({ status: 200, type: DeleteUserResponseDto })
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AdminGuard)  
+  @UseGuards(AdminGuard)
   async deleteUser(
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<DeleteUserResponseDto> {
