@@ -107,6 +107,34 @@ export class ImageStorageService {
     return url;
   }
 
+  extractFilenameFromUrl(url: string): string | null {
+    try {
+      if (
+        url.includes('storage.googleapis.com') ||
+        url.includes('storage.cloud.google.com')
+      ) {
+        const urlObj = new URL(url);
+        const pathParts = urlObj.pathname.split('/');
+        const filename = pathParts[pathParts.length - 1];
+        if (filename && filename !== this.bucketName) {
+          return decodeURIComponent(filename.split('?')[0]);
+        }
+      }
+      return null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  processProfileImageInput(profileImage: string): string {
+    if (!profileImage) {
+      return profileImage;
+    }
+
+    const extractedFilename = this.extractFilenameFromUrl(profileImage);
+    return extractedFilename || profileImage;
+  }
+
   private getFileExtension(contentType: string): string {
     const extensionMap: Record<string, string> = {
       // Images

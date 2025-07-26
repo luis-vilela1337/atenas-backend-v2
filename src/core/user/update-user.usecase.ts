@@ -10,6 +10,7 @@ import { User } from '@infrastructure/data/sql/entities';
 
 import { UpdateUserV2InputDto } from '@presentation/user/dto/update-user.dto';
 import { UpdateUserV2Adapter } from '@application/user/adapters/update';
+import { ImageStorageService } from '@infrastructure/services/image-storage.service';
 import * as bcrypt from 'bcryptjs';
 
 @Injectable()
@@ -17,6 +18,7 @@ export class UpdateUserV2UseCase {
   constructor(
     private readonly userRepository: UserSQLRepository,
     private readonly institutionRepository: InstitutionSQLRepository,
+    private readonly imageStorageService: ImageStorageService,
   ) {}
 
   async execute(userId: string, input: UpdateUserV2InputDto): Promise<User> {
@@ -49,6 +51,13 @@ export class UpdateUserV2UseCase {
       const salt = await bcrypt.genSalt();
       passwordHash = await bcrypt.hash(input.password, salt); //TODO colocar service
     }
+
+    if (input.profileImage) {
+      input.profileImage = this.imageStorageService.processProfileImageInput(
+        input.profileImage,
+      );
+    }
+
     const updateData = UpdateUserV2Adapter.toEntity(
       input,
       institution,

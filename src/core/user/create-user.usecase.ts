@@ -8,6 +8,7 @@ import { User } from '@infrastructure/data/sql/entities';
 import { CreateUserV2InputDto } from '@presentation/user/dto/create-user.dto';
 import { InstitutionSQLRepository } from '@infrastructure/data/sql/repositories/institution.repository';
 import { CreateUserAdapter } from '@application/user/adapters/create';
+import { ImageStorageService } from '@infrastructure/services/image-storage.service';
 import * as bcrypt from 'bcryptjs';
 
 @Injectable()
@@ -15,6 +16,7 @@ export class CreateUserV2UseCase {
   constructor(
     private readonly userRepository: UserSQLRepository,
     private readonly institutionRepository: InstitutionSQLRepository,
+    private readonly imageStorageService: ImageStorageService,
   ) {}
 
   async execute(input: CreateUserV2InputDto): Promise<User> {
@@ -34,6 +36,13 @@ export class CreateUserV2UseCase {
 
     const salt = await bcrypt.genSalt();
     const passwordHash = await bcrypt.hash(input.password, salt); //TODO colocar service
+
+    if (input.profileImage) {
+      input.profileImage = this.imageStorageService.processProfileImageInput(
+        input.profileImage,
+      );
+    }
+
     const userEntity = CreateUserAdapter.toEntity(
       input,
       institution,

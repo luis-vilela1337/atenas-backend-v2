@@ -164,14 +164,14 @@ export class CreateUserV2InputDto {
   @Max(999999.99, { message: 'O creditValue não pode exceder $constraint2.' })
   creditValue?: number;
 
-  @ApiPropertyOptional({ description: 'Imagem de perfil', example: 'foto.jpg' })
+  @ApiPropertyOptional({
+    description: 'Imagem de perfil (nome do arquivo ou URL)',
+    example: 'foto.jpg',
+  })
   @IsOptional()
   @IsString({ message: 'O profileImage deve ser um texto.' })
-  @Length(1, 255, {
+  @Length(1, 500, {
     message: 'O profileImage não pode ultrapassar $constraint2 caracteres.',
-  })
-  @Matches(/\.(jpg|jpeg|png|gif|webp)$/i, {
-    message: 'O profileImage deve terminar com .jpg, .png, .gif, etc.',
   })
   profileImage?: string;
 

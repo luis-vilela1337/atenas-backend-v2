@@ -88,10 +88,13 @@ export class UpdateUserV2InputDto {
   @Min(0)
   @Max(999999.99)
   creditValue?: number;
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    description: 'Imagem de perfil (nome do arquivo ou URL)',
+    example: 'foto.jpg',
+  })
   @IsOptional()
   @IsString()
-  @Length(1, 255)
+  @Length(1, 500)
   profileImage?: string;
 
   status?: UserStatus;
