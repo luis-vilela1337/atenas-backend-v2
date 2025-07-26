@@ -1,6 +1,7 @@
 import { Institution } from '../entities';
 
 export interface EventPayload {
+  id?: string;
   name: string;
 }
 

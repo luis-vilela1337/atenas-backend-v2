@@ -2,7 +2,7 @@ import { DataSource, Repository } from 'typeorm';
 import { Institution, InstitutionEvent } from '../entities';
 import { Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
-import { UpdateInstituitionDto } from '@presentation/instituitions/dto/update.instituition';
+import { UpdateInstitutionData } from '../types/insituition.type';
 
 @Injectable()
 export class InstitutionSQLRepository {
@@ -70,7 +70,7 @@ export class InstitutionSQLRepository {
 
   async updateInstitution(
     id: string,
-    updateData: UpdateInstituitionDto,
+    updateData: UpdateInstitutionData,
   ): Promise<Institution | null> {
     const qr = this.dataSource.createQueryRunner();
     await qr.connect();
@@ -88,16 +88,37 @@ export class InstitutionSQLRepository {
         return null;
       }
 
-      await qr.manager.delete(InstitutionEvent, { institution: inst });
-
       if (updateData.events?.length) {
-        const toInsert = updateData.events.map((dto) => {
-          const ev = new InstitutionEvent();
-          ev.name = dto.name;
-          ev.institution = inst as Institution;
-          return ev;
+        const existingEventIds = new Set(inst.events.map((e) => e.id));
+        const providedEventIds = new Set(
+          updateData.events.filter((e) => e.id).map((e) => e.id),
+        );
+
+        const eventsToDelete = inst.events.filter(
+          (e) => !providedEventIds.has(e.id),
+        );
+        if (eventsToDelete.length > 0) {
+          await qr.manager.delete(
+            InstitutionEvent,
+            eventsToDelete.map((e) => e.id),
+          );
+        }
+
+        const toUpsert = updateData.events.map((dto) => {
+          if (dto.id && existingEventIds.has(dto.id)) {
+            const ev = inst.events.find((e) => e.id === dto.id);
+            ev.name = dto.name;
+            return ev;
+          } else {
+            const ev = new InstitutionEvent();
+            ev.name = dto.name;
+            ev.institution = inst as Institution;
+            return ev;
+          }
         });
-        await qr.manager.save(toInsert);
+        await qr.manager.save(toUpsert);
+      } else {
+        await qr.manager.delete(InstitutionEvent, { institution: inst });
       }
 
       const { contractNumber, name, observations } = updateData;

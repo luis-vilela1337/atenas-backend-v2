@@ -10,10 +10,13 @@ export class CreateUserEventPhotoDto {
   @IsUUID(4, { message: 'eventId deve ser um UUID válido' })
   eventId: string;
 
-  @ApiProperty({ 
-    type: [String], 
-    description: 'Lista de nomes dos arquivos no storage',
-    example: ['image-abc123-1234567890.jpg', 'image-def456-0987654321.png']
+  @ApiProperty({
+    type: [String],
+    description: 'Lista de nomes de arquivos ou URLs completas do storage',
+    example: [
+      'image-abc123-1234567890.jpg',
+      'https://storage.example.com/bucket/image-def456.png',
+    ],
   })
   @IsArray({ message: 'fileNames deve ser um array' })
   @ArrayMinSize(1, { message: 'Pelo menos um arquivo deve ser fornecido' })

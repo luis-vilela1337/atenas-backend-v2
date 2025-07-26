@@ -20,7 +20,7 @@ export class UpdateInstituitionUseCase {
       contractNumber: input.contractNumber,
       name: input.name,
       observations: input.observations,
-      events: input.events?.map((e) => ({ name: e.name })),
+      events: input.events?.map((e) => ({ id: e.id, name: e.name })),
     };
 
     const updated = await this.repo.updateInstitution(id, payload);
