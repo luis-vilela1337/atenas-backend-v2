@@ -28,9 +28,13 @@ export class UpdateProductInputDto {
   description?: string;
 
   @ApiProperty({
-    description: 'URLs das fotos do produto',
+    description: 'Fotos do produto (nomes de arquivos ou URLs)',
     type: [String],
     required: false,
+    example: [
+      'photo-123.jpg',
+      'https://storage.googleapis.com/bucket/photo-456.png',
+    ],
   })
   @IsArray()
   @IsString({ each: true })
@@ -38,9 +42,13 @@ export class UpdateProductInputDto {
   photos?: string[];
 
   @ApiProperty({
-    description: 'URLs dos vídeos do produto',
+    description: 'Vídeos do produto (nomes de arquivos ou URLs)',
     type: [String],
     required: false,
+    example: [
+      'video-123.mp4',
+      'https://storage.googleapis.com/bucket/video-456.mp4',
+    ],
   })
   @IsArray()
   @IsString({ each: true })
@@ -61,10 +69,10 @@ export class UpdateProductResponseDto {
   @ApiProperty({ description: 'Descrição do produto' })
   description: string;
 
-  @ApiProperty({ description: 'URLs das fotos', type: [String] })
+  @ApiProperty({ description: 'Nomes dos arquivos de fotos', type: [String] })
   photos: string[];
 
-  @ApiProperty({ description: 'URLs dos vídeos', type: [String] })
+  @ApiProperty({ description: 'Nomes dos arquivos de vídeos', type: [String] })
   video: string[];
 
   @ApiProperty({ description: 'Data de criação', format: 'date-time' })

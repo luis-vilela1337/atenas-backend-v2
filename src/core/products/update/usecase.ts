@@ -6,10 +6,14 @@ import {
 import { ProductSQLRepository } from '@infrastructure/data/sql/repositories/products.repository';
 import { UpdateProductInputDto } from '@presentation/products/dto/update-product.dto';
 import { Product } from '@infrastructure/data/sql/entities/products.entity';
+import { ImageStorageService } from '@infrastructure/services/image-storage.service';
 
 @Injectable()
 export class UpdateProductUseCase {
-  constructor(private readonly productRepository: ProductSQLRepository) {}
+  constructor(
+    private readonly productRepository: ProductSQLRepository,
+    private readonly imageStorageService: ImageStorageService,
+  ) {}
 
   async execute(id: string, input: UpdateProductInputDto): Promise<Product> {
     const existingProduct = await this.productRepository.findById(id);
@@ -28,11 +32,21 @@ export class UpdateProductUseCase {
       throw new BadRequestException('Já existe um produto com este nome');
     }
 
+    const processedPhotos =
+      input.photos?.map((photo) =>
+        this.imageStorageService.processProfileImageInput(photo),
+      ) || [];
+
+    const processedVideos =
+      input.video?.map((video) =>
+        this.imageStorageService.processProfileImageInput(video),
+      ) || [];
+
     const updateData: Partial<Product> = {
       name: input.name.trim(),
       description: input.description?.trim() || null,
-      photos: input.photos || [],
-      video: input.video || [],
+      photos: processedPhotos,
+      video: processedVideos,
     };
 
     const updatedProduct = await this.productRepository.updateProduct(
