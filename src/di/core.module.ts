@@ -61,7 +61,7 @@ import { DeleteUserEventPhotoUseCase } from '@core/user-event-photos/delete/usec
     // user-event
     CreateUserEventPhotoUseCase,
     FindUserEventPhotosByUserUseCase,
-    DeleteUserEventPhotoUseCase
+    DeleteUserEventPhotoUseCase,
   ],
   exports: [
     //user
@@ -95,7 +95,7 @@ import { DeleteUserEventPhotoUseCase } from '@core/user-event-photos/delete/usec
     // user-event
     CreateUserEventPhotoUseCase,
     FindUserEventPhotosByUserUseCase,
-    DeleteUserEventPhotoUseCase
+    DeleteUserEventPhotoUseCase,
   ],
 })
 export class CoreModule {}

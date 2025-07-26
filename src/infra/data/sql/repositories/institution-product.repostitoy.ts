@@ -3,7 +3,10 @@ import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 
 import { ProductFlag } from '../types/product-flag.enum';
-import { InstitutionProduct, ProductDetails, } from '@infrastructure/data/sql/entities';
+import {
+  InstitutionProduct,
+  ProductDetails,
+} from '@infrastructure/data/sql/entities';
 
 export interface CreateInstitutionProductData {
   productId: string;

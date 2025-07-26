@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { RefreshTokenUseCase, RefreshTokenInput, RefreshTokenOutput } from '@core/auth/refresh-token.usecase';
+import {
+  RefreshTokenUseCase,
+  RefreshTokenInput,
+  RefreshTokenOutput,
+} from '@core/auth/refresh-token.usecase';
 
 @Injectable()
 export class RefreshTokenApplication {

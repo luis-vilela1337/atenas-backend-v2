@@ -24,7 +24,7 @@ export class RefreshTokenUseCase {
   async execute(input: RefreshTokenInput): Promise<RefreshTokenOutput> {
     const { token, user } = await this.authService.refresh(
       input.userId,
-      input.refreshToken
+      input.refreshToken,
     );
 
     return { token, user };

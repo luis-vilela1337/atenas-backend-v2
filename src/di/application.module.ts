@@ -47,7 +47,7 @@ import { ImageStorageService } from '@infrastructure/services/image-storage.serv
     //storage
     GeneratePresignedUrV2Application,
     //institution
-    FindAllInstitutionApplication, 
+    FindAllInstitutionApplication,
     CreateInstitutionApplication,
     FindByIdInstitutionApplication,
     UpdateInstitutionApplication,
@@ -63,10 +63,10 @@ import { ImageStorageService } from '@infrastructure/services/image-storage.serv
     FindAllInstitutionProductsApplication,
     UpdateInstitutionProductApplication,
     DeleteInstitutionProductApplication,
-     // auth
-     RefreshTokenApplication,
-     LogoutApplication,
-     UserEventPhotosApplication,
+    // auth
+    RefreshTokenApplication,
+    LogoutApplication,
+    UserEventPhotosApplication,
   ],
   exports: [
     //user
@@ -95,11 +95,11 @@ import { ImageStorageService } from '@infrastructure/services/image-storage.serv
     FindAllInstitutionProductsApplication,
     UpdateInstitutionProductApplication,
     DeleteInstitutionProductApplication,
-     // auth
-     RefreshTokenApplication,
-     LogoutApplication,
+    // auth
+    RefreshTokenApplication,
+    LogoutApplication,
     //  userEvent
-     UserEventPhotosApplication
+    UserEventPhotosApplication,
   ],
 })
 export class ApplicationModule {}

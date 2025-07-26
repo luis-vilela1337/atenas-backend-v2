@@ -24,12 +24,17 @@ export class InstitutionEventSQLRepository {
     });
   }
 
-  async create(eventData: Partial<InstitutionEvent>): Promise<InstitutionEvent> {
+  async create(
+    eventData: Partial<InstitutionEvent>,
+  ): Promise<InstitutionEvent> {
     const event = this.repository.create(eventData);
     return await this.repository.save(event);
   }
 
-  async update(id: string, eventData: Partial<InstitutionEvent>): Promise<InstitutionEvent> {
+  async update(
+    id: string,
+    eventData: Partial<InstitutionEvent>,
+  ): Promise<InstitutionEvent> {
     await this.repository.update(id, eventData);
     return await this.findById(id);
   }

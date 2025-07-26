@@ -1,4 +1,8 @@
-import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { UserEventPhotoSQLRepository } from '@infrastructure/data/sql/repositories/user-event-photo.repository';
 import { UserSQLRepository } from '@infrastructure/data/sql/repositories/user.repository';
 import { UserEventPhoto } from '@infrastructure/data/sql/entities/user-event-photo.entity';
@@ -29,7 +33,9 @@ export class CreateUserEventPhotoUseCase {
     }
 
     if (user.institution.id !== event.institution.id) {
-      throw new BadRequestException('Usuário não pertence à instituição do evento');
+      throw new BadRequestException(
+        'Usuário não pertence à instituição do evento',
+      );
     }
 
     const createdPhotos: UserEventPhoto[] = [];

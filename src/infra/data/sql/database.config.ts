@@ -6,7 +6,11 @@ import { ConfigService } from '@nestjs/config';
 import { Generated1750351515326 } from '@infrastructure/data/migrations/1750351515326-generated';
 import { Generated1751148139056 } from '../migrations/1751148139056-generated';
 
-export const migrations = [Generated1747237005972, Generated1750351515326, Generated1751148139056];
+export const migrations = [
+  Generated1747237005972,
+  Generated1750351515326,
+  Generated1751148139056,
+];
 const envVars = (cs: ConfigService) => ({
   host: cs.get<string>('DB_HOST'),
   port: Number(cs.get<string>('DB_PORT')),

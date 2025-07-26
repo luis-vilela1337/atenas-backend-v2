@@ -24,15 +24,14 @@ export class AuthService {
       const user = await this.usersRepo.findByEmail(email);
       if (user && (await bcrypt.compare(password, user.passwordHash))) {
         const { passwordHash, ...safe } = user;
-        
-        // Generate presigned URL for profile image
+
         if (safe.profileImage) {
           safe.profileImage = await this.imageStorageService.generateSignedUrl(
             safe.profileImage,
             'read',
           );
         }
-        
+
         return safe;
       }
       return null;
@@ -43,15 +42,17 @@ export class AuthService {
 
   async login(user: Omit<User, 'passwordHash'>) {
     const payload = { sub: user.id, email: user.email, role: user.role };
-    
+
     // Access Token (15 min)
     const accessToken = await this.jwtService.signAsync(payload, {
       expiresIn: '15m',
     });
-    
+
     // Refresh Token (7 days) - DIFFERENT SECRET
     const refreshToken = await this.jwtService.signAsync(payload, {
-      secret: this.configService.get<string>('JWT_REFRESH_SECRET') || this.configService.get<string>('JWT_SECRET') + '_refresh',
+      secret:
+        this.configService.get<string>('JWT_REFRESH_SECRET') ||
+        this.configService.get<string>('JWT_SECRET') + '_refresh',
       expiresIn: '7d',
     });
 
@@ -68,33 +69,33 @@ export class AuthService {
     if (!user || !user.currentHashedRefreshToken) {
       throw new UnauthorizedException('Invalid refresh token');
     }
-  
+
     const isRefreshTokenValid = await bcrypt.compare(
       refreshToken,
       user.currentHashedRefreshToken,
     );
-  
+
     if (!isRefreshTokenValid) {
       throw new UnauthorizedException('Invalid refresh token');
     }
-  
+
     const payload = { sub: user.id, email: user.email, role: user.role };
     const accessToken = await this.jwtService.signAsync(payload, {
       expiresIn: '15m',
     });
-  
+
     const { passwordHash, currentHashedRefreshToken, ...safeUser } = user;
-    
+
     if (safeUser.profileImage) {
       safeUser.profileImage = await this.imageStorageService.generateSignedUrl(
         safeUser.profileImage,
         'read',
       );
     }
-  
-    return { 
-      token: accessToken, 
-      user: safeUser 
+
+    return {
+      token: accessToken,
+      user: safeUser,
     };
   }
   async logout(userId: string) {
@@ -104,7 +105,9 @@ export class AuthService {
   async validateRefreshToken(token: string): Promise<any> {
     try {
       const payload = await this.jwtService.verifyAsync(token, {
-        secret: this.configService.get<string>('JWT_REFRESH_SECRET') || this.configService.get<string>('JWT_SECRET') + '_refresh',
+        secret:
+          this.configService.get<string>('JWT_REFRESH_SECRET') ||
+          this.configService.get<string>('JWT_SECRET') + '_refresh',
       });
       return payload;
     } catch (error) {

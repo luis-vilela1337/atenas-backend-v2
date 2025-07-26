@@ -17,17 +17,15 @@ export const mockConfigService = (): Partial<ConfigService> => ({
 
 export const mockJwtService = (): Partial<JwtService> => ({
   sign: jest.fn(() => 'test-jwt-token'),
-  verify: jest
-    .fn()
-    .mockImplementation(<T extends object = any>(token: string): T => {
-      return { userId: 'test-id' } as T;
-    }),
+  verify: jest.fn().mockImplementation(<T extends object = any>(): T => {
+    return { userId: 'test-id' } as T;
+  }),
   signAsync: jest.fn(() => Promise.resolve('test-jwt-token')),
-  verifyAsync: jest
-    .fn()
-    .mockImplementation(<T extends object = any>(token: string): Promise<T> => {
-      return Promise.resolve({ userId: 'test-id' } as T);
-    }),
+  verifyAsync: jest.fn().mockImplementation(<
+    T extends object = any,
+  >(): Promise<T> => {
+    return Promise.resolve({ userId: 'test-id' } as T);
+  }),
 });
 
 export const mockImageStorageService = (): Partial<ImageStorageService> => ({

@@ -27,7 +27,6 @@ import {
 import { UpdateUserV2Application } from '@application/user/update-user.application';
 import { DeleteUserV2Application } from '@application/user/delete-user.application';
 import { DeleteUserResponseDto } from './dto/delete-user.dto';
-import { GeneratePresignedUrV2Application } from '@application/storage/presigned-url.application';
 import {
   ApiBody,
   ApiOperation,

@@ -51,35 +51,35 @@ export class UserSQLRepository {
       .leftJoinAndSelect('user.institution', 'institution')
       .skip(skip)
       .take(limit);
-  
+
     if (filters?.role) {
       queryBuilder.andWhere('user.role = :role', { role: filters.role });
     }
-  
+
     if (filters?.status) {
       queryBuilder.andWhere('user.status = :status', {
         status: filters.status,
       });
     }
-  
+
     if (filters?.institutionId) {
       queryBuilder.andWhere('user.institution.id = :institutionId', {
         institutionId: filters.institutionId,
       });
     }
-  
+
     queryBuilder.orderBy('user.updatedAt', 'DESC');
-  
+
     const [users, total] = await queryBuilder.getManyAndCount();
     const totalPages = Math.ceil(total / limit);
-  
+
     return {
       users,
       total,
       totalPages,
     };
   }
-  
+
   async findByRole(role: UserRole): Promise<User[]> {
     return await this.user.find({
       where: { role },
@@ -88,7 +88,7 @@ export class UserSQLRepository {
       order: { updatedAt: 'DESC' },
     });
   }
-  
+
   async findByStatus(status: UserStatus): Promise<User[]> {
     return await this.user.find({
       where: { status },
@@ -216,14 +216,17 @@ export class UserSQLRepository {
     return bcrypt.compare(token, hash);
   }
 
-  async setCurrentRefreshToken(refreshToken: string, userId: string): Promise<void> {
+  async setCurrentRefreshToken(
+    refreshToken: string,
+    userId: string,
+  ): Promise<void> {
     await this.user.update(userId, { currentHashedRefreshToken: refreshToken });
   }
-  
+
   async removeRefreshToken(userId: string): Promise<void> {
     await this.user.update(userId, { currentHashedRefreshToken: null });
   }
-  
+
   async getUserIfRefreshTokenMatches(
     refreshToken: string,
     userId: string,
@@ -231,16 +234,16 @@ export class UserSQLRepository {
     const user = await this.user.findOne({
       where: { id: userId },
     });
-  
+
     if (!user || !user.currentHashedRefreshToken) {
       return null;
     }
-  
+
     const isRefreshTokenMatching = await bcrypt.compare(
       refreshToken,
       user.currentHashedRefreshToken,
     );
-  
+
     return isRefreshTokenMatching ? user : null;
   }
 }

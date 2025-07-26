@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { LogoutUseCase, LogoutInput, LogoutOutput } from '@core/auth/logout.usecase';
+import {
+  LogoutUseCase,
+  LogoutInput,
+  LogoutOutput,
+} from '@core/auth/logout.usecase';
 
 @Injectable()
 export class LogoutApplication {

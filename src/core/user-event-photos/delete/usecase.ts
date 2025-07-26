@@ -1,4 +1,5 @@
-import { Injectable, NotFoundException } from '@nestjs/common';import { UserEventPhotoSQLRepository } from '@infrastructure/data/sql/repositories/user-event-photo.repository';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { UserEventPhotoSQLRepository } from '@infrastructure/data/sql/repositories/user-event-photo.repository';
 
 @Injectable()
 export class DeleteUserEventPhotoUseCase {

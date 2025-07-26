@@ -21,28 +21,31 @@ export class RefreshResponseDto {
   @ApiProperty({ description: 'Novo token JWT' })
   token: string;
 
-  @ApiProperty({ type: RefreshUserDto, description: 'Dados do usuário autenticado' })
+  @ApiProperty({
+    type: RefreshUserDto,
+    description: 'Dados do usuário autenticado',
+  })
   user: RefreshUserDto;
 
   static adapterToResponse(
-    token: string, 
-    user: { 
-      id: string; 
-      name: string; 
-      email: string; 
+    token: string,
+    user: {
+      id: string;
+      name: string;
+      email: string;
       role: string;
       profileImage?: string | null;
-    }
+    },
   ): RefreshResponseDto {
-    return { 
-      token, 
+    return {
+      token,
       user: {
         id: user.id,
         name: user.name,
         email: user.email,
         role: user.role,
         profileImage: user.profileImage || null,
-      }
+      },
     };
   }
 }

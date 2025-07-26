@@ -1,4 +1,8 @@
-import { BadRequestException, INestApplication, ValidationPipe, } from '@nestjs/common';
+import {
+  BadRequestException,
+  INestApplication,
+  ValidationPipe,
+} from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { ErrorFormatterInterceptor } from '@application/exceptions/global.exception';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';

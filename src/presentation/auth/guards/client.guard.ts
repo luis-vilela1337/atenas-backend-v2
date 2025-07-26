@@ -1,4 +1,8 @@
-import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
+import {
+  Injectable,
+  ExecutionContext,
+  ForbiddenException,
+} from '@nestjs/common';
 import { JwtCustomAuthGuard } from './jwt-auth.guard';
 
 @Injectable()
