@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { AuthService } from '@infrastructure/services/auth.service';
 
 export interface RefreshTokenInput {

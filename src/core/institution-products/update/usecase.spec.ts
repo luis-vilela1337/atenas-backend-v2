@@ -122,7 +122,7 @@ describe('UpdateInstitutionProductUseCase', () => {
       const invalidInput = {
         details: {
           invalidField: 'invalid value',
-        },
+        } as any,
       };
       toTypedDetailsSpy.mockImplementation(() => {
         throw new Error(

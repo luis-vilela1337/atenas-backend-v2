@@ -127,17 +127,12 @@ describe('CreateInstitutionProductUseCase', () => {
       expect(
         institutionProductRepo.findByProductAndInstitution,
       ).toHaveBeenCalledWith(mockInput.productId, mockInput.institutionId);
-      expect(toTypedDetailsSpy).toHaveBeenCalledWith(
-        mockInput.flag,
-        mockInput.details,
-      );
       expect(
         institutionProductRepo.createInstitutionProduct,
       ).toHaveBeenCalledWith({
         productId: mockInput.productId,
         institutionId: mockInput.institutionId,
-        flag: mockInput.flag,
-        details: mockInput.details,
+        flag: ProductFlag.ALBUM,
       });
       expect(result).toEqual(mockCreatedRelation);
     });

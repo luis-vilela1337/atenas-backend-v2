@@ -23,7 +23,7 @@ export class AuthService {
     try {
       const user = await this.usersRepo.findByEmail(email);
       if (user && (await bcrypt.compare(password, user.passwordHash))) {
-        const { passwordHash, ...safe } = user;
+        const { passwordHash: _, ...safe } = user;
 
         if (safe.profileImage) {
           safe.profileImage = await this.imageStorageService.generateSignedUrl(
@@ -84,7 +84,11 @@ export class AuthService {
       expiresIn: '15m',
     });
 
-    const { passwordHash, currentHashedRefreshToken, ...safeUser } = user;
+    const {
+      passwordHash: _,
+      currentHashedRefreshToken: __,
+      ...safeUser
+    } = user;
 
     if (safeUser.profileImage) {
       safeUser.profileImage = await this.imageStorageService.generateSignedUrl(

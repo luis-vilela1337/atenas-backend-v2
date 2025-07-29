@@ -32,9 +32,10 @@ export const mockImageStorageService = (): Partial<ImageStorageService> => ({
   generateRandomFilename: jest.fn(
     (contentType: string) => `test-file.${contentType.split('/')[1]}`,
   ),
-  generateUploadSignedUrl: jest.fn(() =>
-    Promise.resolve('https://test-bucket.com/upload'),
-  ),
+  generateUploadSignedUrl: jest
+    .fn()
+    .mockResolvedValueOnce('https://storage.com/upload/video1')
+    .mockResolvedValueOnce('https://storage.com/upload/video2'),
   generateSignedUrl: jest.fn(() =>
     Promise.resolve('https://test-bucket.com/read'),
   ),

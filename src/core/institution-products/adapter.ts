@@ -2,7 +2,6 @@ import { ProductFlag } from '@infrastructure/data/sql/types/product-flag.enum';
 import {
   AlbumDetails,
   DigitalFilesDetails,
-  EventConfiguration,
   GenericDetails,
   ProductDetails,
 } from '@infrastructure/data/sql/entities';

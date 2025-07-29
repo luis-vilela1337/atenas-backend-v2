@@ -3,6 +3,7 @@ import { UpdateProductUseCase } from './usecase';
 import { ProductSQLRepository } from '@infrastructure/data/sql/repositories/products.repository';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { ProductFlag } from '@infrastructure/data/sql/types/product-flag.enum';
+import { ImageStorageService } from '@infrastructure/services/image-storage.service';
 
 describe('UpdateProductUseCase', () => {
   let useCase: UpdateProductUseCase;
@@ -15,12 +16,20 @@ describe('UpdateProductUseCase', () => {
       updateProduct: jest.fn(),
     };
 
+    const mockImageStorageService = {
+      processProfileImageInput: jest.fn((input) => input),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UpdateProductUseCase,
         {
           provide: ProductSQLRepository,
           useValue: mockRepository,
+        },
+        {
+          provide: ImageStorageService,
+          useValue: mockImageStorageService,
         },
       ],
     }).compile();

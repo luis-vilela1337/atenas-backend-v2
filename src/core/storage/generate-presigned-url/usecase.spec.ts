@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ImageStorageService } from '@infrastructure/services/image-storage.service';
-import { mockImageStorageService } from '@test/mocks/mock-factory';
 import { GeneratePresignedUrlUseCase } from '@core/storage/generate-presigned-url/usecase';
 import { MediaType } from '@presentation/user/dto/presigned-url.dto';
 
@@ -9,12 +8,17 @@ describe('GeneratePresignedUrlUseCase - Enhanced with Video Support', () => {
   let imageStorageService: jest.Mocked<ImageStorageService>;
 
   beforeEach(async () => {
+    const mockService = {
+      generateRandomFilename: jest.fn(),
+      generateSignedUrl: jest.fn(),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         GeneratePresignedUrlUseCase,
         {
           provide: ImageStorageService,
-          useValue: mockImageStorageService(),
+          useValue: mockService,
         },
       ],
     }).compile();
@@ -34,7 +38,7 @@ describe('GeneratePresignedUrlUseCase - Enhanced with Video Support', () => {
         .mockReturnValueOnce('video-abc123-1640995200000.mp4')
         .mockReturnValueOnce('video-def456-1640995200001.mp4');
 
-      imageStorageService.generateUploadSignedUrl
+      imageStorageService.generateSignedUrl
         .mockResolvedValueOnce('https://storage.com/upload/video1')
         .mockResolvedValueOnce('https://storage.com/upload/video2');
 
@@ -84,9 +88,7 @@ describe('GeneratePresignedUrlUseCase - Enhanced with Video Support', () => {
         const input = { contentType: format, quantity: 1 };
 
         imageStorageService.generateRandomFilename.mockReturnValue('test-file');
-        imageStorageService.generateUploadSignedUrl.mockResolvedValue(
-          'test-url',
-        );
+        imageStorageService.generateSignedUrl.mockResolvedValue('test-url');
 
         // WHEN
         const result = await useCase.execute(input);
@@ -107,7 +109,7 @@ describe('GeneratePresignedUrlUseCase - Enhanced with Video Support', () => {
         .mockReturnValueOnce('image-file-2.png')
         .mockReturnValueOnce('image-file-3.png');
 
-      imageStorageService.generateUploadSignedUrl
+      imageStorageService.generateSignedUrl
         .mockResolvedValueOnce('https://storage.com/upload/1')
         .mockResolvedValueOnce('https://storage.com/upload/2')
         .mockResolvedValueOnce('https://storage.com/upload/3');
@@ -129,7 +131,7 @@ describe('GeneratePresignedUrlUseCase - Enhanced with Video Support', () => {
       const imageInput = { contentType: 'image/jpeg', quantity: 1 };
 
       imageStorageService.generateRandomFilename.mockReturnValue('test-file');
-      imageStorageService.generateUploadSignedUrl.mockResolvedValue('test-url');
+      imageStorageService.generateSignedUrl.mockResolvedValue('test-url');
 
       // WHEN
       const videoResult = await useCase.execute(videoInput);
