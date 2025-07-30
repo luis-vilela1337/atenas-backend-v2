@@ -94,7 +94,6 @@ export class UpdateUserV2InputDto {
   })
   @IsOptional()
   @IsString()
-  @Length(1, 500)
   profileImage?: string;
 
   status?: UserStatus;

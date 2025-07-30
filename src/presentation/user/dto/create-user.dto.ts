@@ -170,9 +170,6 @@ export class CreateUserV2InputDto {
   })
   @IsOptional()
   @IsString({ message: 'O profileImage deve ser um texto.' })
-  @Length(1, 500, {
-    message: 'O profileImage não pode ultrapassar $constraint2 caracteres.',
-  })
   profileImage?: string;
 
   @IsOptional()
