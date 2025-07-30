@@ -4,4 +4,6 @@ export interface UpdateProductData {
   name?: string;
   flag?: ProductFlag;
   description?: string;
+  photos?: string[];
+  video?: string[];
 }

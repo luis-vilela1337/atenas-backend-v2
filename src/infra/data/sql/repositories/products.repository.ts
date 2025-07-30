@@ -89,11 +89,13 @@ export class ProductSQLRepository {
         return null;
       }
 
-      const { name, flag, description } = updateData;
+      const { name, flag, description, photos, video } = updateData;
       await qr.manager.update(Product, id, {
         name,
         flag,
         description,
+        photos,
+        video,
         updated_at: new Date(),
       });
 
