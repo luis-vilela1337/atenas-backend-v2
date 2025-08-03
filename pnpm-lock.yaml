@@ -83,6 +83,9 @@ importers:
       lint-staged:
         specifier: ^13.0.3
         version: 13.3.0
+      mercadopago:
+        specifier: ^2.8.0
+        version: 2.8.0
       moment:
         specifier: ^2.30.1
         version: 2.30.1
@@ -2590,6 +2593,9 @@ packages:
 
   memory-pager@1.5.0:
     resolution: {integrity: sha512-ZS4Bp4r/Zoeq6+NLJpP+0Zzm0pR8whtGPf1XExKLJBAczGMnSi3It14OiNCStjQjM6NU1okjQGSxgEZN8eBYKg==}
+
+  mercadopago@2.8.0:
+    resolution: {integrity: sha512-TInH/yGB1JqWaJv41Ske75ryqsN1ffTPMThSTEpt+sDsFDAG8ecahTLw41Az1VuL0gwa+qOHp9SfTyU27Smwew==}
 
   merge-descriptors@1.0.3:
     resolution: {integrity: sha512-gaNvAS7TZ897/rVaZ0nMtAyxNyi/pdbjbAwUpFQpN70GqnVfOiXpeUUMKRBmzXaSQ8DdTX4/0ms62r2K+hE6mQ==}
@@ -6796,6 +6802,13 @@ snapshots:
       fs-monkey: 1.1.0
 
   memory-pager@1.5.0: {}
+
+  mercadopago@2.8.0:
+    dependencies:
+      node-fetch: 2.7.0
+      uuid: 9.0.1
+    transitivePeerDependencies:
+      - encoding
 
   merge-descriptors@1.0.3: {}
 

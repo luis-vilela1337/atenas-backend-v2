@@ -10,6 +10,7 @@ import { StorageControllerV2 } from '@presentation/storage/controller';
 import { InstitutionProductsController } from '@presentation/institution-product/institution-products.controller';
 import { ProductsController } from '@presentation/products/controller/products.controller';
 import { UserEventPhotosController } from '@presentation/user-event-photos/controller';
+import { MercadoPagoController } from '@presentation/mercado-pago/controller/mercado-pago.controller';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { UserEventPhotosController } from '@presentation/user-event-photos/contr
     InstitutionProductsController,
     ProductsController,
     UserEventPhotosController,
+    MercadoPagoController,
   ],
 })
 export class PresentationModule {}

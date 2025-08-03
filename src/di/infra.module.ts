@@ -20,6 +20,7 @@ import { RolesGuard } from '@presentation/auth/guards/roles.guard';
 import { InstitutionProductSQLRepository } from '@infrastructure/data/sql/repositories/institution-product.repostitoy';
 import { InstitutionEventSQLRepository } from '@infrastructure/data/sql/repositories/institution-event.repository';
 import { UserEventPhotoSQLRepository } from '@infrastructure/data/sql/repositories/user-event-photo.repository';
+import { MercadoPagoService } from '@infrastructure/services/mercado-pago.service';
 
 @Module({
   imports: [
@@ -47,6 +48,11 @@ import { UserEventPhotoSQLRepository } from '@infrastructure/data/sql/repositori
     UserEventPhotoSQLRepository,
     AuthServiceV2,
     ImageStorageService,
+    MercadoPagoService,
+    {
+      provide: 'MercadoPagoRepositoryInterface',
+      useClass: MercadoPagoService,
+    },
     // Strategies
     JwtCustomStrategy,
     JwtRefreshStrategy,
@@ -68,6 +74,8 @@ import { UserEventPhotoSQLRepository } from '@infrastructure/data/sql/repositori
     InstitutionProductSQLRepository,
     InstitutionEventSQLRepository,
     UserEventPhotoSQLRepository,
+    MercadoPagoService,
+    'MercadoPagoRepositoryInterface',
     // Strategies
     JwtCustomStrategy,
     JwtRefreshStrategy,

@@ -28,6 +28,7 @@ import { RefreshTokenApplication } from '@application/auth/refresh-token.applica
 import { LogoutApplication } from '@application/auth/logout.application';
 import { UserEventPhotosApplication } from '@application/user-event-photos/user-event-photos.application';
 import { ImageStorageService } from '@infrastructure/services/image-storage.service';
+import { CreatePreferenceApplication } from '@application/mercado-pago/create-preference.application';
 
 @Module({
   imports: [
@@ -67,6 +68,8 @@ import { ImageStorageService } from '@infrastructure/services/image-storage.serv
     RefreshTokenApplication,
     LogoutApplication,
     UserEventPhotosApplication,
+    // mercado-pago
+    CreatePreferenceApplication,
   ],
   exports: [
     //user
@@ -100,6 +103,8 @@ import { ImageStorageService } from '@infrastructure/services/image-storage.serv
     LogoutApplication,
     //  userEvent
     UserEventPhotosApplication,
+    // mercado-pago
+    CreatePreferenceApplication,
   ],
 })
 export class ApplicationModule {}
