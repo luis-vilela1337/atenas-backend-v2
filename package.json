@@ -13,6 +13,7 @@
     "start:dev": "rimraf dist && nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
+    "test:webhook": "node webhook-test.js",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "test": "jest --config jest-unit-config.js",

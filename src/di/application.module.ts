@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { CoreModule } from './core.module';
+import { InfraModule } from './infra.module';
 import { UpdateUserV2Application } from '@application/user/update-user.application';
 import { DeleteUserV2Application } from '@application/user/delete-user.application';
 
@@ -29,10 +30,12 @@ import { LogoutApplication } from '@application/auth/logout.application';
 import { UserEventPhotosApplication } from '@application/user-event-photos/user-event-photos.application';
 import { ImageStorageService } from '@infrastructure/services/image-storage.service';
 import { CreatePreferenceApplication } from '@application/mercado-pago/create-preference.application';
+import { ProcessWebhookApplication } from '@application/mercado-pago/process-webhook.application';
 
 @Module({
   imports: [
     CoreModule,
+    InfraModule,
     MulterModule.register({
       storage: memoryStorage(),
     }),
@@ -70,6 +73,7 @@ import { CreatePreferenceApplication } from '@application/mercado-pago/create-pr
     UserEventPhotosApplication,
     // mercado-pago
     CreatePreferenceApplication,
+    ProcessWebhookApplication,
   ],
   exports: [
     //user
@@ -105,6 +109,7 @@ import { CreatePreferenceApplication } from '@application/mercado-pago/create-pr
     UserEventPhotosApplication,
     // mercado-pago
     CreatePreferenceApplication,
+    ProcessWebhookApplication,
   ],
 })
 export class ApplicationModule {}
