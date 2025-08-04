@@ -23,6 +23,7 @@ import { UserEventPhotoSQLRepository } from '@infrastructure/data/sql/repositori
 import { MercadoPagoService } from '@infrastructure/services/mercado-pago.service';
 import { MercadoPagoWebhookService } from '@infrastructure/services/mercado-pago-webhook.service';
 import { MercadoPagoWebhookRepository } from '@infrastructure/data/sql/repositories/mercado-pago-webhook.repository';
+import { OrderRepository } from '@infrastructure/data/sql/repositories/order.repository';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { MercadoPagoWebhookRepository } from '@infrastructure/data/sql/repositor
     MercadoPagoService,
     MercadoPagoWebhookService,
     MercadoPagoWebhookRepository,
+    OrderRepository,
     {
       provide: 'MercadoPagoRepositoryInterface',
       useClass: MercadoPagoService,
@@ -60,6 +62,10 @@ import { MercadoPagoWebhookRepository } from '@infrastructure/data/sql/repositor
     {
       provide: 'WebhookRepositoryInterface',
       useClass: MercadoPagoWebhookRepository,
+    },
+    {
+      provide: 'OrderRepositoryInterface',
+      useClass: OrderRepository,
     },
     // Strategies
     JwtCustomStrategy,
@@ -85,8 +91,10 @@ import { MercadoPagoWebhookRepository } from '@infrastructure/data/sql/repositor
     MercadoPagoService,
     MercadoPagoWebhookService,
     MercadoPagoWebhookRepository,
+    OrderRepository,
     'MercadoPagoRepositoryInterface',
     'WebhookRepositoryInterface',
+    'OrderRepositoryInterface',
     // Strategies
     JwtCustomStrategy,
     JwtRefreshStrategy,

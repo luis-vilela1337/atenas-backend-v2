@@ -1,10 +1,12 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class CreateMercadoPagoWebhookTables1751228400000 implements MigrationInterface {
-    name = 'CreateMercadoPagoWebhookTables1751228400000'
+export class CreateMercadoPagoWebhookTables1751228400000
+  implements MigrationInterface
+{
+  name = 'CreateMercadoPagoWebhookTables1751228400000';
 
-    public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`
             CREATE TABLE "mercado_pago_notifications" (
                 "id" character varying(255) NOT NULL,
                 "type" character varying(50) NOT NULL,
@@ -18,27 +20,27 @@ export class CreateMercadoPagoWebhookTables1751228400000 implements MigrationInt
             )
         `);
 
-        await queryRunner.query(`
+    await queryRunner.query(`
             CREATE INDEX "idx_notification_type" ON "mercado_pago_notifications" ("type")
         `);
 
-        await queryRunner.query(`
+    await queryRunner.query(`
             CREATE INDEX "idx_payment_id" ON "mercado_pago_notifications" ("paymentId")
         `);
 
-        await queryRunner.query(`
+    await queryRunner.query(`
             CREATE INDEX "idx_merchant_order_id" ON "mercado_pago_notifications" ("merchantOrderId")
         `);
 
-        await queryRunner.query(`
+    await queryRunner.query(`
             CREATE INDEX "idx_notification_status" ON "mercado_pago_notifications" ("status")
         `);
 
-        await queryRunner.query(`
+    await queryRunner.query(`
             CREATE INDEX "idx_created_at" ON "mercado_pago_notifications" ("created_at")
         `);
 
-        await queryRunner.query(`
+    await queryRunner.query(`
             CREATE TABLE "payment_status_history" (
                 "id" SERIAL NOT NULL,
                 "paymentId" character varying(255) NOT NULL,
@@ -54,30 +56,32 @@ export class CreateMercadoPagoWebhookTables1751228400000 implements MigrationInt
             )
         `);
 
-        await queryRunner.query(`
+    await queryRunner.query(`
             CREATE INDEX "idx_payment_history_payment_id" ON "payment_status_history" ("paymentId")
         `);
 
-        await queryRunner.query(`
+    await queryRunner.query(`
             CREATE INDEX "idx_payment_history_external_reference" ON "payment_status_history" ("externalReference")
         `);
 
-        await queryRunner.query(`
+    await queryRunner.query(`
             CREATE INDEX "idx_payment_history_status" ON "payment_status_history" ("status")
         `);
-    }
+  }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`DROP INDEX "idx_payment_history_status"`);
-        await queryRunner.query(`DROP INDEX "idx_payment_history_external_reference"`);
-        await queryRunner.query(`DROP INDEX "idx_payment_history_payment_id"`);
-        await queryRunner.query(`DROP TABLE "payment_status_history"`);
-        
-        await queryRunner.query(`DROP INDEX "idx_created_at"`);
-        await queryRunner.query(`DROP INDEX "idx_notification_status"`);
-        await queryRunner.query(`DROP INDEX "idx_merchant_order_id"`);
-        await queryRunner.query(`DROP INDEX "idx_payment_id"`);
-        await queryRunner.query(`DROP INDEX "idx_notification_type"`);
-        await queryRunner.query(`DROP TABLE "mercado_pago_notifications"`);
-    }
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`DROP INDEX "idx_payment_history_status"`);
+    await queryRunner.query(
+      `DROP INDEX "idx_payment_history_external_reference"`,
+    );
+    await queryRunner.query(`DROP INDEX "idx_payment_history_payment_id"`);
+    await queryRunner.query(`DROP TABLE "payment_status_history"`);
+
+    await queryRunner.query(`DROP INDEX "idx_created_at"`);
+    await queryRunner.query(`DROP INDEX "idx_notification_status"`);
+    await queryRunner.query(`DROP INDEX "idx_merchant_order_id"`);
+    await queryRunner.query(`DROP INDEX "idx_payment_id"`);
+    await queryRunner.query(`DROP INDEX "idx_notification_type"`);
+    await queryRunner.query(`DROP TABLE "mercado_pago_notifications"`);
+  }
 }

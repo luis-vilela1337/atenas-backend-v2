@@ -6,15 +6,15 @@ import {
   Index,
 } from 'typeorm';
 
-export type PaymentStatusType = 
-  | 'pending' 
-  | 'approved' 
-  | 'authorized' 
-  | 'in_process' 
-  | 'in_mediation' 
-  | 'rejected' 
-  | 'cancelled' 
-  | 'refunded' 
+export type PaymentStatusType =
+  | 'pending'
+  | 'approved'
+  | 'authorized'
+  | 'in_process'
+  | 'in_mediation'
+  | 'rejected'
+  | 'cancelled'
+  | 'refunded'
   | 'charged_back';
 
 @Entity({ name: 'payment_status_history' })

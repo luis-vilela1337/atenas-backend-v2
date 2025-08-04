@@ -11,7 +11,16 @@ export interface WebhookNotification {
 
 export interface PaymentStatus {
   id: string;
-  status: 'pending' | 'approved' | 'authorized' | 'in_process' | 'in_mediation' | 'rejected' | 'cancelled' | 'refunded' | 'charged_back';
+  status:
+    | 'pending'
+    | 'approved'
+    | 'authorized'
+    | 'in_process'
+    | 'in_mediation'
+    | 'rejected'
+    | 'cancelled'
+    | 'refunded'
+    | 'charged_back';
   statusDetail: string;
   paymentId: string;
   externalReference: string;

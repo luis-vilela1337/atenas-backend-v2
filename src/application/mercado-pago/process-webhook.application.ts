@@ -9,6 +9,7 @@ import {
   ValidateSignatureInput,
 } from '@core/mercado-pago/webhook/validate-signature.usecase';
 import { WebhookRepositoryInterface } from '@core/mercado-pago/repositories/webhook.repository.interface';
+import { OrderRepositoryInterface } from '@core/orders/repositories/order.repository.interface';
 import { MercadoPagoWebhookDto } from '@presentation/mercado-pago/dto/webhook.dto';
 import { WebhookProcessingResult } from '@core/mercado-pago/entities/webhook-notification.entity';
 
@@ -27,9 +28,14 @@ export class ProcessWebhookApplication {
   constructor(
     @Inject('WebhookRepositoryInterface')
     private readonly webhookRepository: WebhookRepositoryInterface,
+    @Inject('OrderRepositoryInterface')
+    private readonly orderRepository: OrderRepositoryInterface,
     private readonly configService: ConfigService,
   ) {
-    this.processWebhookUseCase = new ProcessWebhookUseCase(webhookRepository);
+    this.processWebhookUseCase = new ProcessWebhookUseCase(
+      webhookRepository,
+      orderRepository,
+    );
     this.validateSignatureUseCase = new ValidateSignatureUseCase();
   }
 
@@ -50,7 +56,9 @@ export class ProcessWebhookApplication {
         );
 
         if (!webhookSecret) {
-          this.logger.warn('Webhook secret not configured, skipping signature validation');
+          this.logger.warn(
+            'Webhook secret not configured, skipping signature validation',
+          );
         } else {
           const validationInput: ValidateSignatureInput = {
             signature: input.signature,
@@ -58,10 +66,13 @@ export class ProcessWebhookApplication {
             webhookSecret,
           };
 
-          const validationResult = this.validateSignatureUseCase.execute(validationInput);
+          const validationResult =
+            this.validateSignatureUseCase.execute(validationInput);
 
           if (!validationResult.isValid) {
-            this.logger.error(`Signature validation failed: ${validationResult.error}`);
+            this.logger.error(
+              `Signature validation failed: ${validationResult.error}`,
+            );
             return {
               notificationId: input.webhookData.id,
               processed: false,
@@ -89,11 +100,16 @@ export class ProcessWebhookApplication {
 
       const result = await this.processWebhookUseCase.execute(processInput);
 
-      this.logger.log(`Webhook processing completed: ${result.notificationId}, processed: ${result.processed}`);
+      this.logger.log(
+        `Webhook processing completed: ${result.notificationId}, processed: ${result.processed}`,
+      );
 
       return result;
     } catch (error) {
-      this.logger.error(`Error processing webhook: ${error.message}`, error.stack);
+      this.logger.error(
+        `Error processing webhook: ${error.message}`,
+        error.stack,
+      );
       return {
         notificationId: input.webhookData.id,
         processed: false,

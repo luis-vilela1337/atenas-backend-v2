@@ -12,7 +12,9 @@ import { MercadoPagoConfig, Payment, MerchantOrder } from 'mercadopago';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
-export class MercadoPagoWebhookRepository implements WebhookRepositoryInterface {
+export class MercadoPagoWebhookRepository
+  implements WebhookRepositoryInterface
+{
   private readonly logger = new Logger(MercadoPagoWebhookRepository.name);
   private client: MercadoPagoConfig;
   private payment: Payment;
@@ -44,9 +46,11 @@ export class MercadoPagoWebhookRepository implements WebhookRepositoryInterface 
     this.merchantOrder = new MerchantOrder(this.client);
   }
 
-  async saveNotification(notification: WebhookNotification): Promise<WebhookNotification> {
+  async saveNotification(
+    notification: WebhookNotification,
+  ): Promise<WebhookNotification> {
     this.logger.log(`Saving notification: ${notification.id}`);
-    
+
     const entity = this.notificationRepository.create({
       id: notification.id,
       type: notification.type,
@@ -59,7 +63,7 @@ export class MercadoPagoWebhookRepository implements WebhookRepositoryInterface 
     });
 
     const saved = await this.notificationRepository.save(entity);
-    
+
     return {
       id: saved.id,
       type: saved.type,
@@ -74,7 +78,7 @@ export class MercadoPagoWebhookRepository implements WebhookRepositoryInterface 
 
   async findNotificationById(id: string): Promise<WebhookNotification | null> {
     this.logger.log(`Finding notification by ID: ${id}`);
-    
+
     const entity = await this.notificationRepository.findOne({
       where: { id },
     });
@@ -95,9 +99,14 @@ export class MercadoPagoWebhookRepository implements WebhookRepositoryInterface 
     };
   }
 
-  async updatePaymentStatus(paymentId: string, status: PaymentStatus): Promise<void> {
-    this.logger.log(`Updating payment status for: ${paymentId} to ${status.status}`);
-    
+  async updatePaymentStatus(
+    paymentId: string,
+    status: PaymentStatus,
+  ): Promise<void> {
+    this.logger.log(
+      `Updating payment status for: ${paymentId} to ${status.status}`,
+    );
+
     const historyEntity = this.paymentHistoryRepository.create({
       paymentId: status.paymentId,
       externalReference: status.externalReference,
@@ -115,7 +124,7 @@ export class MercadoPagoWebhookRepository implements WebhookRepositoryInterface 
   async getPaymentDetails(paymentId: string): Promise<any> {
     try {
       this.logger.log(`Getting payment details for: ${paymentId}`);
-      
+
       const response = await this.payment.get({
         id: paymentId,
       });
@@ -146,7 +155,7 @@ export class MercadoPagoWebhookRepository implements WebhookRepositoryInterface 
   async getMerchantOrderDetails(merchantOrderId: string): Promise<any> {
     try {
       this.logger.log(`Getting merchant order details for: ${merchantOrderId}`);
-      
+
       const response = await this.merchantOrder.get({
         merchantOrderId,
       });
@@ -167,7 +176,9 @@ export class MercadoPagoWebhookRepository implements WebhookRepositoryInterface 
         last_updated: response.last_updated,
       };
     } catch (error) {
-      this.logger.error(`Error getting merchant order details: ${error.message}`);
+      this.logger.error(
+        `Error getting merchant order details: ${error.message}`,
+      );
       throw new Error(`Failed to get merchant order details: ${error.message}`);
     }
   }

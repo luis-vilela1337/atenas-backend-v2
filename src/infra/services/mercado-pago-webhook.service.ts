@@ -35,7 +35,9 @@ export class MercadoPagoWebhookService implements WebhookRepositoryInterface {
     this.merchantOrder = new MerchantOrder(this.client);
   }
 
-  async saveNotification(notification: WebhookNotification): Promise<WebhookNotification> {
+  async saveNotification(
+    notification: WebhookNotification,
+  ): Promise<WebhookNotification> {
     this.logger.log(`Saving notification: ${notification.id}`);
     this.notifications.set(notification.id, notification);
     return notification;
@@ -46,14 +48,19 @@ export class MercadoPagoWebhookService implements WebhookRepositoryInterface {
     return this.notifications.get(id) || null;
   }
 
-  async updatePaymentStatus(paymentId: string, status: PaymentStatus): Promise<void> {
-    this.logger.log(`Updating payment status for: ${paymentId} to ${status.status}`);
+  async updatePaymentStatus(
+    paymentId: string,
+    status: PaymentStatus,
+  ): Promise<void> {
+    this.logger.log(
+      `Updating payment status for: ${paymentId} to ${status.status}`,
+    );
   }
 
   async getPaymentDetails(paymentId: string): Promise<any> {
     try {
       this.logger.log(`Getting payment details for: ${paymentId}`);
-      
+
       const response = await this.payment.get({
         id: paymentId,
       });
@@ -84,7 +91,7 @@ export class MercadoPagoWebhookService implements WebhookRepositoryInterface {
   async getMerchantOrderDetails(merchantOrderId: string): Promise<any> {
     try {
       this.logger.log(`Getting merchant order details for: ${merchantOrderId}`);
-      
+
       const response = await this.merchantOrder.get({
         merchantOrderId,
       });
@@ -105,7 +112,9 @@ export class MercadoPagoWebhookService implements WebhookRepositoryInterface {
         last_updated: response.last_updated,
       };
     } catch (error) {
-      this.logger.error(`Error getting merchant order details: ${error.message}`);
+      this.logger.error(
+        `Error getting merchant order details: ${error.message}`,
+      );
       throw new Error(`Failed to get merchant order details: ${error.message}`);
     }
   }

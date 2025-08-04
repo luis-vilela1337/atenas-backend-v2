@@ -31,6 +31,7 @@ import { UserEventPhotosApplication } from '@application/user-event-photos/user-
 import { ImageStorageService } from '@infrastructure/services/image-storage.service';
 import { CreatePreferenceApplication } from '@application/mercado-pago/create-preference.application';
 import { ProcessWebhookApplication } from '@application/mercado-pago/process-webhook.application';
+import { CreateOrderApplication } from '@application/orders/create-order.application';
 
 @Module({
   imports: [
@@ -74,6 +75,8 @@ import { ProcessWebhookApplication } from '@application/mercado-pago/process-web
     // mercado-pago
     CreatePreferenceApplication,
     ProcessWebhookApplication,
+    // orders
+    CreateOrderApplication,
   ],
   exports: [
     //user
@@ -110,6 +113,8 @@ import { ProcessWebhookApplication } from '@application/mercado-pago/process-web
     // mercado-pago
     CreatePreferenceApplication,
     ProcessWebhookApplication,
+    // orders
+    CreateOrderApplication,
   ],
 })
 export class ApplicationModule {}

@@ -11,6 +11,7 @@ import { InstitutionProductsController } from '@presentation/institution-product
 import { ProductsController } from '@presentation/products/controller/products.controller';
 import { UserEventPhotosController } from '@presentation/user-event-photos/controller';
 import { MercadoPagoController } from '@presentation/mercado-pago/controller/mercado-pago.controller';
+import { OrdersController } from '@presentation/orders/controller/orders.controller';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { MercadoPagoController } from '@presentation/mercado-pago/controller/mer
     ProductsController,
     UserEventPhotosController,
     MercadoPagoController,
+    OrdersController,
   ],
 })
 export class PresentationModule {}

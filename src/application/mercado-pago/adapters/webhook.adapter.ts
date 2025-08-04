@@ -1,5 +1,11 @@
-import { MercadoPagoWebhookDto, WebhookResponseDto } from '@presentation/mercado-pago/dto/webhook.dto';
-import { WebhookNotification, WebhookProcessingResult } from '@core/mercado-pago/entities/webhook-notification.entity';
+import {
+  MercadoPagoWebhookDto,
+  WebhookResponseDto,
+} from '@presentation/mercado-pago/dto/webhook.dto';
+import {
+  WebhookNotification,
+  WebhookProcessingResult,
+} from '@core/mercado-pago/entities/webhook-notification.entity';
 
 export class WebhookAdapter {
   static toEntity(dto: MercadoPagoWebhookDto): WebhookNotification {

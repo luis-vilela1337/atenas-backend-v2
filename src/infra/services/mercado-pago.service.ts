@@ -28,9 +28,9 @@ export class MercadoPagoService implements MercadoPagoRepositoryInterface {
 
     this.client = new MercadoPagoConfig({
       accessToken,
-      options: { 
+      options: {
         timeout: 5000,
-        integratorId: userId
+        integratorId: userId,
       },
     });
 
@@ -88,7 +88,8 @@ export class MercadoPagoService implements MercadoPagoRepositoryInterface {
           'MERCADO_PAGO_NOTIFICATION_URL',
         ),
         statement_descriptor: 'ATENAS',
-        external_reference: `atenas-${Date.now()}`,
+        external_reference:
+          paymentPreference.externalReference || `atenas-${Date.now()}`,
       };
 
       const response = await this.preference.create({

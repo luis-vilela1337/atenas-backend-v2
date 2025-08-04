@@ -1,4 +1,13 @@
-import { Body, Controller, Post, HttpCode, HttpStatus, Headers, RawBodyRequest, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  HttpCode,
+  HttpStatus,
+  Headers,
+  RawBodyRequest,
+  Req,
+} from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreatePreferenceApplication } from '@application/mercado-pago/create-preference.application';
 import { ProcessWebhookApplication } from '@application/mercado-pago/process-webhook.application';
@@ -6,10 +15,7 @@ import {
   CreatePreferenceInputDto,
   CreatePreferenceResponseDto,
 } from '../dto/create-preference.dto';
-import {
-  MercadoPagoWebhookDto,
-  WebhookResponseDto,
-} from '../dto/webhook.dto';
+import { MercadoPagoWebhookDto, WebhookResponseDto } from '../dto/webhook.dto';
 import { CreatePreferenceAdapter } from '@application/mercado-pago/adapters/create-preference.adapter';
 import { Request } from 'express';
 

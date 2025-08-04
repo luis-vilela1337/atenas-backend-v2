@@ -28,6 +28,7 @@ export interface Payer {
 export interface PaymentPreference {
   items: PaymentItem[];
   payer: Payer;
+  externalReference?: string;
 }
 
 export interface PaymentPreferenceResult {
