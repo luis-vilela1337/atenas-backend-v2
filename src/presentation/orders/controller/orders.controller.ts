@@ -56,7 +56,7 @@ export class OrdersController {
     @Body() dto: CreateOrderDto,
     @Req() req: any,
   ): Promise<CreateOrderResponseDto> {
-    const userId = req.user.id; // Obtido do JWT payload
+    const userId = req.user.userId; // Obtido do JWT payload (payload.sub)
     const orderInput = OrderAdapter.toCreateOrderInput(dto, userId);
     const result = await this.createOrderApp.execute(orderInput);
     return OrderAdapter.toCreateOrderResponseDto(result);

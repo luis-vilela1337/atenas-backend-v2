@@ -7,7 +7,7 @@ export class CreateMercadoPagoWebhookTables1751228400000
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
-            CREATE TABLE "mercado_pago_notifications" (
+            CREATE TABLE IF NOT EXISTS "mercado_pago_notifications" (
                 "id" character varying(255) NOT NULL,
                 "type" character varying(50) NOT NULL,
                 "paymentId" character varying(255),
@@ -21,27 +21,27 @@ export class CreateMercadoPagoWebhookTables1751228400000
         `);
 
     await queryRunner.query(`
-            CREATE INDEX "idx_notification_type" ON "mercado_pago_notifications" ("type")
+            CREATE INDEX IF NOT EXISTS "idx_notification_type" ON "mercado_pago_notifications" ("type")
         `);
 
     await queryRunner.query(`
-            CREATE INDEX "idx_payment_id" ON "mercado_pago_notifications" ("paymentId")
+            CREATE INDEX IF NOT EXISTS "idx_payment_id" ON "mercado_pago_notifications" ("paymentId")
         `);
 
     await queryRunner.query(`
-            CREATE INDEX "idx_merchant_order_id" ON "mercado_pago_notifications" ("merchantOrderId")
+            CREATE INDEX IF NOT EXISTS "idx_merchant_order_id" ON "mercado_pago_notifications" ("merchantOrderId")
         `);
 
     await queryRunner.query(`
-            CREATE INDEX "idx_notification_status" ON "mercado_pago_notifications" ("status")
+            CREATE INDEX IF NOT EXISTS "idx_notification_status" ON "mercado_pago_notifications" ("status")
         `);
 
     await queryRunner.query(`
-            CREATE INDEX "idx_created_at" ON "mercado_pago_notifications" ("created_at")
+            CREATE INDEX IF NOT EXISTS "idx_created_at" ON "mercado_pago_notifications" ("created_at")
         `);
 
     await queryRunner.query(`
-            CREATE TABLE "payment_status_history" (
+            CREATE TABLE IF NOT EXISTS "payment_status_history" (
                 "id" SERIAL NOT NULL,
                 "paymentId" character varying(255) NOT NULL,
                 "externalReference" character varying(255),
@@ -57,15 +57,15 @@ export class CreateMercadoPagoWebhookTables1751228400000
         `);
 
     await queryRunner.query(`
-            CREATE INDEX "idx_payment_history_payment_id" ON "payment_status_history" ("paymentId")
+            CREATE INDEX IF NOT EXISTS "idx_payment_history_payment_id" ON "payment_status_history" ("paymentId")
         `);
 
     await queryRunner.query(`
-            CREATE INDEX "idx_payment_history_external_reference" ON "payment_status_history" ("externalReference")
+            CREATE INDEX IF NOT EXISTS "idx_payment_history_external_reference" ON "payment_status_history" ("externalReference")
         `);
 
     await queryRunner.query(`
-            CREATE INDEX "idx_payment_history_status" ON "payment_status_history" ("status")
+            CREATE INDEX IF NOT EXISTS "idx_payment_history_status" ON "payment_status_history" ("status")
         `);
   }
 
