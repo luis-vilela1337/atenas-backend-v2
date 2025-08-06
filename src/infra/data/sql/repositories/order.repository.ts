@@ -3,6 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { OrderRepositoryInterface } from '@core/orders/repositories/order.repository.interface';
 import { Order as OrderEntity } from '@core/orders/entities/order.entity';
+import {
+  FindOrdersInput,
+  FindOrdersResult,
+} from '@core/orders/dto/find-orders.dto';
 import { Order } from '../entities/order.entity';
 import { OrderItem } from '../entities/order-item.entity';
 import { OrderItemDetail } from '../entities/order-item-detail.entity';
@@ -192,6 +196,58 @@ export class OrderRepository implements OrderRepositoryInterface {
     } catch (error) {
       this.logger.error(`Error updating payment gateway ID: ${error.message}`);
       throw new Error(`Failed to update payment gateway ID: ${error.message}`);
+    }
+  }
+
+  async findOrdersWithPagination(
+    input: FindOrdersInput,
+  ): Promise<FindOrdersResult> {
+    this.logger.log(`Finding orders with pagination: ${JSON.stringify(input)}`);
+
+    try {
+      const { filter, pagination } = input;
+      const { page, limit } = pagination;
+      const skip = (page - 1) * limit;
+
+      const queryBuilder = this.orderRepo
+        .createQueryBuilder('order')
+        .leftJoinAndSelect('order.items', 'items')
+        .leftJoinAndSelect('items.details', 'details')
+        .orderBy('order.createdAt', 'DESC');
+
+      if (filter?.userId) {
+        queryBuilder.andWhere('order.userId = :userId', {
+          userId: filter.userId,
+        });
+      }
+
+      if (filter?.paymentStatus) {
+        queryBuilder.andWhere('order.paymentStatus = :paymentStatus', {
+          paymentStatus: filter.paymentStatus,
+        });
+      }
+
+      const [orders, totalItems] = await queryBuilder
+        .skip(skip)
+        .take(limit)
+        .getManyAndCount();
+
+      const totalPages = Math.ceil(totalItems / limit);
+      const itemCount = orders.length;
+
+      return {
+        orders: orders.map((order) => this.mapToEntity(order)),
+        totalItems,
+        totalPages,
+        currentPage: page,
+        itemsPerPage: limit,
+        itemCount,
+      };
+    } catch (error) {
+      this.logger.error(
+        `Error finding orders with pagination: ${error.message}`,
+      );
+      throw new Error(`Failed to find orders: ${error.message}`);
     }
   }
 

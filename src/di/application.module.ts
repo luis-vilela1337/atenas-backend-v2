@@ -32,6 +32,8 @@ import { ImageStorageService } from '@infrastructure/services/image-storage.serv
 import { CreatePreferenceApplication } from '@application/mercado-pago/create-preference.application';
 import { ProcessWebhookApplication } from '@application/mercado-pago/process-webhook.application';
 import { CreateOrderApplication } from '@application/orders/create-order.application';
+import { FindOrdersApplication } from '@application/orders/find-orders.application';
+import { FindOrderByIdApplication } from '@application/orders/find-order-by-id.application';
 
 @Module({
   imports: [
@@ -77,6 +79,8 @@ import { CreateOrderApplication } from '@application/orders/create-order.applica
     ProcessWebhookApplication,
     // orders
     CreateOrderApplication,
+    FindOrdersApplication,
+    FindOrderByIdApplication,
   ],
   exports: [
     //user
@@ -115,6 +119,8 @@ import { CreateOrderApplication } from '@application/orders/create-order.applica
     ProcessWebhookApplication,
     // orders
     CreateOrderApplication,
+    FindOrdersApplication,
+    FindOrderByIdApplication,
   ],
 })
 export class ApplicationModule {}
