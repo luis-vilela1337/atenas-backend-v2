@@ -88,9 +88,7 @@ export class FindAllUserUseCase {
       order = 'desc',
     } = input;
 
-    let users = await this.userRepository.searchByContractNumber(
-      search as string,
-    );
+    let users = await this.userRepository.searchUsers(search as string);
 
     if (role) {
       users = users.filter((user) => user.role === role);

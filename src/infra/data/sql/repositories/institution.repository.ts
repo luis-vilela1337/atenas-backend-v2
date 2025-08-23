@@ -46,8 +46,8 @@ export class InstitutionSQLRepository {
 
     if (filters?.contractNumber) {
       queryBuilder.andWhere(
-        'institution.contractNumber ILIKE :contractNumber',
-        { contractNumber: `%${filters.contractNumber}%` },
+        '(institution.contractNumber ILIKE :search OR institution.name ILIKE :search)',
+        { search: `%${filters.contractNumber}%` },
       );
     }
 

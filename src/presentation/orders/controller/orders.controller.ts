@@ -7,8 +7,9 @@ import {
   Query,
   HttpCode,
   HttpStatus,
-  Req,
   NotFoundException,
+  UseGuards,
+  Request,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -17,6 +18,7 @@ import {
   ApiTags,
   ApiParam,
   ApiQuery,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { CreateOrderApplication } from '@application/orders/create-order.application';
 import { FindOrdersApplication } from '@application/orders/find-orders.application';
@@ -29,11 +31,12 @@ import { OrderDto } from '../dto/order-response.dto';
 import { OrderListResponseDto } from '../dto/order-list-response.dto';
 import { ListOrdersQueryDto } from '../dto/list-orders-query.dto';
 import { OrderAdapter } from '@application/orders/adapters/order.adapter';
+import { JwtCustomAuthGuard } from '@presentation/auth/guards/jwt-auth.guard';
 
 @ApiTags('orders')
 @Controller('v1/orders')
-// @ApiBearerAuth()
-// @UseGuards(JwtCustomAuthGuard)
+@ApiBearerAuth()
+@UseGuards(JwtCustomAuthGuard)
 export class OrdersController {
   constructor(
     private readonly createOrderApp: CreateOrderApplication,
@@ -66,9 +69,12 @@ export class OrdersController {
   @HttpCode(HttpStatus.CREATED)
   async createOrder(
     @Body() dto: CreateOrderDto,
-    @Req() req: any,
+    @Request() req: any,
   ): Promise<CreateOrderResponseDto> {
-    const userId = req.user.userId; // Obtido do JWT payload (payload.sub)
+    const userId = req.user?.userId || req.user?.sub; // Obtido do JWT payload
+    if (!userId) {
+      throw new NotFoundException('User ID not found in token');
+    }
     const orderInput = OrderAdapter.toCreateOrderInput(dto, userId);
     const result = await this.createOrderApp.execute(orderInput);
     return OrderAdapter.toCreateOrderResponseDto(result);

@@ -143,13 +143,20 @@ export class UserSQLRepository {
 
     return await queryBuilder.getCount();
   }
-  async searchByContractNumber(contractNumber: string): Promise<User[]> {
+  async searchUsers(searchTerm: string): Promise<User[]> {
     return await this.user
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.institution', 'institution')
-      .where(`institution.contractNumber || user.identifier ILIKE :search`, {
-        search: `%${contractNumber}%`,
-      })
+      .where(
+        `institution.contractNumber ILIKE :search 
+              OR user.identifier ILIKE :search 
+              OR user.name ILIKE :search 
+              OR user.email ILIKE :search`,
+        {
+          search: `%${searchTerm}%`,
+        },
+      )
+      .orderBy('user.updatedAt', 'DESC')
       .getMany();
   }
   async emailExists(email: string, excludeId?: string): Promise<boolean> {

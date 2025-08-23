@@ -22,6 +22,7 @@ export interface AlbumDetails {
 
 export interface EventConfiguration {
   id: string;
+  name?: string;
   minPhotos?: number;
   valorPhoto?: number;
   valorPack?: number;
