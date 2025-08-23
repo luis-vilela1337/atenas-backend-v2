@@ -144,20 +144,39 @@ export class UserSQLRepository {
     return await queryBuilder.getCount();
   }
   async searchUsers(searchTerm: string): Promise<User[]> {
-    return await this.user
+    const queryBuilder = this.user
       .createQueryBuilder('user')
-      .leftJoinAndSelect('user.institution', 'institution')
-      .where(
+      .leftJoinAndSelect('user.institution', 'institution');
+
+    if (searchTerm.includes('-')) {
+      const [contractNumber, identifier] = searchTerm.split('-', 2);
+      queryBuilder.where(
+        `(institution.contractNumber = :contractNumber AND user.identifier = :identifier)
+         OR institution.contractNumber ILIKE :search 
+         OR user.identifier ILIKE :search 
+         OR user.name ILIKE :search 
+         OR user.email ILIKE :search
+         OR CONCAT(institution.contractNumber, '-', user.identifier) ILIKE :search`,
+        {
+          contractNumber: contractNumber.trim(),
+          identifier: identifier.trim(),
+          search: `%${searchTerm}%`,
+        },
+      );
+    } else {
+      queryBuilder.where(
         `institution.contractNumber ILIKE :search 
-              OR user.identifier ILIKE :search 
-              OR user.name ILIKE :search 
-              OR user.email ILIKE :search`,
+         OR user.identifier ILIKE :search 
+         OR user.name ILIKE :search 
+         OR user.email ILIKE :search
+         OR CONCAT(institution.contractNumber, '-', user.identifier) ILIKE :search`,
         {
           search: `%${searchTerm}%`,
         },
-      )
-      .orderBy('user.updatedAt', 'DESC')
-      .getMany();
+      );
+    }
+
+    return await queryBuilder.orderBy('user.updatedAt', 'DESC').getMany();
   }
   async emailExists(email: string, excludeId?: string): Promise<boolean> {
     const queryBuilder = this.user
