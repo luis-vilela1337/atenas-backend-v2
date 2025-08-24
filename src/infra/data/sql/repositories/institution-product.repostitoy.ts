@@ -6,7 +6,10 @@ import { ProductFlag } from '../types/product-flag.enum';
 import {
   InstitutionProduct,
   ProductDetails,
+  GenericDetails,
+  DigitalFilesDetails,
 } from '@infrastructure/data/sql/entities';
+import { InstitutionEventSQLRepository } from '@infrastructure/data/sql/repositories/institution-event.repository';
 
 export interface CreateInstitutionProductData {
   productId: string;
@@ -31,6 +34,7 @@ export class InstitutionProductSQLRepository {
   constructor(
     @InjectRepository(InstitutionProduct)
     private readonly institutionProduct: Repository<InstitutionProduct>,
+    private readonly institutionEventRepository: InstitutionEventSQLRepository,
     @InjectDataSource()
     private readonly dataSource: DataSource,
   ) {}
@@ -49,23 +53,37 @@ export class InstitutionProductSQLRepository {
   }
 
   async findById(id: string): Promise<InstitutionProduct | null> {
-    return await this.institutionProduct.findOne({
+    const product = await this.institutionProduct.findOne({
       where: { id },
       relations: ['product', 'institution'],
     });
+
+    if (!product) {
+      return null;
+    }
+
+    const [productWithEventNames] = await this.populateEventNames([product]);
+    return productWithEventNames;
   }
 
   async findByProductAndInstitution(
     productId: string,
     institutionId: string,
   ): Promise<InstitutionProduct | null> {
-    return await this.institutionProduct.findOne({
+    const product = await this.institutionProduct.findOne({
       where: {
         product: { id: productId },
         institution: { id: institutionId },
       },
       relations: ['product', 'institution'],
     });
+
+    if (!product) {
+      return null;
+    }
+
+    const [productWithEventNames] = await this.populateEventNames([product]);
+    return productWithEventNames;
   }
 
   async findAllPaginated(
@@ -108,11 +126,66 @@ export class InstitutionProductSQLRepository {
     const [institutionProducts, total] = await queryBuilder.getManyAndCount();
     const totalPages = Math.ceil(total / limit);
 
-    return {
+    // Populate event names for products with GENERIC or DIGITAL_FILES flags
+    const institutionProductsWithEventNames = await this.populateEventNames(
       institutionProducts,
+    );
+
+    return {
+      institutionProducts: institutionProductsWithEventNames,
       total,
       totalPages,
     };
+  }
+
+  private async populateEventNames(
+    institutionProducts: InstitutionProduct[],
+  ): Promise<InstitutionProduct[]> {
+    return Promise.all(
+      institutionProducts.map(async (product) => {
+        // Only populate event names for GENERIC and DIGITAL_FILES flags
+        if (
+          product.flag === ProductFlag.GENERIC ||
+          product.flag === ProductFlag.DIGITAL_FILES
+        ) {
+          const details = product.details as
+            | GenericDetails
+            | DigitalFilesDetails;
+
+          if (details && details.events && details.events.length > 0) {
+            // Get all event IDs from the details
+            const eventIds = details.events.map((event) => event.id);
+
+            // Fetch event names from the database
+            const events = await this.institutionEventRepository.findByIds(
+              eventIds,
+            );
+
+            // Create a map for quick lookup
+            const eventNameMap = new Map(
+              events.map((event) => [event.id, event.name]),
+            );
+
+            // Update the events with names
+            const updatedEvents = details.events.map((event) => ({
+              ...event,
+              name: eventNameMap.get(event.id) || undefined,
+            }));
+
+            // Return the product with updated details
+            return {
+              ...product,
+              details: {
+                ...details,
+                events: updatedEvents,
+              },
+            };
+          }
+        }
+
+        return product;
+      }),
+    );
   }
 
   async updateInstitutionProduct(
@@ -160,18 +233,22 @@ export class InstitutionProductSQLRepository {
   async findByInstitutionId(
     institutionId: string,
   ): Promise<InstitutionProduct[]> {
-    return await this.institutionProduct.find({
+    const products = await this.institutionProduct.find({
       where: { institution: { id: institutionId } },
       relations: ['product', 'institution'],
       order: { updatedAt: 'DESC' },
     });
+
+    return await this.populateEventNames(products);
   }
 
   async findByProductId(productId: string): Promise<InstitutionProduct[]> {
-    return await this.institutionProduct.find({
+    const products = await this.institutionProduct.find({
       where: { product: { id: productId } },
       relations: ['product', 'institution'],
       order: { updatedAt: 'DESC' },
     });
+
+    return await this.populateEventNames(products);
   }
 }

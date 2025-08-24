@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { InstitutionEvent } from '@infrastructure/data/sql/entities/instituition.events';
 
 @Injectable()
@@ -41,5 +41,14 @@ export class InstitutionEventSQLRepository {
 
   async delete(id: string): Promise<void> {
     await this.repository.delete(id);
+  }
+
+  async findByIds(ids: string[]): Promise<InstitutionEvent[]> {
+    if (ids.length === 0) return [];
+
+    return await this.repository.find({
+      where: { id: In(ids) },
+      select: ['id', 'name'],
+    });
   }
 }
