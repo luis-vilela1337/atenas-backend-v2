@@ -33,13 +33,6 @@ export class ValidateSignatureUseCase {
 
       const { timestamp, hash } = signatureParts;
 
-      if (this.isTimestampExpired(timestamp)) {
-        return {
-          isValid: false,
-          error: 'Signature timestamp is too old',
-        };
-      }
-
       const expectedHash = this.calculateSignature(
         timestamp,
         requestBody,
@@ -80,14 +73,6 @@ export class ValidateSignatureUseCase {
     } catch {
       return null;
     }
-  }
-
-  private isTimestampExpired(timestamp: string): boolean {
-    const timestampMs = parseInt(timestamp) * 1000;
-    const currentMs = Date.now();
-    const fiveMinutesMs = 5 * 60 * 1000;
-
-    return currentMs - timestampMs > fiveMinutesMs;
   }
 
   private calculateSignature(
