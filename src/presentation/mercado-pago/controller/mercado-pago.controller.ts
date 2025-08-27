@@ -75,12 +75,16 @@ export class MercadoPagoController {
     @Req() req: RawBodyRequest<Request>,
   ): Promise<WebhookResponseDto> {
     try {
+      console.log({
+        webhookData: dto,
+        signature: headers['x-signature'] || '',
+        requestBody: req.rawBody?.toString() || JSON.stringify(dto),
+      });
       const result = await this.processWebhookApp.execute({
         webhookData: dto,
         signature: headers['x-signature'] || '',
         requestBody: req.rawBody?.toString() || JSON.stringify(dto),
       });
-
       if (result.processed) {
         return {
           status: 'success',
