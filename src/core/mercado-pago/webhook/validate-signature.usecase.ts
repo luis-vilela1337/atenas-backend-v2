@@ -4,6 +4,7 @@ export interface ValidateSignatureInput {
   signature: string;
   requestBody: string;
   webhookSecret: string;
+  maxTimestampAge?: number; // em segundos, padrão 600 (10 minutos)
 }
 
 export interface ValidateSignatureOutput {
@@ -14,7 +15,12 @@ export interface ValidateSignatureOutput {
 export class ValidateSignatureUseCase {
   execute(input: ValidateSignatureInput): ValidateSignatureOutput {
     try {
-      const { signature, requestBody, webhookSecret } = input;
+      const {
+        signature,
+        requestBody,
+        webhookSecret,
+        maxTimestampAge = 600,
+      } = input;
 
       if (!signature || !requestBody || !webhookSecret) {
         return {
@@ -33,6 +39,18 @@ export class ValidateSignatureUseCase {
 
       const { timestamp, hash } = signatureParts;
 
+      // Validar timestamp
+      const timestampValidation = this.validateTimestamp(
+        timestamp,
+        maxTimestampAge,
+      );
+      if (!timestampValidation.isValid) {
+        return {
+          isValid: false,
+          error: timestampValidation.error,
+        };
+      }
+
       const expectedHash = this.calculateSignature(
         timestamp,
         requestBody,
@@ -43,7 +61,9 @@ export class ValidateSignatureUseCase {
 
       return {
         isValid,
-        error: isValid ? undefined : 'Invalid signature',
+        error: isValid
+          ? undefined
+          : `Invalid signature - Expected: ${expectedHash}, Received: ${hash}`,
       };
     } catch (error) {
       return {
@@ -82,6 +102,31 @@ export class ValidateSignatureUseCase {
   ): string {
     const payload = `${timestamp}.${requestBody}`;
     return createHmac('sha256', webhookSecret).update(payload).digest('hex');
+  }
+
+  private validateTimestamp(
+    timestamp: string,
+    maxAge: number,
+  ): { isValid: boolean; error?: string } {
+    try {
+      const webhookTimestamp = parseInt(timestamp);
+      const currentTimestamp = Math.floor(Date.now() / 1000);
+      const timeDifference = Math.abs(currentTimestamp - webhookTimestamp);
+
+      if (timeDifference > maxAge) {
+        return {
+          isValid: false,
+          error: `Timestamp too old. Difference: ${timeDifference}s, Max allowed: ${maxAge}s`,
+        };
+      }
+
+      return { isValid: true };
+    } catch (error) {
+      return {
+        isValid: false,
+        error: `Invalid timestamp format: ${timestamp}`,
+      };
+    }
   }
 
   private compareHashes(hash1: string, hash2: string): boolean {
