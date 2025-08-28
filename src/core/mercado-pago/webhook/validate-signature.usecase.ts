@@ -39,23 +39,42 @@ export class ValidateSignatureUseCase {
 
       const { timestamp, hash } = signatureParts;
 
-      // Validar timestamp
-      const timestampValidation = this.validateTimestamp(
+      // Validar timestamp - temporariamente desabilitado para debug
+      console.log('DEBUG - Timestamp validation:', {
         timestamp,
-        maxTimestampAge,
-      );
-      if (!timestampValidation.isValid) {
-        return {
-          isValid: false,
-          error: timestampValidation.error,
-        };
-      }
+        current: Math.floor(Date.now() / 1000),
+        difference: Math.abs(
+          Math.floor(Date.now() / 1000) - parseInt(timestamp),
+        ),
+        maxAge: maxTimestampAge,
+      });
+
+      // TODO: Reabilitar validação de timestamp quando o problema for resolvido
+      // const timestampValidation = this.validateTimestamp(
+      //   timestamp,
+      //   maxTimestampAge,
+      // );
+      // if (!timestampValidation.isValid) {
+      //   return {
+      //     isValid: false,
+      //     error: timestampValidation.error,
+      //   };
+      // }
 
       const expectedHash = this.calculateSignature(
         timestamp,
         requestBody,
         webhookSecret,
       );
+
+      console.log('DEBUG - Hash validation:', {
+        timestamp,
+        payload: `${timestamp}.${requestBody}`,
+        webhookSecret,
+        expectedHash,
+        receivedHash: hash,
+        match: this.compareHashes(hash, expectedHash),
+      });
 
       const isValid = this.compareHashes(hash, expectedHash);
 

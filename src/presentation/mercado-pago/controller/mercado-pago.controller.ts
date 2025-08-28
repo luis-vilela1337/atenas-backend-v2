@@ -79,6 +79,9 @@ export class MercadoPagoController {
         webhookData: dto,
         signature: headers['x-signature'] || '',
         requestBody: req.rawBody?.toString() || JSON.stringify(dto),
+        // DEBUG: Log both versions to compare
+        rawBodyAvailable: !!req.rawBody,
+        jsonStringified: JSON.stringify(dto),
       });
       const result = await this.processWebhookApp.execute({
         webhookData: dto,
