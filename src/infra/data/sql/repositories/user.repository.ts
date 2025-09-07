@@ -272,4 +272,16 @@ export class UserSQLRepository {
 
     return isRefreshTokenMatching ? user : null;
   }
+
+  async findUserCreditByUserId(userId: string): Promise<number> {
+    const user = await this.user.findOne({
+      where: { id: userId },
+      select: ['creditValue'],
+    });
+    return user?.creditValue ? parseFloat(user.creditValue) : 0;
+  }
+
+  async updateUserCredit(userId: string, newValue: number): Promise<void> {
+    await this.user.update(userId, { creditValue: newValue.toString() });
+  }
 }

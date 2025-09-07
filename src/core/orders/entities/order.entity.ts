@@ -82,7 +82,10 @@ export interface Order {
 
 export interface CreateOrderResult {
   orderId: string;
-  mercadoPagoCheckoutUrl: string;
+  checkoutUrl: string;
+  paymentMethod: 'MERCADO_PAGO' | 'CREDIT' | 'FREE';
+  creditUsed?: number;
+  remainingCredit?: number;
 }
 
 export interface UpdateOrderStatusInput {
