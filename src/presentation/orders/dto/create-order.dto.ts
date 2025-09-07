@@ -11,8 +11,10 @@ import {
   IsBoolean,
   ValidateNested,
   Min,
+  ValidateIf,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { ConditionalShipping } from '../validators/conditional-shipping.validator';
 
 export class ShippingDetailsDto {
   @ApiProperty({ description: 'CEP de entrega', example: '01234-567' })
@@ -202,12 +204,20 @@ export class CreateOrderDto {
   cartItems!: CartItemDto[];
 
   @ApiProperty({
-    description: 'Detalhes de entrega',
+    description:
+      'Detalhes de entrega (obrigatório apenas para produtos físicos)',
     type: ShippingDetailsDto,
+    required: false,
   })
+  @ValidateIf((o) =>
+    o.cartItems.some(
+      (item: CartItemDto) => item.productType !== 'DIGITAL_FILES',
+    ),
+  )
   @ValidateNested()
   @Type(() => ShippingDetailsDto)
-  shippingDetails!: ShippingDetailsDto;
+  @ConditionalShipping('cartItems')
+  shippingDetails?: ShippingDetailsDto;
 
   @ApiProperty({
     description: 'Dados do pagador',

@@ -56,8 +56,14 @@ export class Order {
   @Index('idx_order_payment_gateway_id')
   paymentGatewayId?: string;
 
-  @Column({ type: 'jsonb' })
-  shippingAddress!: ShippingAddress;
+  @Column({ type: 'varchar', length: 20, nullable: true })
+  contractNumber?: string;
+
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  contractUniqueId?: string;
+
+  @Column({ type: 'jsonb', nullable: true })
+  shippingAddress?: ShippingAddress;
 
   @OneToMany(() => OrderItem, (orderItem) => orderItem.order, {
     cascade: true,

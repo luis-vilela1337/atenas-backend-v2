@@ -74,6 +74,18 @@ export class User {
   @Column({ type: 'varchar', length: 255, nullable: true })
   currentHashedRefreshToken?: string;
 
+  @Column({ type: 'varchar', length: 14, nullable: true })
+  cpf?: string;
+
+  @Column({ type: 'text', nullable: true })
+  becaMeasures?: string;
+
+  @Column({ type: 'text', nullable: true })
+  address?: string;
+
+  @Column({ type: 'varchar', length: 9, nullable: true })
+  zipCode?: string;
+
   @CreateDateColumn({ name: 'created_at', type: 'timestamp with time zone' })
   createdAt!: Date;
 

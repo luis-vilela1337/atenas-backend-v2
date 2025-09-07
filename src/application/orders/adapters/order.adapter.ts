@@ -25,15 +25,17 @@ export class OrderAdapter {
     return {
       userId,
       cartItems: dto.cartItems.map((item) => this.toCartItem(item)),
-      shippingDetails: {
-        zipCode: dto.shippingDetails.zipCode,
-        street: dto.shippingDetails.street,
-        number: dto.shippingDetails.number,
-        complement: dto.shippingDetails.complement,
-        neighborhood: dto.shippingDetails.neighborhood,
-        city: dto.shippingDetails.city,
-        state: dto.shippingDetails.state,
-      },
+      shippingDetails: dto.shippingDetails
+        ? {
+            zipCode: dto.shippingDetails.zipCode,
+            street: dto.shippingDetails.street,
+            number: dto.shippingDetails.number,
+            complement: dto.shippingDetails.complement,
+            neighborhood: dto.shippingDetails.neighborhood,
+            city: dto.shippingDetails.city,
+            state: dto.shippingDetails.state,
+          }
+        : undefined,
       payer: {
         firstName: dto.payer.firstName,
         lastName: dto.payer.lastName,
@@ -51,7 +53,7 @@ export class OrderAdapter {
   ): CreateOrderResponseDto {
     return {
       orderId: result.orderId,
-      mercadoPagoCheckoutUrl: result.mercadoPagoCheckoutUrl,
+      mercadoPagoCheckoutUrl: result.checkoutUrl,
     };
   }
 

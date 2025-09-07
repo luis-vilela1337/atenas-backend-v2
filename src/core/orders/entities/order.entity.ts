@@ -48,7 +48,7 @@ export interface CartItem {
 export interface CreateOrderInput {
   userId: string;
   cartItems: CartItem[];
-  shippingDetails: ShippingAddress;
+  shippingDetails?: ShippingAddress;
   payer: Payer;
 }
 
@@ -74,7 +74,9 @@ export interface Order {
   totalAmount: number;
   paymentStatus: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED';
   paymentGatewayId?: string;
-  shippingAddress: ShippingAddress;
+  contractNumber?: string;
+  contractUniqueId?: string;
+  shippingAddress?: ShippingAddress;
   items: OrderItem[];
   createdAt: Date;
   updatedAt?: Date;
@@ -84,6 +86,7 @@ export interface CreateOrderResult {
   orderId: string;
   checkoutUrl: string;
   paymentMethod: 'MERCADO_PAGO' | 'CREDIT' | 'FREE';
+  contractNumber?: string;
   creditUsed?: number;
   remainingCredit?: number;
 }

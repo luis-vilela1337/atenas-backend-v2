@@ -1,7 +1,9 @@
 import { Injectable, Logger, Inject } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { CreateOrderUseCase } from '@core/orders/create-order/usecase';
 import { OrderRepositoryInterface } from '@core/orders/repositories/order.repository.interface';
 import { MercadoPagoRepositoryInterface } from '@core/mercado-pago/repositories/mercado-pago.repository.interface';
+import { UserSQLRepository } from '../../infra/data/sql/repositories/user.repository';
 import {
   CreateOrderInput,
   CreateOrderResult,
@@ -17,10 +19,14 @@ export class CreateOrderApplication {
     private readonly orderRepository: OrderRepositoryInterface,
     @Inject('MercadoPagoRepositoryInterface')
     private readonly mercadoPagoRepository: MercadoPagoRepositoryInterface,
+    private readonly userRepository: UserSQLRepository,
+    private readonly configService: ConfigService,
   ) {
     this.createOrderUseCase = new CreateOrderUseCase(
       orderRepository,
       mercadoPagoRepository,
+      userRepository,
+      configService,
     );
   }
 

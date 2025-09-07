@@ -119,7 +119,6 @@ describe('CreateOrderUseCase', () => {
   describe('CREDIT Payment Flow - Sufficient Credit', () => {
     it('GIVEN user has sufficient credit WHEN executing THEN should deduct credit and create APPROVED order', async () => {
       // GIVEN
-      const orderValue = 100;
       const userCredit = 150;
 
       userRepository.findUserCreditByUserId.mockResolvedValue(userCredit);
@@ -155,7 +154,6 @@ describe('CreateOrderUseCase', () => {
 
     it('GIVEN user has exact credit amount WHEN executing THEN should use all credit', async () => {
       // GIVEN
-      const orderValue = 100;
       const userCredit = 100;
 
       userRepository.findUserCreditByUserId.mockResolvedValue(userCredit);
@@ -183,7 +181,6 @@ describe('CreateOrderUseCase', () => {
   describe('MERCADO_PAGO Payment Flow - Insufficient Credit', () => {
     it('GIVEN user has insufficient credit WHEN executing THEN should use Mercado Pago flow', async () => {
       // GIVEN
-      const orderValue = 100;
       const userCredit = 50;
 
       userRepository.findUserCreditByUserId.mockResolvedValue(userCredit);
@@ -224,7 +221,6 @@ describe('CreateOrderUseCase', () => {
 
     it('GIVEN user has zero credit WHEN executing THEN should use Mercado Pago flow', async () => {
       // GIVEN
-      const orderValue = 100;
       const userCredit = 0;
 
       userRepository.findUserCreditByUserId.mockResolvedValue(userCredit);
