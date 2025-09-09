@@ -37,7 +37,7 @@ export class Order {
     generated: 'increment',
     nullable: true,
   })
-  displayId!: number;
+  displayId: number;
 
   @Column({ type: 'uuid' })
   @Index('idx_order_user_id')
