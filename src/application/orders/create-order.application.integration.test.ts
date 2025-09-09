@@ -117,6 +117,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
       const userId = 'user-free-test';
       const expectedOrder = {
         id: 'order-free-123',
+        displayId: 1,
         userId,
         totalAmount: 0,
         paymentStatus: 'APPROVED' as const,
@@ -196,6 +197,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
 
       const expectedOrder = {
         id: 'order-multi-free-456',
+        displayId: 2,
         userId: 'user-multi-free',
         totalAmount: 0,
         paymentStatus: 'APPROVED' as const,
@@ -264,6 +266,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
       const userCredit = 200; // Sufficient credit
       const expectedOrder = {
         id: 'order-credit-789',
+        displayId: 3,
         userId,
         totalAmount: 150,
         paymentStatus: 'APPROVED' as const,
@@ -352,6 +355,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
       const userCredit = 100; // Exact credit amount
       const expectedOrder = {
         id: 'order-exact-credit-101',
+        displayId: 4,
         userId,
         totalAmount: 100,
         paymentStatus: 'APPROVED' as const,
@@ -428,6 +432,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
       const userCredit = 100; // Insufficient credit (need 500)
       const expectedOrder = {
         id: 'order-mp-202',
+        displayId: 5,
         userId,
         totalAmount: 500,
         paymentStatus: 'PENDING' as const,
@@ -515,6 +520,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
       const userCredit = 0;
       const expectedOrder = {
         id: 'order-zero-303',
+        displayId: 6,
         userId,
         totalAmount: 25.5,
         paymentStatus: 'PENDING' as const,
@@ -650,6 +656,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
       const userCredit = 0;
       const expectedOrder = {
         id: 'order-digital-404',
+        displayId: 7,
         userId,
         totalAmount: 30,
         paymentStatus: 'PENDING' as const,
@@ -789,6 +796,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
       const userId = 'user-mp-error';
       const expectedOrder = {
         id: 'order-mp-error-505',
+        displayId: 8,
         userId,
         totalAmount: 75,
         paymentStatus: 'PENDING' as const,

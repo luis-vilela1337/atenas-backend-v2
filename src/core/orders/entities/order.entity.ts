@@ -64,12 +64,14 @@ export interface OrderItem {
 export interface OrderItemDetail {
   id: string;
   photoId?: string;
+  photoFileName?: string;
   eventId?: string;
   isPackage: boolean;
 }
 
 export interface Order {
   id: string;
+  displayId: number;
   userId: string;
   totalAmount: number;
   paymentStatus: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED';

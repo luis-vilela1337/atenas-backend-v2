@@ -30,6 +30,14 @@ export class Order {
   @PrimaryGeneratedColumn('uuid')
   id: string = randomUUID();
 
+  @Column({
+    type: 'integer',
+    unique: true,
+    name: 'display_id',
+    generated: 'increment',
+  })
+  displayId!: number;
+
   @Column({ type: 'uuid' })
   @Index('idx_order_user_id')
   userId!: string;

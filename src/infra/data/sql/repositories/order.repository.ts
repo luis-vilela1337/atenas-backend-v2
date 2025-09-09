@@ -87,6 +87,7 @@ export class OrderRepository implements OrderRepositoryInterface {
 
       return {
         id: savedOrder.id,
+        displayId: savedOrder.displayId,
         userId: savedOrder.userId,
         totalAmount: savedOrder.totalAmount,
         paymentStatus: savedOrder.paymentStatus,
@@ -108,7 +109,7 @@ export class OrderRepository implements OrderRepositoryInterface {
     try {
       const order = await this.orderRepo.findOne({
         where: { id },
-        relations: ['items', 'items.details'],
+        relations: ['items', 'items.details', 'items.details.photo'],
       });
 
       if (!order) {
@@ -130,7 +131,7 @@ export class OrderRepository implements OrderRepositoryInterface {
     try {
       const order = await this.orderRepo.findOne({
         where: { paymentGatewayId },
-        relations: ['items', 'items.details'],
+        relations: ['items', 'items.details', 'items.details.photo'],
       });
 
       if (!order) {
@@ -152,7 +153,7 @@ export class OrderRepository implements OrderRepositoryInterface {
     try {
       const orders = await this.orderRepo.find({
         where: { userId },
-        relations: ['items', 'items.details'],
+        relations: ['items', 'items.details', 'items.details.photo'],
         order: { createdAt: 'DESC' },
       });
 
@@ -213,6 +214,7 @@ export class OrderRepository implements OrderRepositoryInterface {
         .createQueryBuilder('order')
         .leftJoinAndSelect('order.items', 'items')
         .leftJoinAndSelect('items.details', 'details')
+        .leftJoinAndSelect('details.photo', 'photo')
         .orderBy('order.createdAt', 'DESC');
 
       if (filter?.userId) {
@@ -254,6 +256,7 @@ export class OrderRepository implements OrderRepositoryInterface {
   private mapToEntity(order: Order): OrderEntity {
     return {
       id: order.id,
+      displayId: order.displayId,
       userId: order.userId,
       totalAmount: Number(order.totalAmount),
       paymentStatus: order.paymentStatus,
@@ -270,6 +273,7 @@ export class OrderRepository implements OrderRepositoryInterface {
             item.details?.map((detail) => ({
               id: detail.id,
               photoId: detail.photoId,
+              photoFileName: detail.photo?.fileName,
               eventId: detail.eventId,
               isPackage: detail.isPackage,
             })) || [],

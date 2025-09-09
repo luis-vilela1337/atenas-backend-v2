@@ -31,7 +31,7 @@ export class OrderItemDetailsDto {
   orderItemId: string;
 
   @ApiProperty({ required: false })
-  photoId?: string;
+  photoUrl?: string;
 
   @ApiProperty({ required: false })
   eventId?: string;
@@ -71,6 +71,9 @@ export class OrderItemDto {
 export class OrderDto {
   @ApiProperty()
   id: string;
+
+  @ApiProperty()
+  displayId: number;
 
   @ApiProperty()
   userId: string;

@@ -16,6 +16,7 @@ import {
   FindOrdersInput,
   FindOrdersResult,
 } from '@core/orders/dto/find-orders.dto';
+import { ImageStorageService } from '@infrastructure/services/image-storage.service';
 
 export class OrderAdapter {
   static toCreateOrderInput(
@@ -95,11 +96,16 @@ export class OrderAdapter {
     };
   }
 
-  static toOrderListResponseDto(
+  static async toOrderListResponseDto(
     result: FindOrdersResult,
-  ): OrderListResponseDto {
+    imageStorageService: ImageStorageService,
+  ): Promise<OrderListResponseDto> {
+    const data = await Promise.all(
+      result.orders.map((order) => this.toOrderDto(order, imageStorageService)),
+    );
+
     return {
-      data: result.orders.map((order) => this.toOrderDto(order)),
+      data,
       meta: {
         totalItems: result.totalItems,
         itemCount: result.itemCount,
@@ -110,9 +116,43 @@ export class OrderAdapter {
     };
   }
 
-  static toOrderDto(order: Order): OrderDto {
+  static async toOrderDto(
+    order: Order,
+    imageStorageService: ImageStorageService,
+  ): Promise<OrderDto> {
+    const items = await Promise.all(
+      order.items.map(async (item) => {
+        const details = await Promise.all(
+          item.details.map(async (detail) => ({
+            id: detail.id,
+            orderItemId: item.id,
+            photoUrl: detail.photoFileName
+              ? await imageStorageService.generateSignedUrl(
+                  detail.photoFileName,
+                  'read',
+                )
+              : undefined,
+            eventId: detail.eventId,
+            isPackage: detail.isPackage,
+          })),
+        );
+
+        return {
+          id: item.id,
+          orderId: order.id,
+          productId: item.productId,
+          productName: item.productName,
+          productType: item.productType,
+          itemPrice: item.itemPrice,
+          createdAt: order.createdAt.toISOString(),
+          details,
+        };
+      }),
+    );
+
     return {
       id: order.id,
+      displayId: order.displayId,
       userId: order.userId,
       totalAmount: order.totalAmount,
       paymentStatus: order.paymentStatus,
@@ -129,22 +169,7 @@ export class OrderAdapter {
       createdAt: order.createdAt.toISOString(),
       updatedAt:
         order.updatedAt?.toISOString() || order.createdAt.toISOString(),
-      items: order.items.map((item) => ({
-        id: item.id,
-        orderId: order.id,
-        productId: item.productId,
-        productName: item.productName,
-        productType: item.productType,
-        itemPrice: item.itemPrice,
-        createdAt: order.createdAt.toISOString(),
-        details: item.details.map((detail) => ({
-          id: detail.id,
-          orderItemId: item.id,
-          photoId: detail.photoId,
-          eventId: detail.eventId,
-          isPackage: detail.isPackage,
-        })),
-      })),
+      items,
     };
   }
 }
