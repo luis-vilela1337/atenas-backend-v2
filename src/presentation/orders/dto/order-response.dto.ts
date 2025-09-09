@@ -89,6 +89,9 @@ export class OrderDto {
   @ApiProperty({ required: false })
   paymentGatewayId?: string;
 
+  @ApiProperty({ required: false })
+  contractNumber?: string;
+
   @ApiProperty({ type: ShippingAddressDto })
   shippingAddress: ShippingAddressDto;
 
