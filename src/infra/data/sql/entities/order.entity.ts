@@ -35,6 +35,7 @@ export class Order {
     unique: true,
     name: 'display_id',
     generated: 'increment',
+    nullable: true,
   })
   displayId!: number;
 
