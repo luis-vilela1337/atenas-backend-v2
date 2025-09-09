@@ -178,10 +178,10 @@ export class CartItemDto {
   @ApiProperty({
     description: 'Preço total do item',
     example: 29.99,
-    minimum: 0.01,
+    minimum: 0.0,
   })
   @IsNumber()
-  @Min(0.01)
+  @Min(0.0)
   totalPrice!: number;
 
   @ApiProperty({
