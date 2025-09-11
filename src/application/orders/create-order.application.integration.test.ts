@@ -10,6 +10,7 @@ import { OrderAdapter } from './adapters/order.adapter';
 import {
   CreateOrderInput,
   CreateOrderResult,
+  OrderStatus,
 } from '@core/orders/entities/order.entity';
 
 describe('CreateOrderApplication - Integration Tests', () => {
@@ -120,7 +121,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
         displayId: 1,
         userId,
         totalAmount: 0,
-        paymentStatus: 'APPROVED' as const,
+        paymentStatus: OrderStatus.APPROVED,
         contractNumber: '2025-001',
         contractUniqueId: '2025-001-1736251200000',
         createdAt: new Date(),
@@ -152,7 +153,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
         expect.objectContaining({
           userId,
           totalAmount: 0,
-          paymentStatus: 'APPROVED',
+          paymentStatus: OrderStatus.APPROVED,
         }),
       );
 
@@ -200,7 +201,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
         displayId: 2,
         userId: 'user-multi-free',
         totalAmount: 0,
-        paymentStatus: 'APPROVED' as const,
+        paymentStatus: OrderStatus.APPROVED,
         contractNumber: '2025-002',
         createdAt: new Date(),
         items: [],
@@ -222,7 +223,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
       expect(orderRepository.createOrder).toHaveBeenCalledWith(
         expect.objectContaining({
           totalAmount: 0,
-          paymentStatus: 'APPROVED',
+          paymentStatus: OrderStatus.APPROVED,
         }),
       );
     });
@@ -269,7 +270,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
         displayId: 3,
         userId,
         totalAmount: 150,
-        paymentStatus: 'APPROVED' as const,
+        paymentStatus: OrderStatus.APPROVED,
         contractNumber: '2025-003',
         createdAt: new Date(),
         items: [],
@@ -313,7 +314,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
         expect.objectContaining({
           userId,
           totalAmount: 150,
-          paymentStatus: 'APPROVED',
+          paymentStatus: OrderStatus.APPROVED,
         }),
       );
 
@@ -358,7 +359,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
         displayId: 4,
         userId,
         totalAmount: 100,
-        paymentStatus: 'APPROVED' as const,
+        paymentStatus: OrderStatus.APPROVED,
         contractNumber: '2025-004',
         createdAt: new Date(),
         items: [],
@@ -388,7 +389,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
       expect(orderRepository.createOrder).toHaveBeenCalledWith(
         expect.objectContaining({
           totalAmount: 100,
-          paymentStatus: 'APPROVED',
+          paymentStatus: OrderStatus.APPROVED,
         }),
       );
     });
@@ -435,7 +436,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
         displayId: 5,
         userId,
         totalAmount: 500,
-        paymentStatus: 'PENDING' as const,
+        paymentStatus: OrderStatus.PENDING,
         contractNumber: '2025-005',
         createdAt: new Date(),
         items: [],
@@ -483,7 +484,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
         expect.objectContaining({
           userId,
           totalAmount: 500,
-          paymentStatus: 'PENDING',
+          paymentStatus: OrderStatus.PENDING,
         }),
       );
 
@@ -523,7 +524,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
         displayId: 6,
         userId,
         totalAmount: 25.5,
-        paymentStatus: 'PENDING' as const,
+        paymentStatus: OrderStatus.PENDING,
         contractNumber: '2025-006',
         createdAt: new Date(),
         items: [],
@@ -659,7 +660,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
         displayId: 7,
         userId,
         totalAmount: 30,
-        paymentStatus: 'PENDING' as const,
+        paymentStatus: OrderStatus.PENDING,
         contractNumber: '2025-007',
         createdAt: new Date(),
         items: [],
@@ -799,7 +800,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
         displayId: 8,
         userId,
         totalAmount: 75,
-        paymentStatus: 'PENDING' as const,
+        paymentStatus: OrderStatus.PENDING,
         contractNumber: '2025-008',
         createdAt: new Date(),
         items: [],
