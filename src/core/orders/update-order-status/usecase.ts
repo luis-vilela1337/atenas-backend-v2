@@ -1,8 +1,10 @@
+import { Injectable } from '@nestjs/common';
 import { UpdateOrderStatusInput, OrderStatus } from '../entities/order.entity';
-import { OrderRepositoryInterface } from '../repositories/order.repository.interface';
+import { OrderRepository } from '@infrastructure/data/sql/repositories/order.repository';
 
+@Injectable()
 export class UpdateOrderStatusUseCase {
-  constructor(private readonly orderRepository: OrderRepositoryInterface) {}
+  constructor(private readonly orderRepository: OrderRepository) {}
 
   async execute(input: UpdateOrderStatusInput): Promise<void> {
     try {

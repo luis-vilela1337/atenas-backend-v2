@@ -9,6 +9,7 @@ import { CreateMercadoPagoWebhookTables1751228400000 } from '../migrations/17512
 import { CreateOrderTables1754264500000 } from '../migrations/1754264500000-CreateOrderTables';
 import { AddUserAndContractFields1757211242262 } from '../migrations/1757211242262-AddUserAndContractFields';
 import { Generated1757455211999 } from '../migrations/1757455211999-generated';
+import { Generated1757564486153 } from '../migrations/1757564486153-generated';
 
 export const migrations = [
   Generated1747237005972,
@@ -18,6 +19,7 @@ export const migrations = [
   CreateOrderTables1754264500000,
   AddUserAndContractFields1757211242262,
   Generated1757455211999,
+  Generated1757564486153,
 ];
 const envVars = (cs: ConfigService) => ({
   host: cs.get<string>('DB_HOST'),
