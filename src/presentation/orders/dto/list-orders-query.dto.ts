@@ -7,6 +7,7 @@ export enum PaymentStatusFilter {
   APPROVED = 'APPROVED',
   REJECTED = 'REJECTED',
   CANCELLED = 'CANCELLED',
+  COMPLETED = 'COMPLETED',
 }
 
 export class ListOrdersQueryDto {

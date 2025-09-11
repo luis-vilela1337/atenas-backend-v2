@@ -1,6 +1,11 @@
 export interface FindOrdersFilter {
   userId?: string;
-  paymentStatus?: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED';
+  paymentStatus?:
+    | 'PENDING'
+    | 'APPROVED'
+    | 'REJECTED'
+    | 'CANCELLED'
+    | 'COMPLETED';
 }
 
 export interface FindOrdersPagination {
