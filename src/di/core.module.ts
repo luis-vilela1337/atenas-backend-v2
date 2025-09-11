@@ -29,6 +29,7 @@ import { DeleteUserEventPhotoUseCase } from '@core/user-event-photos/delete/usec
 import { CreatePreferenceUseCase } from '@core/mercado-pago/create-preference/usecase';
 import { FindOrdersUseCase } from '@core/orders/find-orders.usecase';
 import { FindOrderByIdUseCase } from '@core/orders/find-order-by-id.usecase';
+import { UpdateOrderStatusUseCase } from '@core/orders/update-order-status/usecase';
 
 @Module({
   imports: [InfraModule],
@@ -70,6 +71,7 @@ import { FindOrderByIdUseCase } from '@core/orders/find-order-by-id.usecase';
     // orders
     FindOrdersUseCase,
     FindOrderByIdUseCase,
+    UpdateOrderStatusUseCase,
   ],
   exports: [
     //user
@@ -109,6 +111,7 @@ import { FindOrderByIdUseCase } from '@core/orders/find-order-by-id.usecase';
     // orders
     FindOrdersUseCase,
     FindOrderByIdUseCase,
+    UpdateOrderStatusUseCase,
   ],
 })
 export class CoreModule {}

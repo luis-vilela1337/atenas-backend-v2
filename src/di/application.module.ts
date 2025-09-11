@@ -34,6 +34,7 @@ import { ProcessWebhookApplication } from '@application/mercado-pago/process-web
 import { CreateOrderApplication } from '@application/orders/create-order.application';
 import { FindOrdersApplication } from '@application/orders/find-orders.application';
 import { FindOrderByIdApplication } from '@application/orders/find-order-by-id.application';
+import { UpdateOrderStatusApplication } from '@application/orders/update-order-status.application';
 
 @Module({
   imports: [
@@ -81,6 +82,7 @@ import { FindOrderByIdApplication } from '@application/orders/find-order-by-id.a
     CreateOrderApplication,
     FindOrdersApplication,
     FindOrderByIdApplication,
+    UpdateOrderStatusApplication,
   ],
   exports: [
     //user
@@ -121,6 +123,7 @@ import { FindOrderByIdApplication } from '@application/orders/find-order-by-id.a
     CreateOrderApplication,
     FindOrdersApplication,
     FindOrderByIdApplication,
+    UpdateOrderStatusApplication,
   ],
 })
 export class ApplicationModule {}
