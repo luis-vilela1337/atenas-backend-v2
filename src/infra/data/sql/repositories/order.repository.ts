@@ -2,7 +2,10 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { OrderRepositoryInterface } from '@core/orders/repositories/order.repository.interface';
-import { Order as OrderEntity, OrderStatus } from '@core/orders/entities/order.entity';
+import {
+  Order as OrderEntity,
+  OrderStatus,
+} from '@core/orders/entities/order.entity';
 import {
   FindOrdersInput,
   FindOrdersResult,
@@ -36,6 +39,8 @@ export class OrderRepository implements OrderRepositoryInterface {
         totalAmount: orderData.totalAmount,
         paymentStatus: orderData.paymentStatus,
         paymentGatewayId: orderData.paymentGatewayId,
+        contractNumber: orderData.contractNumber,
+        contractUniqueId: orderData.contractUniqueId,
         shippingAddress: orderData.shippingAddress,
       });
 
@@ -92,6 +97,8 @@ export class OrderRepository implements OrderRepositoryInterface {
         totalAmount: savedOrder.totalAmount,
         paymentStatus: savedOrder.paymentStatus,
         paymentGatewayId: savedOrder.paymentGatewayId,
+        contractNumber: savedOrder.contractNumber,
+        contractUniqueId: savedOrder.contractUniqueId,
         shippingAddress: savedOrder.shippingAddress,
         items: createdItems,
         createdAt: savedOrder.createdAt,
@@ -164,10 +171,7 @@ export class OrderRepository implements OrderRepositoryInterface {
     }
   }
 
-  async updateOrderStatus(
-    orderId: string,
-    status: OrderStatus,
-  ): Promise<void> {
+  async updateOrderStatus(orderId: string, status: OrderStatus): Promise<void> {
     this.logger.log(`Updating order ${orderId} status to: ${status}`);
 
     try {
@@ -261,6 +265,8 @@ export class OrderRepository implements OrderRepositoryInterface {
       totalAmount: Number(order.totalAmount),
       paymentStatus: order.paymentStatus,
       paymentGatewayId: order.paymentGatewayId,
+      contractNumber: order.contractNumber,
+      contractUniqueId: order.contractUniqueId,
       shippingAddress: order.shippingAddress,
       items:
         order.items?.map((item) => ({
