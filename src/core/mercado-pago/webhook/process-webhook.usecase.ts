@@ -5,6 +5,7 @@ import {
 } from '../entities/webhook-notification.entity';
 import { WebhookRepositoryInterface } from '../repositories/webhook.repository.interface';
 import { OrderRepositoryInterface } from '../../orders/repositories/order.repository.interface';
+import { OrderStatus } from '../../orders/entities/order.entity';
 
 export interface ProcessWebhookInput {
   id: string;
@@ -185,20 +186,17 @@ export class ProcessWebhookUseCase {
 
   private mapPaymentStatusToOrderStatus(
     paymentStatus: string,
-  ): 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED' | null {
-    const statusMap: Record<
-      string,
-      'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED'
-    > = {
-      approved: 'APPROVED',
-      authorized: 'APPROVED',
-      pending: 'PENDING',
-      in_process: 'PENDING',
-      in_mediation: 'PENDING',
-      rejected: 'REJECTED',
-      cancelled: 'CANCELLED',
-      refunded: 'CANCELLED',
-      charged_back: 'CANCELLED',
+  ): OrderStatus | null {
+    const statusMap: Record<string, OrderStatus> = {
+      approved: OrderStatus.APPROVED,
+      authorized: OrderStatus.APPROVED,
+      pending: OrderStatus.PENDING,
+      in_process: OrderStatus.PENDING,
+      in_mediation: OrderStatus.PENDING,
+      rejected: OrderStatus.REJECTED,
+      cancelled: OrderStatus.CANCELLED,
+      refunded: OrderStatus.CANCELLED,
+      charged_back: OrderStatus.CANCELLED,
     };
 
     return statusMap[paymentStatus] || null;

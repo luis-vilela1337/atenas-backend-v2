@@ -5,6 +5,7 @@ import {
   OrderItemDetail,
   CartItem,
   ShippingAddress,
+  OrderStatus,
 } from '../entities/order.entity';
 import { OrderRepositoryInterface } from '../repositories/order.repository.interface';
 import { MercadoPagoRepositoryInterface } from '../../mercado-pago/repositories/mercado-pago.repository.interface';
@@ -33,7 +34,11 @@ export class CreateOrderUseCase {
 
       // 3. Handle free orders
       if (totalAmount === 0) {
-        const order = await this.createOrder(input, totalAmount, 'APPROVED');
+        const order = await this.createOrder(
+          input,
+          totalAmount,
+          OrderStatus.APPROVED,
+        );
         return {
           orderId: order.id,
           checkoutUrl: this.configService.get('BATATA_CHECKOUT_URL'),
@@ -53,7 +58,11 @@ export class CreateOrderUseCase {
           userCredit - totalAmount,
         );
 
-        const order = await this.createOrder(input, totalAmount, 'APPROVED');
+        const order = await this.createOrder(
+          input,
+          totalAmount,
+          OrderStatus.APPROVED,
+        );
         return {
           orderId: order.id,
           checkoutUrl: this.configService.get('BATATA_CHECKOUT_URL'),
@@ -65,7 +74,11 @@ export class CreateOrderUseCase {
       }
 
       // 5. Mercado Pago flow (existing code)
-      const order = await this.createOrder(input, totalAmount, 'PENDING');
+      const order = await this.createOrder(
+        input,
+        totalAmount,
+        OrderStatus.PENDING,
+      );
 
       // Create Mercado Pago preference
       const preference = this.createMercadoPagoPreference(order, input);
@@ -92,7 +105,7 @@ export class CreateOrderUseCase {
   private async createOrder(
     input: CreateOrderInput,
     totalAmount: number,
-    paymentStatus: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED',
+    paymentStatus: OrderStatus,
   ): Promise<Order> {
     // Generate contract number
     const contractNumber = await this.generateContractNumber(input.userId);

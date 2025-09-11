@@ -12,8 +12,9 @@ import {
 import { randomUUID } from 'crypto';
 import { User } from './user.entity';
 import { OrderItem } from './order-item.entity';
+import { OrderStatus } from '@core/orders/entities/order.entity';
 
-export type PaymentStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED';
+export type PaymentStatus = OrderStatus;
 
 export interface ShippingAddress {
   zipCode: string;
@@ -55,8 +56,8 @@ export class Order {
 
   @Column({
     type: 'enum',
-    enum: ['PENDING', 'APPROVED', 'REJECTED', 'CANCELLED'],
-    default: 'PENDING',
+    enum: OrderStatus,
+    default: OrderStatus.PENDING,
   })
   @Index('idx_order_payment_status')
   paymentStatus!: PaymentStatus;

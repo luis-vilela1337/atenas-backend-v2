@@ -1,4 +1,4 @@
-import { UpdateOrderStatusInput } from '../entities/order.entity';
+import { UpdateOrderStatusInput, OrderStatus } from '../entities/order.entity';
 import { OrderRepositoryInterface } from '../repositories/order.repository.interface';
 
 export class UpdateOrderStatusUseCase {
@@ -34,14 +34,19 @@ export class UpdateOrderStatusUseCase {
   }
 
   private validateStatusTransition(
-    currentStatus: string,
-    newStatus: string,
+    currentStatus: OrderStatus,
+    newStatus: OrderStatus,
   ): void {
     const validTransitions = {
-      PENDING: ['APPROVED', 'REJECTED', 'CANCELLED'],
-      APPROVED: ['CANCELLED'], // Can cancel even approved orders
-      REJECTED: [], // Final state
-      CANCELLED: [], // Final state
+      [OrderStatus.PENDING]: [
+        OrderStatus.APPROVED,
+        OrderStatus.REJECTED,
+        OrderStatus.CANCELLED,
+      ],
+      [OrderStatus.APPROVED]: [OrderStatus.COMPLETED, OrderStatus.CANCELLED],
+      [OrderStatus.REJECTED]: [], // Final state
+      [OrderStatus.CANCELLED]: [], // Final state
+      [OrderStatus.COMPLETED]: [], // Final state
     };
 
     const allowedTransitions = validTransitions[currentStatus] || [];

@@ -69,12 +69,20 @@ export interface OrderItemDetail {
   isPackage: boolean;
 }
 
+export enum OrderStatus {
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+  CANCELLED = 'CANCELLED',
+  COMPLETED = 'COMPLETED',
+}
+
 export interface Order {
   id: string;
   displayId: number;
   userId: string;
   totalAmount: number;
-  paymentStatus: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED';
+  paymentStatus: OrderStatus;
   paymentGatewayId?: string;
   contractNumber?: string;
   contractUniqueId?: string;
@@ -95,6 +103,6 @@ export interface CreateOrderResult {
 
 export interface UpdateOrderStatusInput {
   orderId: string;
-  paymentStatus: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED';
+  paymentStatus: OrderStatus;
   paymentGatewayId?: string;
 }

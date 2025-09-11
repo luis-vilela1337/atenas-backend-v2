@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { OrderRepositoryInterface } from '@core/orders/repositories/order.repository.interface';
-import { Order as OrderEntity } from '@core/orders/entities/order.entity';
+import { Order as OrderEntity, OrderStatus } from '@core/orders/entities/order.entity';
 import {
   FindOrdersInput,
   FindOrdersResult,
@@ -166,7 +166,7 @@ export class OrderRepository implements OrderRepositoryInterface {
 
   async updateOrderStatus(
     orderId: string,
-    status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED',
+    status: OrderStatus,
   ): Promise<void> {
     this.logger.log(`Updating order ${orderId} status to: ${status}`);
 

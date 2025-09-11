@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { OrderStatus } from '@core/orders/entities/order.entity';
 
 export class ShippingAddressDto {
   @ApiProperty()
@@ -82,9 +83,9 @@ export class OrderDto {
   totalAmount: number;
 
   @ApiProperty({
-    enum: ['PENDING', 'APPROVED', 'REJECTED', 'CANCELLED'],
+    enum: OrderStatus,
   })
-  paymentStatus: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED';
+  paymentStatus: OrderStatus;
 
   @ApiProperty({ required: false })
   paymentGatewayId?: string;

@@ -3,6 +3,7 @@ import {
   Controller,
   Post,
   Get,
+  Put,
   Param,
   Query,
   HttpCode,
@@ -23,6 +24,7 @@ import {
 import { CreateOrderApplication } from '@application/orders/create-order.application';
 import { FindOrdersApplication } from '@application/orders/find-orders.application';
 import { FindOrderByIdApplication } from '@application/orders/find-order-by-id.application';
+import { UpdateOrderStatusApplication } from '@application/orders/update-order-status.application';
 import {
   CreateOrderDto,
   CreateOrderResponseDto,
@@ -30,6 +32,10 @@ import {
 import { OrderDto } from '../dto/order-response.dto';
 import { OrderListResponseDto } from '../dto/order-list-response.dto';
 import { ListOrdersQueryDto } from '../dto/list-orders-query.dto';
+import {
+  UpdateOrderStatusDto,
+  UpdateOrderStatusResponseDto,
+} from '../dto/update-order-status.dto';
 import { OrderAdapter } from '@application/orders/adapters/order.adapter';
 import { JwtCustomAuthGuard } from '@presentation/auth/guards/jwt-auth.guard';
 
@@ -42,6 +48,7 @@ export class OrdersController {
     private readonly createOrderApp: CreateOrderApplication,
     private readonly findOrdersApp: FindOrdersApplication,
     private readonly findOrderByIdApp: FindOrderByIdApplication,
+    private readonly updateOrderStatusApp: UpdateOrderStatusApplication,
   ) {}
 
   @Post()
@@ -143,5 +150,48 @@ export class OrdersController {
     }
 
     return order;
+  }
+
+  @Put(':id/status')
+  @ApiOperation({
+    summary: 'Atualizar status do pedido',
+    description: 'Atualiza o status de um pedido específico pelo seu ID',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'ID único do pedido',
+    type: 'string',
+  })
+  @ApiBody({ type: UpdateOrderStatusDto })
+  @ApiResponse({
+    status: 200,
+    type: UpdateOrderStatusResponseDto,
+    description: 'Status do pedido atualizado com sucesso',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Dados inválidos ou transição de status inválida',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Pedido não encontrado',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Token de autenticação inválido ou ausente',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Erro interno do servidor',
+  })
+  @HttpCode(HttpStatus.OK)
+  async updateOrderStatus(
+    @Param('id') id: string,
+    @Body() dto: UpdateOrderStatusDto,
+  ): Promise<UpdateOrderStatusResponseDto> {
+    return await this.updateOrderStatusApp.execute({
+      orderId: id,
+      status: dto.status,
+    });
   }
 }

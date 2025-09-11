@@ -1,4 +1,4 @@
-import { Order } from '../entities/order.entity';
+import { Order, OrderStatus } from '../entities/order.entity';
 import { FindOrdersInput, FindOrdersResult } from '../dto/find-orders.dto';
 
 export interface OrderRepositoryInterface {
@@ -7,10 +7,7 @@ export interface OrderRepositoryInterface {
   findOrderByPaymentGatewayId(paymentGatewayId: string): Promise<Order | null>;
   findOrdersByUserId(userId: string): Promise<Order[]>;
   findOrdersWithPagination(input: FindOrdersInput): Promise<FindOrdersResult>;
-  updateOrderStatus(
-    orderId: string,
-    status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED',
-  ): Promise<void>;
+  updateOrderStatus(orderId: string, status: OrderStatus): Promise<void>;
   updateOrderPaymentGatewayId(
     orderId: string,
     paymentGatewayId: string,
