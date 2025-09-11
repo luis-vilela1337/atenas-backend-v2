@@ -95,7 +95,7 @@ export class CreateOrderUseCase {
     paymentStatus: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED',
   ): Promise<Order> {
     // Generate contract number
-    const contractNumber = await this.generateContractNumber();
+    const contractNumber = await this.generateContractNumber(input.userId);
     const contractUniqueId = `${contractNumber}-${Date.now()}`;
 
     const orderData: Partial<Order> = {
@@ -196,14 +196,15 @@ export class CreateOrderUseCase {
     };
   }
 
-  private async generateContractNumber(): Promise<string> {
-    const currentYear = new Date().getFullYear();
+  private async generateContractNumber(userId: string): Promise<string> {
+    // Get user with institution data
+    const user = await this.userRepository.findById(userId);
 
-    // This is a simplified implementation - in production you might want a more robust sequence system
-    const orderCount = await this.getOrderCountForYear();
-    const sequence = orderCount + 1;
+    if (!user || !user.institution) {
+      throw new Error('User or institution not found');
+    }
 
-    return `${currentYear}-${sequence.toString().padStart(3, '0')}`;
+    return `${user.institution.contractNumber}-${user.identifier}`;
   }
 
   private async getOrderCountForYear(): Promise<number> {
