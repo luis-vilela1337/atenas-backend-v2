@@ -11,6 +11,7 @@ import {
   NotFoundException,
   UseGuards,
   Request,
+  SetMetadata,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -88,6 +89,7 @@ export class OrdersController {
   }
 
   @Get()
+  @SetMetadata('isPublic', true)
   @ApiOperation({
     summary: 'Listar pedidos com paginação e filtros',
     description:

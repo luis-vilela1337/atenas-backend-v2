@@ -10,6 +10,7 @@ import { CreateOrderTables1754264500000 } from '../migrations/1754264500000-Crea
 import { AddUserAndContractFields1757211242262 } from '../migrations/1757211242262-AddUserAndContractFields';
 import { Generated1757455211999 } from '../migrations/1757455211999-generated';
 import { Generated1757564486153 } from '../migrations/1757564486153-generated';
+import { AddUserAddressFields1757600000000 } from '../migrations/1757600000000-AddUserAddressFields';
 
 export const migrations = [
   Generated1747237005972,
@@ -20,6 +21,7 @@ export const migrations = [
   AddUserAndContractFields1757211242262,
   Generated1757455211999,
   Generated1757564486153,
+  AddUserAddressFields1757600000000,
 ];
 const envVars = (cs: ConfigService) => ({
   host: cs.get<string>('DB_HOST'),

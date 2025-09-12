@@ -80,11 +80,29 @@ export class User {
   @Column({ type: 'text', nullable: true })
   becaMeasures?: string;
 
+  @Column({ type: 'varchar', length: 10, nullable: true })
+  zipCode?: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  street?: string;
+
+  @Column({ type: 'varchar', length: 20, nullable: true })
+  number?: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  complement?: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  neighborhood?: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  city?: string;
+
+  @Column({ type: 'varchar', length: 2, nullable: true })
+  state?: string;
+
   @Column({ type: 'text', nullable: true })
   address?: string;
-
-  @Column({ type: 'varchar', length: 9, nullable: true })
-  zipCode?: string;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp with time zone' })
   createdAt!: Date;

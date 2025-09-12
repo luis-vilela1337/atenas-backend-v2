@@ -11,8 +11,11 @@ import {
   Min,
   Max,
   IsNotEmpty,
+  ValidateNested,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 import { UserRole, UserStatus } from '@infrastructure/data/sql/entities';
+import { AddressDto } from './address.dto';
 
 export class CreateUserV2InputDto {
   @ApiProperty({ example: 'João Silva', description: 'Nome completo' })
@@ -172,6 +175,15 @@ export class CreateUserV2InputDto {
   @IsString({ message: 'O profileImage deve ser um texto.' })
   profileImage?: string;
 
+  @ApiPropertyOptional({
+    description: 'Endereço completo do usuário',
+    type: AddressDto,
+  })
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => AddressDto)
+  address?: AddressDto;
+
   @IsOptional()
   status?: UserStatus;
 }
@@ -193,5 +205,12 @@ export class CreateUserResponseV2Dto {
   @ApiProperty({ nullable: true }) creditValue: number | null;
   @ApiProperty({ nullable: true }) profileImage: string | null;
   @ApiProperty() status: string;
+  @ApiProperty({ nullable: true }) zipCode: string | null;
+  @ApiProperty({ nullable: true }) street: string | null;
+  @ApiProperty({ nullable: true }) number: string | null;
+  @ApiProperty({ nullable: true }) complement: string | null;
+  @ApiProperty({ nullable: true }) neighborhood: string | null;
+  @ApiProperty({ nullable: true }) city: string | null;
+  @ApiProperty({ nullable: true }) state: string | null;
   @ApiProperty({ type: String, format: 'date-time' }) createdAt: string;
 }
