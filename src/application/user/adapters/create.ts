@@ -26,6 +26,13 @@ export class CreateUserAdapter {
       driveLink: dto.driveLink,
       creditValue: dto.creditValue ? dto.creditValue.toString() : undefined,
       profileImage: dto.profileImage,
+      zipCode: dto.address?.zipCode,
+      street: dto.address?.street,
+      number: dto.address?.number,
+      complement: dto.address?.complement,
+      neighborhood: dto.address?.neighborhood,
+      city: dto.address?.city,
+      state: dto.address?.state,
       status: dto.status,
     };
   }
@@ -48,6 +55,13 @@ export class CreateUserAdapter {
       creditValue: user.creditValue ? parseFloat(user.creditValue) : null,
       profileImage: user.profileImage || null,
       status: user.status,
+      zipCode: user.zipCode || null,
+      street: user.street || null,
+      number: user.number || null,
+      complement: user.complement || null,
+      neighborhood: user.neighborhood || null,
+      city: user.city || null,
+      state: user.state || null,
       createdAt: user.createdAt.toISOString(),
     };
   }
