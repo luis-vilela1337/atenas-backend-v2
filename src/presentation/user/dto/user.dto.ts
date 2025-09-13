@@ -49,6 +49,12 @@ export class UserDto {
   @ApiProperty({ nullable: true })
   state?: string;
 
+  @ApiProperty({ nullable: true })
+  cpf?: string;
+
+  @ApiProperty({ nullable: true })
+  becaMeasures?: string;
+
   @ApiProperty({ type: String, format: 'date-time' })
   createdAt: Date;
 }

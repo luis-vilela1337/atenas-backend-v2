@@ -17,6 +17,15 @@ export class UserMapper {
       createdAt: user.createdAt,
       profileImage: user.profileImage || '',
       userContract: `${user.institution.contractNumber}-${user.identifier}`,
+      zipCode: user.zipCode,
+      street: user.street,
+      number: user.number,
+      complement: user.complement,
+      neighborhood: user.neighborhood,
+      city: user.city,
+      state: user.state,
+      cpf: user.cpf,
+      becaMeasures: user.becaMeasures,
     };
   }
 

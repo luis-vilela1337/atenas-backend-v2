@@ -184,6 +184,31 @@ export class CreateUserV2InputDto {
   @Type(() => AddressDto)
   address?: AddressDto;
 
+  @ApiPropertyOptional({
+    description: 'CPF do usuário',
+    example: '123.456.789-00',
+  })
+  @IsOptional()
+  @IsString({ message: 'O CPF deve ser um texto.' })
+  @Length(11, 14, {
+    message: 'O CPF deve ter entre $constraint1 e $constraint2 caracteres.',
+  })
+  @Matches(/^\d{3}\.\d{3}\.\d{3}-\d{2}$|^\d{11}$/, {
+    message: 'O CPF deve estar no formato XXX.XXX.XXX-XX ou XXXXXXXXXXX.',
+  })
+  cpf?: string;
+
+  @ApiPropertyOptional({
+    description: 'Medidas da beca',
+    example: 'Tamanho M, altura 1,70m',
+  })
+  @IsOptional()
+  @IsString({ message: 'As medidas da beca devem ser um texto.' })
+  @Length(1, 1000, {
+    message: 'As medidas da beca não podem ultrapassar $constraint2 caracteres.',
+  })
+  becaMeasures?: string;
+
   @IsOptional()
   status?: UserStatus;
 }
@@ -212,5 +237,7 @@ export class CreateUserResponseV2Dto {
   @ApiProperty({ nullable: true }) neighborhood: string | null;
   @ApiProperty({ nullable: true }) city: string | null;
   @ApiProperty({ nullable: true }) state: string | null;
+  @ApiProperty({ nullable: true }) cpf: string | null;
+  @ApiProperty({ nullable: true }) becaMeasures: string | null;
   @ApiProperty({ type: String, format: 'date-time' }) createdAt: string;
 }

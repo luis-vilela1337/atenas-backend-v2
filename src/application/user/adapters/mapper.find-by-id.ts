@@ -50,6 +50,33 @@ export class UserPayloadDto {
   @ApiProperty()
   status: string;
 
+  @ApiProperty({ nullable: true })
+  zipCode: string | null;
+
+  @ApiProperty({ nullable: true })
+  street: string | null;
+
+  @ApiProperty({ nullable: true })
+  number: string | null;
+
+  @ApiProperty({ nullable: true })
+  complement: string | null;
+
+  @ApiProperty({ nullable: true })
+  neighborhood: string | null;
+
+  @ApiProperty({ nullable: true })
+  city: string | null;
+
+  @ApiProperty({ nullable: true })
+  state: string | null;
+
+  @ApiProperty({ nullable: true })
+  cpf: string | null;
+
+  @ApiProperty({ nullable: true })
+  becaMeasures: string | null;
+
   @ApiProperty({ type: String, format: 'date-time' })
   createdAt: string;
 }
@@ -73,6 +100,15 @@ export class UserAdapterEntity {
       creditValue: user.creditValue ? parseFloat(user.creditValue) : null,
       profileImage: user.profileImage || null,
       status: user.status,
+      zipCode: user.zipCode || null,
+      street: user.street || null,
+      number: user.number || null,
+      complement: user.complement || null,
+      neighborhood: user.neighborhood || null,
+      city: user.city || null,
+      state: user.state || null,
+      cpf: user.cpf || null,
+      becaMeasures: user.becaMeasures || null,
       createdAt: user.createdAt.toISOString(),
     };
   }

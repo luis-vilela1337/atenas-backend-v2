@@ -33,6 +33,8 @@ export class CreateUserAdapter {
       neighborhood: dto.address?.neighborhood,
       city: dto.address?.city,
       state: dto.address?.state,
+      cpf: dto.cpf,
+      becaMeasures: dto.becaMeasures,
       status: dto.status,
     };
   }
@@ -62,6 +64,8 @@ export class CreateUserAdapter {
       neighborhood: user.neighborhood || null,
       city: user.city || null,
       state: user.state || null,
+      cpf: user.cpf || null,
+      becaMeasures: user.becaMeasures || null,
       createdAt: user.createdAt.toISOString(),
     };
   }
