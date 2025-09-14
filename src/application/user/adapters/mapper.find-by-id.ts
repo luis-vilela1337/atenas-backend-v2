@@ -1,5 +1,6 @@
 import { User } from '@infrastructure/data/sql/entities';
 import { ApiProperty } from '@nestjs/swagger';
+import { AddressDto } from '@presentation/user/dto/address.dto';
 
 export class UserPayloadDto {
   @ApiProperty({ format: 'uuid' })
@@ -50,26 +51,8 @@ export class UserPayloadDto {
   @ApiProperty()
   status: string;
 
-  @ApiProperty({ nullable: true })
-  zipCode: string | null;
-
-  @ApiProperty({ nullable: true })
-  street: string | null;
-
-  @ApiProperty({ nullable: true })
-  number: string | null;
-
-  @ApiProperty({ nullable: true })
-  complement: string | null;
-
-  @ApiProperty({ nullable: true })
-  neighborhood: string | null;
-
-  @ApiProperty({ nullable: true })
-  city: string | null;
-
-  @ApiProperty({ nullable: true })
-  state: string | null;
+  @ApiProperty({ nullable: true, type: () => AddressDto })
+  address?: AddressDto;
 
   @ApiProperty({ nullable: true })
   cpf: string | null;
@@ -100,13 +83,24 @@ export class UserAdapterEntity {
       creditValue: user.creditValue ? parseFloat(user.creditValue) : null,
       profileImage: user.profileImage || null,
       status: user.status,
-      zipCode: user.zipCode || null,
-      street: user.street || null,
-      number: user.number || null,
-      complement: user.complement || null,
-      neighborhood: user.neighborhood || null,
-      city: user.city || null,
-      state: user.state || null,
+      address:
+        user.zipCode ||
+        user.street ||
+        user.number ||
+        user.complement ||
+        user.neighborhood ||
+        user.city ||
+        user.state
+          ? {
+              zipCode: user.zipCode,
+              street: user.street,
+              number: user.number,
+              complement: user.complement,
+              neighborhood: user.neighborhood,
+              city: user.city,
+              state: user.state,
+            }
+          : undefined,
       cpf: user.cpf || null,
       becaMeasures: user.becaMeasures || null,
       createdAt: user.createdAt.toISOString(),
