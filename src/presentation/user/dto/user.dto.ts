@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { AddressDto } from './address.dto';
 
 export class UserDto {
   @ApiProperty({ format: 'uuid' })
@@ -28,26 +29,8 @@ export class UserDto {
   @ApiProperty({ type: String })
   profileImage: string;
 
-  @ApiProperty({ nullable: true })
-  zipCode?: string;
-
-  @ApiProperty({ nullable: true })
-  street?: string;
-
-  @ApiProperty({ nullable: true })
-  number?: string;
-
-  @ApiProperty({ nullable: true })
-  complement?: string;
-
-  @ApiProperty({ nullable: true })
-  neighborhood?: string;
-
-  @ApiProperty({ nullable: true })
-  city?: string;
-
-  @ApiProperty({ nullable: true })
-  state?: string;
+  @ApiProperty({ nullable: true, type: () => AddressDto })
+  address?: AddressDto;
 
   @ApiProperty({ nullable: true })
   cpf?: string;
