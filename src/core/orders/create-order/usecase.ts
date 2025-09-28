@@ -26,13 +26,21 @@ export class CreateOrderUseCase {
       // 1. Validate shipping requirements
       this.validateShippingRequirement(input.cartItems, input.shippingDetails);
 
-      // 2. Calculate total amount
+      // 2. Update user address if shipping details are provided and different
+      if (input.shippingDetails) {
+        await this.updateUserAddressIfDifferent(
+          input.userId,
+          input.shippingDetails,
+        );
+      }
+
+      // 3. Calculate total amount
       const totalAmount = input.cartItems.reduce(
         (sum, item) => sum + item.totalPrice,
         0,
       );
 
-      // 3. Handle free orders
+      // 4. Handle free orders
       if (totalAmount === 0) {
         const order = await this.createOrder(
           input,
@@ -47,7 +55,7 @@ export class CreateOrderUseCase {
         };
       }
 
-      // 4. Check user credit
+      // 5. Check user credit
       const userCredit = await this.userRepository.findUserCreditByUserId(
         input.userId,
       );
@@ -73,7 +81,7 @@ export class CreateOrderUseCase {
         };
       }
 
-      // 5. Mercado Pago flow (existing code)
+      // 6. Mercado Pago flow (existing code)
       const order = await this.createOrder(
         input,
         totalAmount,
@@ -238,6 +246,38 @@ export class CreateOrderUseCase {
       throw new Error(
         'Shipping address is required for physical products (GENERIC or ALBUM)',
       );
+    }
+  }
+
+  private async updateUserAddressIfDifferent(
+    userId: string,
+    shippingDetails: ShippingAddress,
+  ): Promise<void> {
+    const user = await this.userRepository.findById(userId);
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const addressChanged =
+      user.zipCode !== shippingDetails.zipCode ||
+      user.street !== shippingDetails.street ||
+      user.number !== shippingDetails.number ||
+      user.complement !== shippingDetails.complement ||
+      user.neighborhood !== shippingDetails.neighborhood ||
+      user.city !== shippingDetails.city ||
+      user.state !== shippingDetails.state;
+
+    if (addressChanged) {
+      await this.userRepository.updateUser(userId, {
+        zipCode: shippingDetails.zipCode,
+        street: shippingDetails.street,
+        number: shippingDetails.number,
+        complement: shippingDetails.complement,
+        neighborhood: shippingDetails.neighborhood,
+        city: shippingDetails.city,
+        state: shippingDetails.state,
+      });
     }
   }
 }
