@@ -48,6 +48,15 @@ export class GeneratePresignedUrlInputDto {
   @IsOptional()
   @IsEnum(MediaType)
   mediaType?: MediaType;
+
+  @ApiProperty({
+    example: 'user-123',
+    description: 'Nome puro do arquivo sem criptografia ou timestamp adicional',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  customIdentifier?: string;
 }
 
 export class PresignedUrlItemDto {
