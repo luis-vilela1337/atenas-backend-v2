@@ -2,9 +2,10 @@ import { createHmac } from 'crypto';
 
 export interface ValidateSignatureInput {
   signature: string;
-  requestBody: string;
+  requestId: string;
+  dataId: string;
+  requestBody: string; // Manter para fallback
   webhookSecret: string;
-  maxTimestampAge?: number; // em segundos, padrão 600 (10 minutos)
 }
 
 export interface ValidateSignatureOutput {
@@ -15,14 +16,10 @@ export interface ValidateSignatureOutput {
 export class ValidateSignatureUseCase {
   execute(input: ValidateSignatureInput): ValidateSignatureOutput {
     try {
-      const {
-        signature,
-        requestBody,
-        webhookSecret,
-        maxTimestampAge = 600,
-      } = input;
+      const { signature, requestId, dataId, requestBody, webhookSecret } =
+        input;
 
-      if (!signature || !requestBody || !webhookSecret) {
+      if (!signature || !webhookSecret) {
         return {
           isValid: false,
           error: 'Missing required parameters for signature validation',
@@ -39,50 +36,45 @@ export class ValidateSignatureUseCase {
 
       const { timestamp, hash } = signatureParts;
 
-      // Validar timestamp - temporariamente desabilitado para debug
-      console.log('DEBUG - Timestamp validation:', {
-        timestamp,
-        current: Math.floor(Date.now() / 1000),
-        difference: Math.abs(
-          Math.floor(Date.now() / 1000) - parseInt(timestamp),
-        ),
-        maxAge: maxTimestampAge,
-      });
+      // Validação de timestamp
+      if (this.isTimestampExpired(timestamp)) {
+        return {
+          isValid: false,
+          error: 'Signature timestamp is too old',
+        };
+      }
 
-      // TODO: Reabilitar validação de timestamp quando o problema for resolvido
-      // const timestampValidation = this.validateTimestamp(
-      //   timestamp,
-      //   maxTimestampAge,
-      // );
-      // if (!timestampValidation.isValid) {
-      //   return {
-      //     isValid: false,
-      //     error: timestampValidation.error,
-      //   };
-      // }
-
-      const expectedHash = this.calculateSignature(
+      // ⚠️ NOVO ALGORITMO CORRETO DO MERCADO PAGO
+      const expectedHash = this.calculateSignatureMercadoPago(
+        dataId,
+        requestId,
         timestamp,
-        requestBody,
         webhookSecret,
       );
 
-      console.log('DEBUG - Hash validation:', {
-        timestamp,
-        payload: `${timestamp}.${requestBody}`,
-        webhookSecret,
-        expectedHash,
-        receivedHash: hash,
-        match: this.compareHashes(hash, expectedHash),
-      });
-
       const isValid = this.compareHashes(hash, expectedHash);
+
+      // ⚠️ FALLBACK: Se falhar, tenta o método antigo
+      if (!isValid && requestBody) {
+        const expectedHashLegacy = this.calculateSignatureLegacy(
+          timestamp,
+          requestBody,
+          webhookSecret,
+        );
+
+        const isValidLegacy = this.compareHashes(hash, expectedHashLegacy);
+
+        if (isValidLegacy) {
+          console.warn(
+            '⚠️ Webhook validated using LEGACY method - Update Mercado Pago configuration',
+          );
+          return { isValid: true };
+        }
+      }
 
       return {
         isValid,
-        error: isValid
-          ? undefined
-          : `Invalid signature - Expected: ${expectedHash}, Received: ${hash}`,
+        error: isValid ? undefined : 'Invalid signature',
       };
     } catch (error) {
       return {
@@ -114,38 +106,39 @@ export class ValidateSignatureUseCase {
     }
   }
 
-  private calculateSignature(
+  private isTimestampExpired(timestamp: string): boolean {
+    const timestampMs = parseInt(timestamp) * 1000;
+    const currentMs = Date.now();
+    const fiveMinutesMs = 5 * 60 * 1000;
+
+    return currentMs - timestampMs > fiveMinutesMs;
+  }
+
+  /**
+   * ✅ ALGORITMO CORRETO SEGUNDO DOCUMENTAÇÃO MERCADO PAGO
+   * Template: id:[data.id];request-id:[x-request-id];ts:[timestamp]
+   */
+  private calculateSignatureMercadoPago(
+    dataId: string,
+    requestId: string,
+    timestamp: string,
+    webhookSecret: string,
+  ): string {
+    // Formato EXATO da documentação do Mercado Pago
+    const manifest = `id:${dataId};request-id:${requestId};ts:${timestamp}`;
+    return createHmac('sha256', webhookSecret).update(manifest).digest('hex');
+  }
+
+  /**
+   * ⚠️ MÉTODO LEGADO - Mantido para compatibilidade reversa
+   */
+  private calculateSignatureLegacy(
     timestamp: string,
     requestBody: string,
     webhookSecret: string,
   ): string {
     const payload = `${timestamp}.${requestBody}`;
     return createHmac('sha256', webhookSecret).update(payload).digest('hex');
-  }
-
-  private validateTimestamp(
-    timestamp: string,
-    maxAge: number,
-  ): { isValid: boolean; error?: string } {
-    try {
-      const webhookTimestamp = parseInt(timestamp);
-      const currentTimestamp = Math.floor(Date.now() / 1000);
-      const timeDifference = Math.abs(currentTimestamp - webhookTimestamp);
-
-      if (timeDifference > maxAge) {
-        return {
-          isValid: false,
-          error: `Timestamp too old. Difference: ${timeDifference}s, Max allowed: ${maxAge}s`,
-        };
-      }
-
-      return { isValid: true };
-    } catch (error) {
-      return {
-        isValid: false,
-        error: `Invalid timestamp format: ${timestamp}`,
-      };
-    }
   }
 
   private compareHashes(hash1: string, hash2: string): boolean {

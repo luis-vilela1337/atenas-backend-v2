@@ -78,6 +78,8 @@ export class MercadoPagoController {
       console.log({
         webhookData: dto,
         signature: headers['x-signature'] || '',
+        requestId: headers['x-request-id'] || '',
+        dataId: dto.data.id,
         requestBody: req.rawBody?.toString() || JSON.stringify(dto),
         // DEBUG: Log both versions to compare
         rawBodyAvailable: !!req.rawBody,
@@ -86,6 +88,8 @@ export class MercadoPagoController {
       const result = await this.processWebhookApp.execute({
         webhookData: dto,
         signature: headers['x-signature'] || '',
+        requestId: headers['x-request-id'] || '',
+        dataId: dto.data.id,
         requestBody: req.rawBody?.toString() || JSON.stringify(dto),
       });
       if (result.processed) {
