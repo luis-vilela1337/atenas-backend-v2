@@ -16,6 +16,8 @@ import { WebhookProcessingResult } from '@core/mercado-pago/entities/webhook-not
 export interface ProcessWebhookApplicationInput {
   webhookData: MercadoPagoWebhookDto;
   signature: string;
+  requestId: string;
+  dataId: string;
   requestBody: string;
 }
 
@@ -62,6 +64,8 @@ export class ProcessWebhookApplication {
         } else {
           const validationInput: ValidateSignatureInput = {
             signature: input.signature,
+            requestId: input.requestId,
+            dataId: input.dataId,
             requestBody: input.requestBody,
             webhookSecret,
           };
