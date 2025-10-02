@@ -77,29 +77,60 @@ export class ValidateSignatureUseCase {
       //   };
       // }
 
-      // ⚠️ NOVO ALGORITMO CORRETO DO MERCADO PAGO
-      const manifest = `id:${dataId};request-id:${requestId};ts:${timestamp}`;
-      const expectedHash = this.calculateSignatureMercadoPago(
-        dataId,
-        requestId,
-        timestamp,
-        webhookSecret,
-      );
+      // ⚠️ TESTANDO DIFERENTES FORMATOS DO MERCADO PAGO
 
-      console.log('✅ [WEBHOOK SIGNATURE] Mercado Pago algorithm', {
-        manifest,
-        expectedHash,
+      // Formato 1: com ponto-e-vírgula
+      const manifest1 = `id:${dataId};request-id:${requestId};ts:${timestamp}`;
+      const hash1 = createHmac('sha256', webhookSecret)
+        .update(manifest1)
+        .digest('hex');
+
+      // Formato 2: com espaço
+      const manifest2 = `id:${dataId} request-id:${requestId} ts:${timestamp}`;
+      const hash2 = createHmac('sha256', webhookSecret)
+        .update(manifest2)
+        .digest('hex');
+
+      // Formato 3: sem separador
+      const manifest3 = `id:${dataId}request-id:${requestId}ts:${timestamp}`;
+      const hash3 = createHmac('sha256', webhookSecret)
+        .update(manifest3)
+        .digest('hex');
+
+      console.log('🧪 [WEBHOOK SIGNATURE] Testing different formats', {
+        format1_semicolon: {
+          manifest: manifest1,
+          hash: hash1,
+          match: this.compareHashes(hash, hash1),
+        },
+        format2_space: {
+          manifest: manifest2,
+          hash: hash2,
+          match: this.compareHashes(hash, hash2),
+        },
+        format3_nosep: {
+          manifest: manifest3,
+          hash: hash3,
+          match: this.compareHashes(hash, hash3),
+        },
         receivedHash: hash,
       });
 
-      const isValid = this.compareHashes(hash, expectedHash);
+      const isValid =
+        this.compareHashes(hash, hash1) ||
+        this.compareHashes(hash, hash2) ||
+        this.compareHashes(hash, hash3);
 
       if (isValid) {
-        console.log('✅ [WEBHOOK SIGNATURE] Validation SUCCESSFUL (Mercado Pago method)');
+        console.log(
+          '✅ [WEBHOOK SIGNATURE] Validation SUCCESSFUL (Mercado Pago method)',
+        );
         return { isValid: true };
       }
 
-      console.warn('⚠️ [WEBHOOK SIGNATURE] Mercado Pago method failed, trying LEGACY');
+      console.warn(
+        '⚠️ [WEBHOOK SIGNATURE] All Mercado Pago formats failed, trying LEGACY',
+      );
 
       // ⚠️ FALLBACK: Se falhar, tenta o método antigo
       if (!isValid && requestBody) {
@@ -127,7 +158,11 @@ export class ValidateSignatureUseCase {
       }
 
       console.error('❌ [WEBHOOK SIGNATURE] Validation FAILED', {
-        mercadoPagoHash: expectedHash,
+        testedHashes: {
+          format1: hash1,
+          format2: hash2,
+          format3: hash3,
+        },
         receivedHash: hash,
       });
 
