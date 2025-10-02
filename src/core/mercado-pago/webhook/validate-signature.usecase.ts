@@ -77,49 +77,23 @@ export class ValidateSignatureUseCase {
       //   };
       // }
 
-      // ⚠️ TESTANDO DIFERENTES FORMATOS DO MERCADO PAGO
+      // ⚠️ ALGORITMO CORRETO SEGUNDO DOCUMENTAÇÃO MERCADO PAGO
+      // Template: id:[data.id];request-id:[x-request-id];ts:[timestamp];
+      // IMPORTANTE: Tem um ; no final!
 
-      // Formato 1: com ponto-e-vírgula
-      const manifest1 = `id:${dataId};request-id:${requestId};ts:${timestamp}`;
-      const hash1 = createHmac('sha256', webhookSecret)
-        .update(manifest1)
+      const manifest = `id:${dataId};request-id:${requestId};ts:${timestamp};`;
+      const expectedHash = createHmac('sha256', webhookSecret)
+        .update(manifest)
         .digest('hex');
 
-      // Formato 2: com espaço
-      const manifest2 = `id:${dataId} request-id:${requestId} ts:${timestamp}`;
-      const hash2 = createHmac('sha256', webhookSecret)
-        .update(manifest2)
-        .digest('hex');
-
-      // Formato 3: sem separador
-      const manifest3 = `id:${dataId}request-id:${requestId}ts:${timestamp}`;
-      const hash3 = createHmac('sha256', webhookSecret)
-        .update(manifest3)
-        .digest('hex');
-
-      console.log('🧪 [WEBHOOK SIGNATURE] Testing different formats', {
-        format1_semicolon: {
-          manifest: manifest1,
-          hash: hash1,
-          match: this.compareHashes(hash, hash1),
-        },
-        format2_space: {
-          manifest: manifest2,
-          hash: hash2,
-          match: this.compareHashes(hash, hash2),
-        },
-        format3_nosep: {
-          manifest: manifest3,
-          hash: hash3,
-          match: this.compareHashes(hash, hash3),
-        },
+      console.log('✅ [WEBHOOK SIGNATURE] Mercado Pago algorithm', {
+        manifest,
+        expectedHash,
         receivedHash: hash,
+        match: this.compareHashes(hash, expectedHash),
       });
 
-      const isValid =
-        this.compareHashes(hash, hash1) ||
-        this.compareHashes(hash, hash2) ||
-        this.compareHashes(hash, hash3);
+      const isValid = this.compareHashes(hash, expectedHash);
 
       if (isValid) {
         console.log(
@@ -158,11 +132,7 @@ export class ValidateSignatureUseCase {
       }
 
       console.error('❌ [WEBHOOK SIGNATURE] Validation FAILED', {
-        testedHashes: {
-          format1: hash1,
-          format2: hash2,
-          format3: hash3,
-        },
+        expectedHash,
         receivedHash: hash,
       });
 
