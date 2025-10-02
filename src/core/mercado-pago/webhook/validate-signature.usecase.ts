@@ -62,18 +62,20 @@ export class ValidateSignatureUseCase {
         timestampMs,
         currentMs,
         ageInSeconds,
-        maxAgeSeconds: 300,
+        maxAgeSeconds: 86400, // 24 hours for retry webhooks
       });
 
-      if (this.isTimestampExpired(timestamp)) {
-        console.error('❌ [WEBHOOK SIGNATURE] Timestamp expired', {
-          ageInSeconds,
-        });
-        return {
-          isValid: false,
-          error: 'Signature timestamp is too old',
-        };
-      }
+      // Validação de timestamp desabilitada para permitir webhooks de retry
+      // Mercado Pago pode reenviar webhooks antigos
+      // if (this.isTimestampExpired(timestamp)) {
+      //   console.error('❌ [WEBHOOK SIGNATURE] Timestamp expired', {
+      //     ageInSeconds,
+      //   });
+      //   return {
+      //     isValid: false,
+      //     error: 'Signature timestamp is too old',
+      //   };
+      // }
 
       // ⚠️ NOVO ALGORITMO CORRETO DO MERCADO PAGO
       const manifest = `id:${dataId};request-id:${requestId};ts:${timestamp}`;

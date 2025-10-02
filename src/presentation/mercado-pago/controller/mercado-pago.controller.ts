@@ -75,15 +75,20 @@ export class MercadoPagoController {
     @Req() req: RawBodyRequest<Request>,
   ): Promise<WebhookResponseDto> {
     try {
-      console.log({
+      console.log('🌐 [WEBHOOK CONTROLLER] Received webhook', {
+        timestamp: new Date().toISOString(),
+        unixTimestamp: Math.floor(Date.now() / 1000),
+      });
+
+      console.log('📋 [WEBHOOK CONTROLLER] All headers:', headers);
+
+      console.log('📦 [WEBHOOK CONTROLLER] Webhook data:', {
         webhookData: dto,
         signature: headers['x-signature'] || '',
         requestId: headers['x-request-id'] || '',
         dataId: dto.data.id,
         requestBody: req.rawBody?.toString() || JSON.stringify(dto),
-        // DEBUG: Log both versions to compare
         rawBodyAvailable: !!req.rawBody,
-        jsonStringified: JSON.stringify(dto),
       });
       const result = await this.processWebhookApp.execute({
         webhookData: dto,
