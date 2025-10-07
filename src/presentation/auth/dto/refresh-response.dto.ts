@@ -15,6 +15,9 @@ export class RefreshUserDto {
 
   @ApiProperty({ nullable: true })
   profileImage: string | null;
+
+  @ApiProperty({ type: Number, nullable: true })
+  creditValue: number | null;
 }
 
 export class RefreshResponseDto {
@@ -35,6 +38,7 @@ export class RefreshResponseDto {
       email: string;
       role: string;
       profileImage?: string | null;
+      creditValue?: string | null;
     },
   ): RefreshResponseDto {
     return {
@@ -45,6 +49,7 @@ export class RefreshResponseDto {
         email: user.email,
         role: user.role,
         profileImage: user.profileImage || null,
+        creditValue: user.creditValue ? parseFloat(user.creditValue) : null,
       },
     };
   }

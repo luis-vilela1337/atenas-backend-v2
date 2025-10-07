@@ -41,12 +41,7 @@ export class AuthService {
   }
 
   async login(user: Omit<User, 'passwordHash'>) {
-    const payload = {
-      sub: user.id,
-      email: user.email,
-      role: user.role,
-      creditValue: user.creditValue ? parseFloat(user.creditValue) : 0,
-    };
+    const payload = { sub: user.id, email: user.email, role: user.role };
 
     // Access Token (15 min)
     const accessToken = await this.jwtService.signAsync(payload, {
@@ -84,12 +79,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid refresh token');
     }
 
-    const payload = {
-      sub: user.id,
-      email: user.email,
-      role: user.role,
-      creditValue: user.creditValue ? parseFloat(user.creditValue) : 0,
-    };
+    const payload = { sub: user.id, email: user.email, role: user.role };
     const accessToken = await this.jwtService.signAsync(payload, {
       expiresIn: '15m',
     });

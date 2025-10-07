@@ -15,6 +15,9 @@ export class AuthUserDto {
 
   @ApiProperty({ nullable: true })
   profileImage: string | null;
+
+  @ApiProperty({ type: Number, nullable: true })
+  creditValue: number | null;
 }
 
 export class AuthResponseDto {
@@ -39,6 +42,7 @@ export class AuthResponseDto {
       email: string;
       role: string;
       profileImage?: string | null;
+      creditValue?: string | null;
     },
   ): AuthResponseDto {
     return {
@@ -50,6 +54,7 @@ export class AuthResponseDto {
         email: user.email,
         role: user.role,
         profileImage: user.profileImage || null,
+        creditValue: user.creditValue ? parseFloat(user.creditValue) : null,
       },
     };
   }
