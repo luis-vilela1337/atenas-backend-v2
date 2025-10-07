@@ -25,20 +25,11 @@ export class ShippingAddressDto {
 }
 
 export class OrderItemDetailsDto {
-  @ApiProperty()
-  id: string;
-
-  @ApiProperty()
-  orderItemId: string;
-
   @ApiProperty({ required: false })
   photoUrl?: string;
 
   @ApiProperty({ required: false })
-  eventId?: string;
-
-  @ApiProperty()
-  isPackage: boolean;
+  photoName?: string;
 }
 
 export class OrderItemDto {

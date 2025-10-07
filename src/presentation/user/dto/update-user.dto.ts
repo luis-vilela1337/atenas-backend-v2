@@ -16,6 +16,7 @@ import {
 import { Type } from 'class-transformer';
 import { UserRole, UserStatus } from '@infrastructure/data/sql/entities';
 import { AddressDto } from './address.dto';
+import { BecaMeasuresDto } from './beca-measures.dto';
 
 export class UpdateUserV2InputDto {
   @ApiProperty({ example: 'João Silva' })
@@ -124,14 +125,12 @@ export class UpdateUserV2InputDto {
 
   @ApiPropertyOptional({
     description: 'Medidas da beca',
-    example: 'Tamanho M, altura 1,70m',
+    type: BecaMeasuresDto,
   })
   @IsOptional()
-  @IsString({ message: 'As medidas da beca devem ser um texto.' })
-  @Length(1, 1000, {
-    message: 'As medidas da beca não podem ultrapassar $constraint2 caracteres.',
-  })
-  becaMeasures?: string;
+  @ValidateNested()
+  @Type(() => BecaMeasuresDto)
+  becaMeasures?: BecaMeasuresDto;
 
   status?: UserStatus;
 }
@@ -161,7 +160,7 @@ export class UpdateUserV2ResponseDto {
   @ApiProperty({ nullable: true }) city: string | null;
   @ApiProperty({ nullable: true }) state: string | null;
   @ApiProperty({ nullable: true }) cpf: string | null;
-  @ApiProperty({ nullable: true }) becaMeasures: string | null;
+  @ApiProperty({ nullable: true, type: BecaMeasuresDto }) becaMeasures: BecaMeasuresDto | null;
   @ApiProperty({ type: String, format: 'date-time' }) createdAt: string;
   @ApiProperty({ type: String, format: 'date-time', nullable: true })
   updatedAt: string | null;

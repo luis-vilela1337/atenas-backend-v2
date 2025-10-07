@@ -33,7 +33,9 @@ export class UpdateUserV2Adapter {
       city: dto.address?.city,
       state: dto.address?.state,
       cpf: dto.cpf,
-      becaMeasures: dto.becaMeasures,
+      becaMeasures: dto.becaMeasures
+        ? JSON.stringify(dto.becaMeasures)
+        : undefined,
       status: dto.status,
     };
 
@@ -70,7 +72,9 @@ export class UpdateUserV2Adapter {
       city: user.city || null,
       state: user.state || null,
       cpf: user.cpf || null,
-      becaMeasures: user.becaMeasures || null,
+      becaMeasures: user.becaMeasures
+        ? JSON.parse(user.becaMeasures)
+        : null,
       createdAt: user.createdAt.toISOString(),
       updatedAt: user.updatedAt ? user.updatedAt.toISOString() : null,
     };

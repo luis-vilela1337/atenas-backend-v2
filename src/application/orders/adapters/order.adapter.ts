@@ -124,16 +124,13 @@ export class OrderAdapter {
       order.items.map(async (item) => {
         const details = await Promise.all(
           item.details.map(async (detail) => ({
-            id: detail.id,
-            orderItemId: item.id,
             photoUrl: detail.photoFileName
               ? await imageStorageService.generateSignedUrl(
                   detail.photoFileName,
                   'read',
                 )
               : undefined,
-            eventId: detail.eventId,
-            isPackage: detail.isPackage,
+            photoName: detail.photoFileName,
           })),
         );
 

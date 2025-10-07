@@ -36,7 +36,9 @@ export class UserMapper {
             }
           : undefined,
       cpf: user.cpf,
-      becaMeasures: user.becaMeasures,
+      becaMeasures: user.becaMeasures
+        ? JSON.parse(user.becaMeasures)
+        : undefined,
     };
   }
 

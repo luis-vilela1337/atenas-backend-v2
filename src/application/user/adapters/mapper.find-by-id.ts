@@ -1,6 +1,7 @@
 import { User } from '@infrastructure/data/sql/entities';
 import { ApiProperty } from '@nestjs/swagger';
 import { AddressDto } from '@presentation/user/dto/address.dto';
+import { BecaMeasuresDto } from '@presentation/user/dto/beca-measures.dto';
 
 export class UserPayloadDto {
   @ApiProperty({ format: 'uuid' })
@@ -57,8 +58,8 @@ export class UserPayloadDto {
   @ApiProperty({ nullable: true })
   cpf: string | null;
 
-  @ApiProperty({ nullable: true })
-  becaMeasures: string | null;
+  @ApiProperty({ nullable: true, type: BecaMeasuresDto })
+  becaMeasures: BecaMeasuresDto | null;
 
   @ApiProperty({ type: String, format: 'date-time' })
   createdAt: string;
@@ -102,7 +103,9 @@ export class UserAdapterEntity {
             }
           : undefined,
       cpf: user.cpf || null,
-      becaMeasures: user.becaMeasures || null,
+      becaMeasures: user.becaMeasures
+        ? JSON.parse(user.becaMeasures)
+        : null,
       createdAt: user.createdAt.toISOString(),
     };
   }
