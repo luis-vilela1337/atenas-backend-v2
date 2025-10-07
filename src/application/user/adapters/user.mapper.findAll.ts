@@ -37,9 +37,17 @@ export class UserMapper {
           : undefined,
       cpf: user.cpf,
       becaMeasures: user.becaMeasures
-        ? JSON.parse(user.becaMeasures)
+        ? this.parseBecaMeasures(user.becaMeasures)
         : undefined,
     };
+  }
+
+  private static parseBecaMeasures(value: string): any {
+    try {
+      return JSON.parse(value);
+    } catch {
+      return undefined;
+    }
   }
 
   static toDtoArray(users: User[]): UserDto[] {

@@ -68,9 +68,17 @@ export class CreateUserAdapter {
       state: user.state || null,
       cpf: user.cpf || null,
       becaMeasures: user.becaMeasures
-        ? JSON.parse(user.becaMeasures)
+        ? this.parseBecaMeasures(user.becaMeasures)
         : null,
       createdAt: user.createdAt.toISOString(),
     };
+  }
+
+  private static parseBecaMeasures(value: string): any {
+    try {
+      return JSON.parse(value);
+    } catch {
+      return null;
+    }
   }
 }
