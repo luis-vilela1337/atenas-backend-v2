@@ -11,6 +11,7 @@ import { AddUserAndContractFields1757211242262 } from '../migrations/17572112422
 import { Generated1757455211999 } from '../migrations/1757455211999-generated';
 import { Generated1757564486153 } from '../migrations/1757564486153-generated';
 import { AddUserAddressFields1757600000000 } from '../migrations/1757600000000-AddUserAddressFields';
+import { AddCreditUsedToOrder1759747200000 } from '../migrations/1759747200000-AddCreditUsedToOrder';
 
 export const migrations = [
   Generated1747237005972,
@@ -22,7 +23,9 @@ export const migrations = [
   Generated1757455211999,
   Generated1757564486153,
   AddUserAddressFields1757600000000,
+  AddCreditUsedToOrder1759747200000,
 ];
+
 const envVars = (cs: ConfigService) => ({
   host: cs.get<string>('DB_HOST'),
   port: Number(cs.get<string>('DB_PORT')),

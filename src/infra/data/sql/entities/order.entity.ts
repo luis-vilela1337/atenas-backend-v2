@@ -81,6 +81,9 @@ export class Order {
   })
   items!: OrderItem[];
 
+  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
+  creditUsed?: number;
+
   @CreateDateColumn({ name: 'created_at', type: 'timestamp with time zone' })
   createdAt!: Date;
 

@@ -88,6 +88,7 @@ export interface Order {
   contractUniqueId?: string;
   shippingAddress?: ShippingAddress;
   items: OrderItem[];
+  creditUsed?: number;
   createdAt: Date;
   updatedAt?: Date;
 }

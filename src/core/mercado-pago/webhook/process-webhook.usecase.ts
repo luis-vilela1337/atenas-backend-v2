@@ -6,6 +6,7 @@ import {
 import { WebhookRepositoryInterface } from '../repositories/webhook.repository.interface';
 import { OrderRepositoryInterface } from '../../orders/repositories/order.repository.interface';
 import { OrderStatus } from '../../orders/entities/order.entity';
+import { UserSQLRepository } from '../../../infra/data/sql/repositories/user.repository';
 
 export interface ProcessWebhookInput {
   id: string;
@@ -23,6 +24,7 @@ export class ProcessWebhookUseCase {
   constructor(
     private readonly webhookRepository: WebhookRepositoryInterface,
     private readonly orderRepository?: OrderRepositoryInterface,
+    private readonly userRepository?: UserSQLRepository,
   ) {}
 
   async execute(input: ProcessWebhookInput): Promise<WebhookProcessingResult> {
@@ -175,6 +177,25 @@ export class ProcessWebhookUseCase {
       );
 
       if (orderStatus) {
+        // Restore credit if order is cancelled or rejected and credit was used
+        if (
+          (orderStatus === OrderStatus.CANCELLED ||
+            orderStatus === OrderStatus.REJECTED) &&
+          order.creditUsed &&
+          order.creditUsed > 0 &&
+          this.userRepository
+        ) {
+          const currentCredit =
+            await this.userRepository.findUserCreditByUserId(order.userId);
+          await this.userRepository.updateUserCredit(
+            order.userId,
+            currentCredit + order.creditUsed,
+          );
+          console.log(
+            `Restored ${order.creditUsed} credit to user ${order.userId}`,
+          );
+        }
+
         await this.orderRepository!.updateOrderStatus(order.id, orderStatus);
         console.log(`Order ${order.id} status updated to: ${orderStatus}`);
       }
