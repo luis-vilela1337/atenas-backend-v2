@@ -3,7 +3,7 @@ import { CreateOrderUseCase } from './usecase';
 import { OrderRepositoryInterface } from '../repositories/order.repository.interface';
 import { MercadoPagoRepositoryInterface } from '../../mercado-pago/repositories/mercado-pago.repository.interface';
 import { UserSQLRepository } from '../../../infra/data/sql/repositories/user.repository';
-import { CreateOrderInput, Order } from '../entities/order.entity';
+import { CreateOrderInput, Order, OrderStatus } from '../entities/order.entity';
 
 describe('CreateOrderUseCase', () => {
   let useCase: CreateOrderUseCase;
@@ -20,7 +20,9 @@ describe('CreateOrderUseCase', () => {
         productName: 'Test Product',
         productType: 'GENERIC',
         totalPrice: 100,
-        selectionDetails: {},
+        selectionDetails: {
+          photos: [{ id: 'photo-1', eventId: 'event-1' }],
+        },
       },
     ],
     shippingDetails: {
@@ -41,9 +43,10 @@ describe('CreateOrderUseCase', () => {
 
   const mockOrder: Order = {
     id: 'order-123',
+    displayId: 1,
     userId: 'user-123',
     totalAmount: 100,
-    paymentStatus: 'APPROVED',
+    paymentStatus: OrderStatus.APPROVED,
     shippingAddress: mockInput.shippingDetails,
     items: [],
     createdAt: new Date(),
@@ -67,6 +70,8 @@ describe('CreateOrderUseCase', () => {
     userRepository = {
       findUserCreditByUserId: jest.fn(),
       updateUserCredit: jest.fn(),
+      findById: jest.fn(),
+      updateUser: jest.fn(),
     } as any;
 
     configService = {
@@ -79,6 +84,15 @@ describe('CreateOrderUseCase', () => {
       userRepository,
       configService,
     );
+
+    // Default mock setup
+    userRepository.findById.mockResolvedValue({
+      id: 'user-123',
+      identifier: 'USER001',
+      institution: {
+        contractNumber: 'INST001',
+      },
+    } as any);
   });
 
   describe('FREE Payment Flow - R$ 0,00', () => {
@@ -106,7 +120,7 @@ describe('CreateOrderUseCase', () => {
       });
       expect(orderRepository.createOrder).toHaveBeenCalledWith(
         expect.objectContaining({
-          paymentStatus: 'APPROVED',
+          paymentStatus: OrderStatus.APPROVED,
           totalAmount: 0,
         }),
       );
@@ -145,7 +159,7 @@ describe('CreateOrderUseCase', () => {
       );
       expect(orderRepository.createOrder).toHaveBeenCalledWith(
         expect.objectContaining({
-          paymentStatus: 'APPROVED',
+          paymentStatus: OrderStatus.APPROVED,
           totalAmount: 100,
         }),
       );
@@ -186,7 +200,7 @@ describe('CreateOrderUseCase', () => {
       userRepository.findUserCreditByUserId.mockResolvedValue(userCredit);
       orderRepository.createOrder.mockResolvedValue({
         ...mockOrder,
-        paymentStatus: 'PENDING',
+        paymentStatus: OrderStatus.PENDING,
       });
       mercadoPagoRepository.createPreference.mockResolvedValue({
         id: 'mp-preference-123',
@@ -208,7 +222,7 @@ describe('CreateOrderUseCase', () => {
       expect(userRepository.updateUserCredit).not.toHaveBeenCalled();
       expect(orderRepository.createOrder).toHaveBeenCalledWith(
         expect.objectContaining({
-          paymentStatus: 'PENDING',
+          paymentStatus: OrderStatus.PENDING,
           totalAmount: 100,
         }),
       );
@@ -226,7 +240,7 @@ describe('CreateOrderUseCase', () => {
       userRepository.findUserCreditByUserId.mockResolvedValue(userCredit);
       orderRepository.createOrder.mockResolvedValue({
         ...mockOrder,
-        paymentStatus: 'PENDING',
+        paymentStatus: OrderStatus.PENDING,
       });
       mercadoPagoRepository.createPreference.mockResolvedValue({
         id: 'mp-preference-456',

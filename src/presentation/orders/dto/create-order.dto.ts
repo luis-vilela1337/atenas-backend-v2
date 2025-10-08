@@ -135,7 +135,8 @@ export class SelectionDetailsDto {
   events?: EventSelectionDto[];
 
   @ApiProperty({
-    description: 'Se é pacote completo',
+    description:
+      'Se é pacote completo (não pode ser usado junto com outras seleções)',
     example: false,
     required: false,
   })

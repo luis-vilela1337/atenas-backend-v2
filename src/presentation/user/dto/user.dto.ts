@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { AddressDto } from './address.dto';
+import { BecaMeasuresDto } from './beca-measures.dto';
 
 export class UserDto {
   @ApiProperty({ format: 'uuid' })
@@ -35,8 +36,8 @@ export class UserDto {
   @ApiProperty({ nullable: true })
   cpf?: string;
 
-  @ApiProperty({ nullable: true })
-  becaMeasures?: string;
+  @ApiProperty({ nullable: true, type: BecaMeasuresDto })
+  becaMeasures?: BecaMeasuresDto;
 
   @ApiProperty({ type: String, format: 'date-time' })
   createdAt: Date;

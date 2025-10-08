@@ -30,12 +30,19 @@ export class ImageStorageService {
   generateRandomFilename(
     contentType: string,
     mediaType: MediaType = MediaType.IMAGE,
+    customIdentifier?: string,
   ): string {
+    const extension = this.getFileExtension(contentType);
+
+    // If customIdentifier is provided, use only customIdentifier (pure name)
+    if (customIdentifier) {
+      return `${customIdentifier}.${extension}`;
+    }
+
+    // Default behavior: prefix + randomBytes + timestamp
     const timestamp = Date.now();
     const randomBytes = crypto.randomBytes(16).toString('hex');
-    const extension = this.getFileExtension(contentType);
     const prefix = mediaType === MediaType.VIDEO ? 'video' : 'image';
-
     return `${prefix}-${randomBytes}-${timestamp}.${extension}`;
   }
 

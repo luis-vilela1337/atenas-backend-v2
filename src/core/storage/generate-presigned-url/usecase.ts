@@ -10,6 +10,7 @@ export interface GeneratePresignedUrlInput {
   contentType: string;
   quantity: number;
   mediaType?: MediaType; // Auto-detected from contentType if not provided
+  customIdentifier?: string; // Custom value to concatenate with dateTime
 }
 
 @Injectable()
@@ -19,7 +20,7 @@ export class GeneratePresignedUrlUseCase {
   async execute(
     input: GeneratePresignedUrlInput,
   ): Promise<PresignedUrlResponseDto> {
-    const { contentType, quantity } = input;
+    const { contentType, quantity, customIdentifier } = input;
     const mediaType = input.mediaType || this.detectMediaType(contentType);
 
     this.validateContentType(contentType, mediaType);
@@ -27,7 +28,7 @@ export class GeneratePresignedUrlUseCase {
 
     try {
       const urlPromises = Array.from({ length: quantity }, (_, index) =>
-        this.generateSinglePresignedUrl(contentType, mediaType, index + 1),
+        this.generateSinglePresignedUrl(contentType, mediaType, index + 1, customIdentifier),
       );
 
       const urls = await Promise.all(urlPromises);
@@ -47,10 +48,12 @@ export class GeneratePresignedUrlUseCase {
     contentType: string,
     mediaType: MediaType,
     index: number,
+    customIdentifier?: string,
   ): Promise<PresignedUrlItemDto> {
     const filename = this.imageStorageService.generateRandomFilename(
       contentType,
       mediaType,
+      customIdentifier,
     );
     const uploadUrl = await this.imageStorageService.generateSignedUrl(
       filename,

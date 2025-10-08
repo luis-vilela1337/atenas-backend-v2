@@ -57,6 +57,7 @@ describe('GeneratePresignedUrlUseCase - Enhanced with Video Support', () => {
       expect(imageStorageService.generateRandomFilename).toHaveBeenCalledWith(
         'video/mp4',
         MediaType.VIDEO,
+        undefined,
       );
     });
 
@@ -149,6 +150,51 @@ describe('GeneratePresignedUrlUseCase - Enhanced with Video Support', () => {
       // WHEN & THEN
       await expect(useCase.execute(input)).rejects.toThrow(
         'Tipo de mídia não detectado para: application/pdf',
+      );
+    });
+
+    it('should use pure customIdentifier when customIdentifier is provided', async () => {
+      // GIVEN
+      const input = {
+        contentType: 'image/png',
+        quantity: 1,
+        customIdentifier: 'user-123',
+      };
+
+      imageStorageService.generateRandomFilename.mockReturnValue('user-123.png');
+      imageStorageService.generateSignedUrl.mockResolvedValue('https://storage.com/upload/custom');
+
+      // WHEN
+      const result = await useCase.execute(input);
+
+      // THEN
+      expect(result.urls[0].filename).toBe('user-123.png');
+      expect(imageStorageService.generateRandomFilename).toHaveBeenCalledWith(
+        'image/png',
+        MediaType.IMAGE,
+        'user-123',
+      );
+    });
+
+    it('should use default behavior when customIdentifier is not provided', async () => {
+      // GIVEN
+      const input = {
+        contentType: 'image/png',
+        quantity: 1,
+      };
+
+      imageStorageService.generateRandomFilename.mockReturnValue('image-abc123-1640995200000.png');
+      imageStorageService.generateSignedUrl.mockResolvedValue('https://storage.com/upload/default');
+
+      // WHEN
+      const result = await useCase.execute(input);
+
+      // THEN
+      expect(result.urls[0].filename).toBe('image-abc123-1640995200000.png');
+      expect(imageStorageService.generateRandomFilename).toHaveBeenCalledWith(
+        'image/png',
+        MediaType.IMAGE,
+        undefined,
       );
     });
   });

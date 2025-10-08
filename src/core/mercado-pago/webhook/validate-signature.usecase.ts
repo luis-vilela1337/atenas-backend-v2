@@ -86,11 +86,11 @@ export class ValidateSignatureUseCase {
         .update(manifest)
         .digest('hex');
 
+
       console.log('✅ [WEBHOOK SIGNATURE] Mercado Pago algorithm', {
         manifest,
         expectedHash,
         receivedHash: hash,
-        match: this.compareHashes(hash, expectedHash),
       });
 
       const isValid = this.compareHashes(hash, expectedHash);
@@ -103,7 +103,7 @@ export class ValidateSignatureUseCase {
       }
 
       console.warn(
-        '⚠️ [WEBHOOK SIGNATURE] All Mercado Pago formats failed, trying LEGACY',
+        '⚠️ [WEBHOOK SIGNATURE] Mercado Pago method failed, trying LEGACY',
       );
 
       // ⚠️ FALLBACK: Se falhar, tenta o método antigo

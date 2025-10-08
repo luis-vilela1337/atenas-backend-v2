@@ -30,7 +30,17 @@ export const mockJwtService = (): Partial<JwtService> => ({
 
 export const mockImageStorageService = (): Partial<ImageStorageService> => ({
   generateRandomFilename: jest.fn(
-    (contentType: string) => `test-file.${contentType.split('/')[1]}`,
+    (contentType: string, mediaType?: any, customIdentifier?: string) => {
+      const extension = contentType.split('/')[1];
+
+      // If customIdentifier is provided, use only customIdentifier (pure name)
+      if (customIdentifier) {
+        return `${customIdentifier}.${extension}`;
+      }
+
+      // Default behavior
+      return `test-file.${extension}`;
+    },
   ),
   generateUploadSignedUrl: jest
     .fn()

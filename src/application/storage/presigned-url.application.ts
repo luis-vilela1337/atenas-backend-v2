@@ -21,6 +21,7 @@ export class GeneratePresignedUrV2Application {
       const useCaseInput: GeneratePresignedUrlInput = {
         contentType: input.contentType,
         quantity: input.quantity,
+        customIdentifier: input.customIdentifier,
       };
 
       return await this.generatePresignedUrl.execute(useCaseInput);
