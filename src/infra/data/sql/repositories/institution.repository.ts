@@ -98,7 +98,7 @@ export class InstitutionSQLRepository {
           (e) => !providedEventIds.has(e.id),
         );
         if (eventsToDelete.length > 0) {
-          await qr.manager.delete(
+          await qr.manager.softDelete(
             InstitutionEvent,
             eventsToDelete.map((e) => e.id),
           );
@@ -118,7 +118,7 @@ export class InstitutionSQLRepository {
         });
         await qr.manager.save(toUpsert);
       } else {
-        await qr.manager.delete(InstitutionEvent, { institution: inst });
+        await qr.manager.softDelete(InstitutionEvent, { institution: inst });
       }
 
       const { contractNumber, name, observations } = updateData;
@@ -156,9 +156,8 @@ export class InstitutionSQLRepository {
         return null;
       }
 
-      await qr.manager.delete(InstitutionEvent, { institution: { id } });
+      await qr.manager.softDelete(InstitutionEvent, { institution: { id } });
       await qr.manager.delete(Institution, id);
-      await qr.manager.delete(InstitutionEvent, { institution: { id } });
 
       await qr.commitTransaction();
     } catch (err) {

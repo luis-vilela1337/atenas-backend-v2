@@ -45,7 +45,7 @@ export class UserEventPhotoSQLRepository {
   }
 
   async deleteById(id: string): Promise<void> {
-    await this.repository.delete(id);
+    await this.repository.softDelete(id);
   }
 
   async findById(id: string): Promise<UserEventPhoto | null> {
