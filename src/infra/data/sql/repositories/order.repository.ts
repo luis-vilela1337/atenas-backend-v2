@@ -145,35 +145,19 @@ export class OrderRepository implements OrderRepositoryInterface {
             .join(', ')}...`,
         );
 
-        // Try direct SQL query to check if photos exist
-        const testQuery = await this.orderRepo.manager.query(
-          `SELECT id, "fileName" FROM user_event_photos WHERE id = $1`,
-          [Array.from(photoIds)[0]],
-        );
-        this.logger.debug(
-          `Direct SQL test result: ${JSON.stringify(testQuery)}`,
+        // Use direct SQL query to bypass TypeORM filters
+        const photoIdsArray = Array.from(photoIds);
+        const placeholders = photoIdsArray
+          .map((_, index) => `$${index + 1}`)
+          .join(', ');
+
+        const photos = await this.orderRepo.manager.query(
+          `SELECT id, "fileName" FROM user_event_photos WHERE id IN (${placeholders})`,
+          photoIdsArray,
         );
 
-        // Also check table columns
-        const columnsQuery = await this.orderRepo.manager.query(
-          `SELECT column_name FROM information_schema.columns WHERE table_name = 'user_event_photos' AND column_name LIKE '%file%'`,
-        );
         this.logger.debug(
-          `File-related columns: ${JSON.stringify(columnsQuery)}`,
-        );
-
-        const photos = await this.orderRepo.manager
-          .createQueryBuilder()
-          .select('photo.id', 'id')
-          .addSelect('photo.fileName', 'fileName')
-          .from('user_event_photos', 'photo')
-          .where('photo.id IN (:...ids)', { ids: Array.from(photoIds) })
-          .getRawMany();
-
-        this.logger.debug(
-          `Photos query returned ${
-            photos.length
-          } results. First result: ${JSON.stringify(photos[0])}`,
+          `Photos query returned ${photos.length} results from ${photoIdsArray.length} IDs`,
         );
 
         photos.forEach((photo) => {
