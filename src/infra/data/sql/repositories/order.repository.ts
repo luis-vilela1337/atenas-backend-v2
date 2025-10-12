@@ -140,7 +140,26 @@ export class OrderRepository implements OrderRepositoryInterface {
       const photoMap = new Map<string, any>();
       if (photoIds.size > 0) {
         this.logger.debug(
-          `Loading ${photoIds.size} photos with IDs: ${Array.from(photoIds).slice(0, 3).join(', ')}...`,
+          `Loading ${photoIds.size} photos with IDs: ${Array.from(photoIds)
+            .slice(0, 3)
+            .join(', ')}...`,
+        );
+
+        // Try direct SQL query to check if photos exist
+        const testQuery = await this.orderRepo.manager.query(
+          `SELECT id, "fileName" FROM user_event_photos WHERE id = $1`,
+          [Array.from(photoIds)[0]],
+        );
+        this.logger.debug(
+          `Direct SQL test result: ${JSON.stringify(testQuery)}`,
+        );
+
+        // Also check table columns
+        const columnsQuery = await this.orderRepo.manager.query(
+          `SELECT column_name FROM information_schema.columns WHERE table_name = 'user_event_photos' AND column_name LIKE '%file%'`,
+        );
+        this.logger.debug(
+          `File-related columns: ${JSON.stringify(columnsQuery)}`,
         );
 
         const photos = await this.orderRepo.manager
@@ -152,7 +171,9 @@ export class OrderRepository implements OrderRepositoryInterface {
           .getRawMany();
 
         this.logger.debug(
-          `Photos query returned ${photos.length} results. First result: ${JSON.stringify(photos[0])}`,
+          `Photos query returned ${
+            photos.length
+          } results. First result: ${JSON.stringify(photos[0])}`,
         );
 
         photos.forEach((photo) => {
@@ -201,11 +222,7 @@ export class OrderRepository implements OrderRepositoryInterface {
         .createQueryBuilder('order')
         .leftJoinAndSelect('order.items', 'items')
         .leftJoinAndSelect('items.details', 'details')
-        .leftJoin(
-          'user_event_photos',
-          'photo',
-          'photo.id = details.photoId',
-        )
+        .leftJoin('user_event_photos', 'photo', 'photo.id = details.photoId')
         .addSelect([
           'photo.id',
           'photo.fileName',
@@ -240,11 +257,7 @@ export class OrderRepository implements OrderRepositoryInterface {
         .createQueryBuilder('order')
         .leftJoinAndSelect('order.items', 'items')
         .leftJoinAndSelect('items.details', 'details')
-        .leftJoin(
-          'user_event_photos',
-          'photo',
-          'photo.id = details.photoId',
-        )
+        .leftJoin('user_event_photos', 'photo', 'photo.id = details.photoId')
         .addSelect([
           'photo.id',
           'photo.fileName',
@@ -311,11 +324,7 @@ export class OrderRepository implements OrderRepositoryInterface {
         .createQueryBuilder('order')
         .leftJoinAndSelect('order.items', 'items')
         .leftJoinAndSelect('items.details', 'details')
-        .leftJoin(
-          'user_event_photos',
-          'photo',
-          'photo.id = details.photoId',
-        )
+        .leftJoin('user_event_photos', 'photo', 'photo.id = details.photoId')
         .addSelect([
           'photo.id',
           'photo.fileName',
