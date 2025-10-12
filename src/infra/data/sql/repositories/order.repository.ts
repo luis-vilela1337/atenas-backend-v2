@@ -118,7 +118,11 @@ export class OrderRepository implements OrderRepositoryInterface {
         .createQueryBuilder('order')
         .leftJoinAndSelect('order.items', 'items')
         .leftJoinAndSelect('items.details', 'details')
-        .leftJoin('details.photo', 'photo')
+        .leftJoin(
+          'user_event_photos',
+          'photo',
+          'photo.id = details.photoId',
+        )
         .addSelect([
           'photo.id',
           'photo.fileName',
@@ -164,7 +168,11 @@ export class OrderRepository implements OrderRepositoryInterface {
         .createQueryBuilder('order')
         .leftJoinAndSelect('order.items', 'items')
         .leftJoinAndSelect('items.details', 'details')
-        .leftJoin('details.photo', 'photo')
+        .leftJoin(
+          'user_event_photos',
+          'photo',
+          'photo.id = details.photoId',
+        )
         .addSelect([
           'photo.id',
           'photo.fileName',
@@ -199,7 +207,11 @@ export class OrderRepository implements OrderRepositoryInterface {
         .createQueryBuilder('order')
         .leftJoinAndSelect('order.items', 'items')
         .leftJoinAndSelect('items.details', 'details')
-        .leftJoin('details.photo', 'photo')
+        .leftJoin(
+          'user_event_photos',
+          'photo',
+          'photo.id = details.photoId',
+        )
         .addSelect([
           'photo.id',
           'photo.fileName',
@@ -266,7 +278,11 @@ export class OrderRepository implements OrderRepositoryInterface {
         .createQueryBuilder('order')
         .leftJoinAndSelect('order.items', 'items')
         .leftJoinAndSelect('items.details', 'details')
-        .leftJoin('details.photo', 'photo')
+        .leftJoin(
+          'user_event_photos',
+          'photo',
+          'photo.id = details.photoId',
+        )
         .addSelect([
           'photo.id',
           'photo.fileName',
