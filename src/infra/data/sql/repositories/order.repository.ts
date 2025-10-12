@@ -146,7 +146,7 @@ export class OrderRepository implements OrderRepositoryInterface {
         const photos = await this.orderRepo.manager
           .createQueryBuilder()
           .select('photo.id', 'id')
-          .addSelect('photo.file_name', 'fileName')
+          .addSelect('photo.fileName', 'fileName')
           .from('user_event_photos', 'photo')
           .where('photo.id IN (:...ids)', { ids: Array.from(photoIds) })
           .getRawMany();
