@@ -118,7 +118,14 @@ export class OrderRepository implements OrderRepositoryInterface {
         .createQueryBuilder('order')
         .leftJoinAndSelect('order.items', 'items')
         .leftJoinAndSelect('items.details', 'details')
-        .leftJoinAndSelect('details.photo', 'photo')
+        .leftJoin('details.photo', 'photo')
+        .addSelect([
+          'photo.id',
+          'photo.fileName',
+          'photo.createdAt',
+          'photo.updatedAt',
+          'photo.deletedAt',
+        ])
         .withDeleted()
         .where('order.id = :id', { id })
         .getOne();
@@ -161,7 +168,14 @@ export class OrderRepository implements OrderRepositoryInterface {
         .createQueryBuilder('order')
         .leftJoinAndSelect('order.items', 'items')
         .leftJoinAndSelect('items.details', 'details')
-        .leftJoinAndSelect('details.photo', 'photo')
+        .leftJoin('details.photo', 'photo')
+        .addSelect([
+          'photo.id',
+          'photo.fileName',
+          'photo.createdAt',
+          'photo.updatedAt',
+          'photo.deletedAt',
+        ])
         .withDeleted()
         .where('order.paymentGatewayId = :paymentGatewayId', {
           paymentGatewayId,
@@ -189,7 +203,14 @@ export class OrderRepository implements OrderRepositoryInterface {
         .createQueryBuilder('order')
         .leftJoinAndSelect('order.items', 'items')
         .leftJoinAndSelect('items.details', 'details')
-        .leftJoinAndSelect('details.photo', 'photo')
+        .leftJoin('details.photo', 'photo')
+        .addSelect([
+          'photo.id',
+          'photo.fileName',
+          'photo.createdAt',
+          'photo.updatedAt',
+          'photo.deletedAt',
+        ])
         .withDeleted()
         .where('order.userId = :userId', { userId })
         .orderBy('order.createdAt', 'DESC')
@@ -249,7 +270,14 @@ export class OrderRepository implements OrderRepositoryInterface {
         .createQueryBuilder('order')
         .leftJoinAndSelect('order.items', 'items')
         .leftJoinAndSelect('items.details', 'details')
-        .leftJoinAndSelect('details.photo', 'photo')
+        .leftJoin('details.photo', 'photo')
+        .addSelect([
+          'photo.id',
+          'photo.fileName',
+          'photo.createdAt',
+          'photo.updatedAt',
+          'photo.deletedAt',
+        ])
         .withDeleted()
         .orderBy('order.createdAt', 'DESC');
 
