@@ -127,6 +127,23 @@ export class OrderRepository implements OrderRepositoryInterface {
         return null;
       }
 
+      // Debug log
+      this.logger.debug(
+        `Order found: ${JSON.stringify({
+          id: order.id,
+          itemsCount: order.items?.length || 0,
+          items: order.items?.map((item) => ({
+            id: item.id,
+            detailsCount: item.details?.length || 0,
+            details: item.details?.map((d) => ({
+              id: d.id,
+              photoId: d.photoId,
+              photoFileName: d.photo?.fileName,
+            })),
+          })),
+        })}`,
+      );
+
       return this.mapToEntity(order);
     } catch (error) {
       this.logger.error(`Error finding order by ID: ${error.message}`);
@@ -146,7 +163,9 @@ export class OrderRepository implements OrderRepositoryInterface {
         .leftJoinAndSelect('items.details', 'details')
         .leftJoinAndSelect('details.photo', 'photo')
         .withDeleted()
-        .where('order.paymentGatewayId = :paymentGatewayId', { paymentGatewayId })
+        .where('order.paymentGatewayId = :paymentGatewayId', {
+          paymentGatewayId,
+        })
         .getOne();
 
       if (!order) {
@@ -250,6 +269,18 @@ export class OrderRepository implements OrderRepositoryInterface {
         .skip(skip)
         .take(limit)
         .getManyAndCount();
+
+      // Debug log
+      this.logger.debug(
+        `Orders found: ${orders.length}, First order details: ${JSON.stringify({
+          id: orders[0]?.id,
+          itemsCount: orders[0]?.items?.length || 0,
+          items: orders[0]?.items?.map((item) => ({
+            id: item.id,
+            detailsCount: item.details?.length || 0,
+          })),
+        })}`,
+      );
 
       const totalPages = Math.ceil(totalItems / limit);
       const itemCount = orders.length;
