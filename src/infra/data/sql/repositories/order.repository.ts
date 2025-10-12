@@ -118,18 +118,6 @@ export class OrderRepository implements OrderRepositoryInterface {
         .createQueryBuilder('order')
         .leftJoinAndSelect('order.items', 'items')
         .leftJoinAndSelect('items.details', 'details')
-        .leftJoin(
-          'user_event_photos',
-          'photo',
-          'photo.id = details.photoId',
-        )
-        .addSelect([
-          'photo.id',
-          'photo.fileName',
-          'photo.createdAt',
-          'photo.updatedAt',
-          'photo.deletedAt',
-        ])
         .withDeleted()
         .where('order.id = :id', { id })
         .getOne();
@@ -138,16 +126,53 @@ export class OrderRepository implements OrderRepositoryInterface {
         return null;
       }
 
+      // Collect all photoIds
+      const photoIds = new Set<string>();
+      order.items?.forEach((item) => {
+        item.details?.forEach((detail) => {
+          if (detail.photoId) {
+            photoIds.add(detail.photoId);
+          }
+        });
+      });
+
+      // Load photos separately (including soft-deleted)
+      let photoMap = new Map<string, any>();
+      if (photoIds.size > 0) {
+        const photos = await this.orderRepo.manager
+          .createQueryBuilder()
+          .select('photo.id', 'id')
+          .addSelect('photo.fileName', 'fileName')
+          .from('user_event_photos', 'photo')
+          .where('photo.id IN (:...ids)', { ids: Array.from(photoIds) })
+          .getRawMany();
+
+        photos.forEach((photo) => {
+          photoMap.set(photo.id, photo);
+        });
+      }
+
+      // Map photos to details
+      order.items?.forEach((item) => {
+        item.details?.forEach((detail) => {
+          if (detail.photoId && photoMap.has(detail.photoId)) {
+            (detail as any).photo = photoMap.get(detail.photoId);
+          }
+        });
+      });
+
       // Debug log
       this.logger.debug(
-        `Order found RAW: ${JSON.stringify({
+        `Order found with ${photoMap.size} photos loaded: ${JSON.stringify({
           id: order.id,
           itemsCount: order.items?.length || 0,
-          firstItem: order.items?.[0] ? {
-            id: order.items[0].id,
-            detailsCount: order.items[0].details?.length || 0,
-            firstDetail: order.items[0].details?.[0],
-          } : null,
+          firstItem: order.items?.[0]
+            ? {
+                id: order.items[0].id,
+                detailsCount: order.items[0].details?.length || 0,
+                firstDetail: order.items[0].details?.[0],
+              }
+            : null,
         })}`,
       );
 
