@@ -120,6 +120,13 @@ export class OrderAdapter {
     order: Order,
     imageStorageService: ImageStorageService,
   ): Promise<OrderDto> {
+    // Debug log
+    console.log('[OrderAdapter] Processing order:', {
+      orderId: order.id,
+      itemsCount: order.items.length,
+      firstItemDetails: order.items[0]?.details?.[0],
+    });
+
     const items = await Promise.all(
       order.items.map(async (item) => {
         const details = await Promise.all(
