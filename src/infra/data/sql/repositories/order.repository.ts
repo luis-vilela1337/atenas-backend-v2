@@ -137,15 +137,23 @@ export class OrderRepository implements OrderRepositoryInterface {
       });
 
       // Load photos separately (including soft-deleted)
-      let photoMap = new Map<string, any>();
+      const photoMap = new Map<string, any>();
       if (photoIds.size > 0) {
+        this.logger.debug(
+          `Loading ${photoIds.size} photos with IDs: ${Array.from(photoIds).slice(0, 3).join(', ')}...`,
+        );
+
         const photos = await this.orderRepo.manager
           .createQueryBuilder()
           .select('photo.id', 'id')
-          .addSelect('photo.fileName', 'fileName')
+          .addSelect('photo.file_name', 'fileName')
           .from('user_event_photos', 'photo')
           .where('photo.id IN (:...ids)', { ids: Array.from(photoIds) })
           .getRawMany();
+
+        this.logger.debug(
+          `Photos query returned ${photos.length} results. First result: ${JSON.stringify(photos[0])}`,
+        );
 
         photos.forEach((photo) => {
           photoMap.set(photo.id, photo);
