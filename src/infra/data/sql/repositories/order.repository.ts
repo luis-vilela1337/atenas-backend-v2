@@ -114,10 +114,14 @@ export class OrderRepository implements OrderRepositoryInterface {
     this.logger.log(`Finding order by ID: ${id}`);
 
     try {
-      const order = await this.orderRepo.findOne({
-        where: { id },
-        relations: ['items', 'items.details', 'items.details.photo'],
-      });
+      const order = await this.orderRepo
+        .createQueryBuilder('order')
+        .leftJoinAndSelect('order.items', 'items')
+        .leftJoinAndSelect('items.details', 'details')
+        .leftJoinAndSelect('details.photo', 'photo')
+        .withDeleted()
+        .where('order.id = :id', { id })
+        .getOne();
 
       if (!order) {
         return null;
@@ -136,10 +140,14 @@ export class OrderRepository implements OrderRepositoryInterface {
     this.logger.log(`Finding order by payment gateway ID: ${paymentGatewayId}`);
 
     try {
-      const order = await this.orderRepo.findOne({
-        where: { paymentGatewayId },
-        relations: ['items', 'items.details', 'items.details.photo'],
-      });
+      const order = await this.orderRepo
+        .createQueryBuilder('order')
+        .leftJoinAndSelect('order.items', 'items')
+        .leftJoinAndSelect('items.details', 'details')
+        .leftJoinAndSelect('details.photo', 'photo')
+        .withDeleted()
+        .where('order.paymentGatewayId = :paymentGatewayId', { paymentGatewayId })
+        .getOne();
 
       if (!order) {
         return null;
@@ -158,11 +166,15 @@ export class OrderRepository implements OrderRepositoryInterface {
     this.logger.log(`Finding orders for user: ${userId}`);
 
     try {
-      const orders = await this.orderRepo.find({
-        where: { userId },
-        relations: ['items', 'items.details', 'items.details.photo'],
-        order: { createdAt: 'DESC' },
-      });
+      const orders = await this.orderRepo
+        .createQueryBuilder('order')
+        .leftJoinAndSelect('order.items', 'items')
+        .leftJoinAndSelect('items.details', 'details')
+        .leftJoinAndSelect('details.photo', 'photo')
+        .withDeleted()
+        .where('order.userId = :userId', { userId })
+        .orderBy('order.createdAt', 'DESC')
+        .getMany();
 
       return orders.map((order) => this.mapToEntity(order));
     } catch (error) {
@@ -219,6 +231,7 @@ export class OrderRepository implements OrderRepositoryInterface {
         .leftJoinAndSelect('order.items', 'items')
         .leftJoinAndSelect('items.details', 'details')
         .leftJoinAndSelect('details.photo', 'photo')
+        .withDeleted()
         .orderBy('order.createdAt', 'DESC');
 
       if (filter?.userId) {
