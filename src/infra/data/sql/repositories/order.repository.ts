@@ -136,18 +136,14 @@ export class OrderRepository implements OrderRepositoryInterface {
 
       // Debug log
       this.logger.debug(
-        `Order found: ${JSON.stringify({
+        `Order found RAW: ${JSON.stringify({
           id: order.id,
           itemsCount: order.items?.length || 0,
-          items: order.items?.map((item) => ({
-            id: item.id,
-            detailsCount: item.details?.length || 0,
-            details: item.details?.map((d) => ({
-              id: d.id,
-              photoId: d.photoId,
-              photoFileName: d.photo?.fileName,
-            })),
-          })),
+          firstItem: order.items?.[0] ? {
+            id: order.items[0].id,
+            detailsCount: order.items[0].details?.length || 0,
+            firstDetail: order.items[0].details?.[0],
+          } : null,
         })}`,
       );
 
