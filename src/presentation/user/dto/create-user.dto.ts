@@ -72,17 +72,13 @@ export class CreateUserV2InputDto {
   observations?: string;
 
   @ApiProperty({
-    description: 'Senha (minúscula, maiúscula, número)',
-    example: 'Abc12345',
+    description: 'Senha',
+    example: 'senha123',
   })
   @IsString({ message: 'A senha deve ser um texto.' })
   @IsNotEmpty({ message: 'A senha não pode ficar em branco.' })
   @Length(6, 100, {
     message: 'A senha deve ter entre $constraint1 e $constraint2 caracteres.',
-  })
-  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@$!%*?&]{6,}$/, {
-    message:
-      'A senha precisa ter ao menos uma letra minúscula, uma maiúscula e um dígito.',
   })
   password: string;
 

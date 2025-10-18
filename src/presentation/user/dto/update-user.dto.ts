@@ -50,7 +50,6 @@ export class UpdateUserV2InputDto {
   @IsOptional()
   @IsString()
   @Length(6, 100)
-  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@$!%*?&]{6,}$/)
   password?: string;
   @ApiProperty({ enum: ['admin', 'client'] })
   @IsEnum(['admin', 'client'])
