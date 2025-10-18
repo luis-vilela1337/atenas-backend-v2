@@ -34,9 +34,10 @@ export class ImageStorageService {
   ): string {
     const extension = this.getFileExtension(contentType);
 
-    // If customIdentifier is provided, use only customIdentifier (pure name)
+    // If customIdentifier is provided, use dateTime ISO + customIdentifier
     if (customIdentifier) {
-      return `${customIdentifier}.${extension}`;
+      const dateTime = new Date().toISOString();
+      return `${dateTime}+${customIdentifier}.${extension}`;
     }
 
     // Default behavior: prefix + randomBytes + timestamp
@@ -140,6 +141,27 @@ export class ImageStorageService {
 
     const extractedFilename = this.extractFilenameFromUrl(profileImage);
     return extractedFilename || profileImage;
+  }
+
+  /**
+   * Extrai o nome legível do arquivo
+   * - Formato novo: "2025-10-18T14:30:45.123Z+foto-festa.jpg" → "foto-festa.jpg"
+   * - Formato antigo: "image-abc123-1234567890.jpg" → "image-abc123-1234567890.jpg" (sem alteração)
+   */
+  extractReadableFilename(fullFilename: string): string {
+    if (!fullFilename) {
+      return fullFilename;
+    }
+
+    // Verifica se tem o separador "+" (formato novo)
+    if (fullFilename.includes('+')) {
+      const parts = fullFilename.split('+');
+      // Retorna tudo após o primeiro "+", incluindo a extensão
+      return parts.slice(1).join('+');
+    }
+
+    // Formato antigo ou sem customIdentifier - retorna o nome completo
+    return fullFilename;
   }
 
   private getFileExtension(contentType: string): string {

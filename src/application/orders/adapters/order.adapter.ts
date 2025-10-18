@@ -137,7 +137,9 @@ export class OrderAdapter {
                   'read',
                 )
               : undefined,
-            photoName: detail.photoFileName,
+            photoName: detail.photoFileName
+              ? imageStorageService.extractReadableFilename(detail.photoFileName)
+              : undefined,
           })),
         );
 

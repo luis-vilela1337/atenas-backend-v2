@@ -7,8 +7,49 @@ import {
   IsString,
   Max,
   Min,
+  ValidateIf,
+  IsArray,
+  ArrayMaxSize,
+  ArrayMinSize,
+  registerDecorator,
+  ValidationOptions,
+  ValidationArguments,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
+
+// Custom validator para verificar se o array de customIdentifiers tem o mesmo tamanho que quantity
+function IsCustomIdentifiersValid(validationOptions?: ValidationOptions) {
+  return function (object: object, propertyName: string) {
+    registerDecorator({
+      name: 'isCustomIdentifiersValid',
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      validator: {
+        validate(value: any, args: ValidationArguments) {
+          const obj = args.object as any;
+
+          // Se não houver customIdentifier, é válido
+          if (!value) return true;
+
+          // Se for string, é válido (comportamento antigo)
+          if (typeof value === 'string') return true;
+
+          // Se for array, deve ter o mesmo tamanho que quantity
+          if (Array.isArray(value)) {
+            return value.length === obj.quantity;
+          }
+
+          return false;
+        },
+        defaultMessage(args: ValidationArguments) {
+          const obj = args.object as any;
+          return `customIdentifier deve ser uma string ou um array com ${obj.quantity} elementos (mesmo tamanho que quantity)`;
+        },
+      },
+    });
+  };
+}
 
 export enum MediaType {
   IMAGE = 'image',
@@ -50,13 +91,19 @@ export class GeneratePresignedUrlInputDto {
   mediaType?: MediaType;
 
   @ApiProperty({
-    example: 'user-123',
-    description: 'Nome puro do arquivo sem criptografia ou timestamp adicional',
+    oneOf: [
+      { type: 'string', example: 'foto-festa' },
+      { type: 'array', items: { type: 'string' }, example: ['foto-1', 'foto-2', 'foto-3'] },
+    ],
+    description:
+      'Nome(s) do(s) arquivo(s) sem extensão. ' +
+      'Pode ser uma string (para uso único ou repetido) ou array de strings (um para cada arquivo). ' +
+      'Se for array, deve ter o mesmo tamanho que quantity.',
     required: false,
   })
   @IsOptional()
-  @IsString()
-  customIdentifier?: string;
+  @IsCustomIdentifiersValid()
+  customIdentifier?: string | string[];
 }
 
 export class PresignedUrlItemDto {

@@ -10,7 +10,7 @@ export interface GeneratePresignedUrlInput {
   contentType: string;
   quantity: number;
   mediaType?: MediaType; // Auto-detected from contentType if not provided
-  customIdentifier?: string; // Custom value to concatenate with dateTime
+  customIdentifier?: string | string[]; // Custom value(s) to concatenate with dateTime
 }
 
 @Injectable()
@@ -27,9 +27,21 @@ export class GeneratePresignedUrlUseCase {
     this.validateQuantity(quantity, mediaType);
 
     try {
-      const urlPromises = Array.from({ length: quantity }, (_, index) =>
-        this.generateSinglePresignedUrl(contentType, mediaType, index + 1, customIdentifier),
-      );
+      const urlPromises = Array.from({ length: quantity }, (_, index) => {
+        // Se customIdentifier for array, usa o elemento específico do índice
+        // Se for string, usa a mesma string para todos
+        // Se for undefined, não passa nada
+        const identifier = Array.isArray(customIdentifier)
+          ? customIdentifier[index]
+          : customIdentifier;
+
+        return this.generateSinglePresignedUrl(
+          contentType,
+          mediaType,
+          index + 1,
+          identifier,
+        );
+      });
 
       const urls = await Promise.all(urlPromises);
 
