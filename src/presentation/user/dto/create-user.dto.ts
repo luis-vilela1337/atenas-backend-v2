@@ -233,6 +233,7 @@ export class CreateUserResponseV2Dto {
   @ApiProperty({ nullable: true }) city: string | null;
   @ApiProperty({ nullable: true }) state: string | null;
   @ApiProperty({ nullable: true }) cpf: string | null;
-  @ApiProperty({ nullable: true, type: BecaMeasuresDto }) becaMeasures: BecaMeasuresDto | null;
+  @ApiProperty({ nullable: true, type: BecaMeasuresDto })
+  becaMeasures: BecaMeasuresDto | null;
   @ApiProperty({ type: String, format: 'date-time' }) createdAt: string;
 }
