@@ -30,6 +30,15 @@ export class OrderItemDetailsDto {
 
   @ApiProperty({ required: false })
   photoName?: string;
+
+  @ApiProperty({ required: false })
+  eventId?: string;
+
+  @ApiProperty({ required: false })
+  eventName?: string;
+
+  @ApiProperty({ required: false })
+  isPackage?: boolean;
 }
 
 export class OrderItemDto {

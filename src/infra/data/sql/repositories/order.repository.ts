@@ -126,12 +126,16 @@ export class OrderRepository implements OrderRepositoryInterface {
         return null;
       }
 
-      // Collect all photoIds
+      // Collect all photoIds and eventIds
       const photoIds = new Set<string>();
+      const eventIds = new Set<string>();
       order.items?.forEach((item) => {
         item.details?.forEach((detail) => {
           if (detail.photoId) {
             photoIds.add(detail.photoId);
+          }
+          if (detail.eventId) {
+            eventIds.add(detail.eventId);
           }
         });
       });
@@ -165,18 +169,49 @@ export class OrderRepository implements OrderRepositoryInterface {
         });
       }
 
-      // Map photos to details
+      // Load events separately (including soft-deleted)
+      const eventMap = new Map<string, any>();
+      if (eventIds.size > 0) {
+        this.logger.debug(
+          `Loading ${eventIds.size} events with IDs: ${Array.from(eventIds)
+            .slice(0, 3)
+            .join(', ')}...`,
+        );
+
+        const eventIdsArray = Array.from(eventIds);
+        const placeholders = eventIdsArray
+          .map((_, index) => `$${index + 1}`)
+          .join(', ');
+
+        const events = await this.orderRepo.manager.query(
+          `SELECT id, name FROM institution_events WHERE id IN (${placeholders})`,
+          eventIdsArray,
+        );
+
+        this.logger.debug(
+          `Events query returned ${events.length} results from ${eventIdsArray.length} IDs`,
+        );
+
+        events.forEach((event) => {
+          eventMap.set(event.id, event);
+        });
+      }
+
+      // Map photos and events to details
       order.items?.forEach((item) => {
         item.details?.forEach((detail) => {
           if (detail.photoId && photoMap.has(detail.photoId)) {
             (detail as any).photo = photoMap.get(detail.photoId);
+          }
+          if (detail.eventId && eventMap.has(detail.eventId)) {
+            (detail as any).event = eventMap.get(detail.eventId);
           }
         });
       });
 
       // Debug log
       this.logger.debug(
-        `Order found with ${photoMap.size} photos loaded: ${JSON.stringify({
+        `Order found with ${photoMap.size} photos and ${eventMap.size} events loaded: ${JSON.stringify({
           id: order.id,
           itemsCount: order.items?.length || 0,
           firstItem: order.items?.[0]
@@ -391,6 +426,7 @@ export class OrderRepository implements OrderRepositoryInterface {
               photoId: detail.photoId,
               photoFileName: detail.photo?.fileName,
               eventId: detail.eventId,
+              eventName: (detail as any).event?.name,
               isPackage: detail.isPackage,
             })) || [],
         })) || [],

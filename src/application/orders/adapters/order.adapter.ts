@@ -140,6 +140,9 @@ export class OrderAdapter {
             photoName: detail.photoFileName
               ? imageStorageService.extractReadableFilename(detail.photoFileName)
               : undefined,
+            eventId: detail.eventId,
+            eventName: detail.eventName,
+            isPackage: detail.isPackage,
           })),
         );
 

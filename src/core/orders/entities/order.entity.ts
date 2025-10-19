@@ -66,6 +66,7 @@ export interface OrderItemDetail {
   photoId?: string;
   photoFileName?: string;
   eventId?: string;
+  eventName?: string;
   isPackage: boolean;
 }
 
