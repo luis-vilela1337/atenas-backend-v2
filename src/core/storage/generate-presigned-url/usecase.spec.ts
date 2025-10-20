@@ -161,8 +161,12 @@ describe('GeneratePresignedUrlUseCase - Enhanced with Video Support', () => {
         customIdentifier: 'user-123',
       };
 
-      imageStorageService.generateRandomFilename.mockReturnValue('user-123.png');
-      imageStorageService.generateSignedUrl.mockResolvedValue('https://storage.com/upload/custom');
+      imageStorageService.generateRandomFilename.mockReturnValue(
+        'user-123.png',
+      );
+      imageStorageService.generateSignedUrl.mockResolvedValue(
+        'https://storage.com/upload/custom',
+      );
 
       // WHEN
       const result = await useCase.execute(input);
@@ -183,8 +187,12 @@ describe('GeneratePresignedUrlUseCase - Enhanced with Video Support', () => {
         quantity: 1,
       };
 
-      imageStorageService.generateRandomFilename.mockReturnValue('image-abc123-1640995200000.png');
-      imageStorageService.generateSignedUrl.mockResolvedValue('https://storage.com/upload/default');
+      imageStorageService.generateRandomFilename.mockReturnValue(
+        'image-abc123-1640995200000.png',
+      );
+      imageStorageService.generateSignedUrl.mockResolvedValue(
+        'https://storage.com/upload/default',
+      );
 
       // WHEN
       const result = await useCase.execute(input);

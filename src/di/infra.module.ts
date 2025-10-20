@@ -24,6 +24,8 @@ import { MercadoPagoService } from '@infrastructure/services/mercado-pago.servic
 import { MercadoPagoWebhookService } from '@infrastructure/services/mercado-pago-webhook.service';
 import { MercadoPagoWebhookRepository } from '@infrastructure/data/sql/repositories/mercado-pago-webhook.repository';
 import { OrderRepository } from '@infrastructure/data/sql/repositories/order.repository';
+import { MailerSendService } from '@infrastructure/services/mailersend.service';
+import { PasswordResetCodeRepository } from '@infrastructure/data/sql/repositories/password-reset-code.repository';
 
 @Module({
   imports: [
@@ -51,10 +53,12 @@ import { OrderRepository } from '@infrastructure/data/sql/repositories/order.rep
     UserEventPhotoSQLRepository,
     AuthServiceV2,
     ImageStorageService,
+    MailerSendService,
     MercadoPagoService,
     MercadoPagoWebhookService,
     MercadoPagoWebhookRepository,
     OrderRepository,
+    PasswordResetCodeRepository,
     {
       provide: 'MercadoPagoRepositoryInterface',
       useClass: MercadoPagoService,
@@ -82,6 +86,7 @@ import { OrderRepository } from '@infrastructure/data/sql/repositories/order.rep
     ConfigService,
     UserSQLRepository,
     ImageStorageService,
+    MailerSendService,
     ProductSQLRepository,
     AuthServiceV2,
     InstitutionSQLRepository,
@@ -92,6 +97,7 @@ import { OrderRepository } from '@infrastructure/data/sql/repositories/order.rep
     MercadoPagoWebhookService,
     MercadoPagoWebhookRepository,
     OrderRepository,
+    PasswordResetCodeRepository,
     'MercadoPagoRepositoryInterface',
     'WebhookRepositoryInterface',
     'OrderRepositoryInterface',

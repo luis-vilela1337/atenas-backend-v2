@@ -27,6 +27,8 @@ import { UpdateProductApplication } from '@application/products/update-product.a
 import { DeleteInstitutionProductApplication } from '@application/institution-products/delete';
 import { RefreshTokenApplication } from '@application/auth/refresh-token.application';
 import { LogoutApplication } from '@application/auth/logout.application';
+import { RequestPasswordResetApplication } from '@application/auth/request-password-reset.application';
+import { ResetPasswordApplication } from '@application/auth/reset-password.application';
 import { UserEventPhotosApplication } from '@application/user-event-photos/user-event-photos.application';
 import { ImageStorageService } from '@infrastructure/services/image-storage.service';
 import { CreatePreferenceApplication } from '@application/mercado-pago/create-preference.application';
@@ -74,6 +76,8 @@ import { UpdateOrderStatusApplication } from '@application/orders/update-order-s
     // auth
     RefreshTokenApplication,
     LogoutApplication,
+    RequestPasswordResetApplication,
+    ResetPasswordApplication,
     UserEventPhotosApplication,
     // mercado-pago
     CreatePreferenceApplication,
@@ -114,6 +118,8 @@ import { UpdateOrderStatusApplication } from '@application/orders/update-order-s
     // auth
     RefreshTokenApplication,
     LogoutApplication,
+    RequestPasswordResetApplication,
+    ResetPasswordApplication,
     //  userEvent
     UserEventPhotosApplication,
     // mercado-pago

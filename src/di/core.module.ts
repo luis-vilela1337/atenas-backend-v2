@@ -23,6 +23,8 @@ import { UpdateProductUseCase } from '@core/products/update/usecase';
 import { DeleteInstitutionProductUseCase } from '@core/institution-products/delete/usecase';
 import { RefreshTokenUseCase } from '@core/auth/refresh-token.usecase';
 import { LogoutUseCase } from '@core/auth/logout.usecase';
+import { RequestPasswordResetUseCase } from '@core/auth/request-password-reset.usecase';
+import { ResetPasswordUseCase } from '@core/auth/reset-password.usecase';
 import { CreateUserEventPhotoUseCase } from '@core/user-event-photos/create/usecase';
 import { FindUserEventPhotosByUserUseCase } from '@core/user-event-photos/find-by-user/usecase';
 import { DeleteUserEventPhotoUseCase } from '@core/user-event-photos/delete/usecase';
@@ -62,6 +64,8 @@ import { UpdateOrderStatusUseCase } from '@core/orders/update-order-status/useca
     //auth
     RefreshTokenUseCase,
     LogoutUseCase,
+    RequestPasswordResetUseCase,
+    ResetPasswordUseCase,
     // user-event
     CreateUserEventPhotoUseCase,
     FindUserEventPhotosByUserUseCase,
@@ -102,6 +106,8 @@ import { UpdateOrderStatusUseCase } from '@core/orders/update-order-status/useca
     //auth
     RefreshTokenUseCase,
     LogoutUseCase,
+    RequestPasswordResetUseCase,
+    ResetPasswordUseCase,
     // user-event
     CreateUserEventPhotoUseCase,
     FindUserEventPhotosByUserUseCase,

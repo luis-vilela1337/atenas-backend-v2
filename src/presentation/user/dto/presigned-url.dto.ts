@@ -93,7 +93,11 @@ export class GeneratePresignedUrlInputDto {
   @ApiProperty({
     oneOf: [
       { type: 'string', example: 'foto-festa' },
-      { type: 'array', items: { type: 'string' }, example: ['foto-1', 'foto-2', 'foto-3'] },
+      {
+        type: 'array',
+        items: { type: 'string' },
+        example: ['foto-1', 'foto-2', 'foto-3'],
+      },
     ],
     description:
       'Nome(s) do(s) arquivo(s) sem extensão. ' +

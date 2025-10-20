@@ -86,7 +86,6 @@ export class ValidateSignatureUseCase {
         .update(manifest)
         .digest('hex');
 
-
       console.log('✅ [WEBHOOK SIGNATURE] Mercado Pago algorithm', {
         manifest,
         expectedHash,

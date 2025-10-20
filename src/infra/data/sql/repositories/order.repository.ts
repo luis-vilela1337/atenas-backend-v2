@@ -211,7 +211,9 @@ export class OrderRepository implements OrderRepositoryInterface {
 
       // Debug log
       this.logger.debug(
-        `Order found with ${photoMap.size} photos and ${eventMap.size} events loaded: ${JSON.stringify({
+        `Order found with ${photoMap.size} photos and ${
+          eventMap.size
+        } events loaded: ${JSON.stringify({
           id: order.id,
           itemsCount: order.items?.length || 0,
           firstItem: order.items?.[0]

@@ -13,6 +13,7 @@ import { Generated1757564486153 } from '../migrations/1757564486153-generated';
 import { AddUserAddressFields1757600000000 } from '../migrations/1757600000000-AddUserAddressFields';
 import { AddCreditUsedToOrder1759747200000 } from '../migrations/1759747200000-AddCreditUsedToOrder';
 import { Generated1759959807948 } from '../migrations/1759959807948-generated';
+import { Generated1760917623803 } from '../migrations/1760917623803-generated';
 
 export const migrations = [
   Generated1747237005972,
@@ -26,6 +27,7 @@ export const migrations = [
   AddUserAddressFields1757600000000,
   AddCreditUsedToOrder1759747200000,
   Generated1759959807948,
+  Generated1760917623803,
 ];
 
 const envVars = (cs: ConfigService) => ({

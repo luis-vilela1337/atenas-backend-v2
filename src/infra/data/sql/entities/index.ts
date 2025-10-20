@@ -9,6 +9,7 @@ import { PaymentStatusHistory } from './payment-status-history.entity';
 import { Order } from './order.entity';
 import { OrderItem } from './order-item.entity';
 import { OrderItemDetail } from './order-item-detail.entity';
+import { PasswordResetCode } from './password-reset-code.entity';
 
 export * from './instituition.entity';
 export * from './instituition.events';
@@ -20,6 +21,7 @@ export * from './payment-status-history.entity';
 export * from './order.entity';
 export * from './order-item.entity';
 export * from './order-item-detail.entity';
+export * from './password-reset-code.entity';
 export const entities = [
   Institution,
   User,
@@ -32,4 +34,5 @@ export const entities = [
   Order,
   OrderItem,
   OrderItemDetail,
+  PasswordResetCode,
 ];
