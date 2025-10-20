@@ -44,10 +44,16 @@ export class RequestPasswordResetUseCase {
     await this.resetCodeRepository.create(user, code, expiresAt);
 
     // Enviar email com código
-    await this.emailService.sendPasswordResetCodeEmail(
+    const emailResult = await this.emailService.sendPasswordResetCodeEmail(
       { email: user.email, name: user.name },
       code,
     );
+
+    if (!emailResult.success) {
+      throw new Error(
+        `Falha ao enviar email: ${emailResult.error || 'Erro desconhecido'}`,
+      );
+    }
 
     return {
       success: true,

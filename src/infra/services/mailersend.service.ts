@@ -99,10 +99,30 @@ export class MailerSendService {
         messageId: response.headers['x-message-id'] || 'sent',
       };
     } catch (error) {
-      this.logger.error(`Failed to send email: ${error.message}`, error.stack);
+      let errorMessage = 'Unknown error';
+
+      if (error?.message) {
+        errorMessage = error.message;
+      } else if (error?.body) {
+        errorMessage = JSON.stringify(error.body);
+      } else if (typeof error === 'string') {
+        errorMessage = error;
+      } else {
+        try {
+          errorMessage = JSON.stringify(error, null, 2);
+        } catch {
+          errorMessage = String(error);
+        }
+      }
+
+      this.logger.error(
+        `Failed to send email: ${errorMessage}`,
+        error?.stack || error,
+      );
+
       return {
         success: false,
-        error: error.message,
+        error: errorMessage,
       };
     }
   }
@@ -151,13 +171,30 @@ export class MailerSendService {
         messageId: response.headers['x-message-id'] || 'sent',
       };
     } catch (error) {
+      let errorMessage = 'Unknown error';
+
+      if (error?.message) {
+        errorMessage = error.message;
+      } else if (error?.body) {
+        errorMessage = JSON.stringify(error.body);
+      } else if (typeof error === 'string') {
+        errorMessage = error;
+      } else {
+        try {
+          errorMessage = JSON.stringify(error, null, 2);
+        } catch {
+          errorMessage = String(error);
+        }
+      }
+
       this.logger.error(
-        `Failed to send template email: ${error.message}`,
-        error.stack,
+        `Failed to send template email: ${errorMessage}`,
+        error?.stack || error,
       );
+
       return {
         success: false,
-        error: error.message,
+        error: errorMessage,
       };
     }
   }
