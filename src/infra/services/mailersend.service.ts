@@ -38,7 +38,8 @@ export class MailerSendService {
     this.defaultFromEmail =
       this.configService.get<string>('MAILERSEND_FROM_EMAIL') || '';
     this.defaultFromName =
-      this.configService.get<string>('MAILERSEND_FROM_NAME') || 'Atenas';
+      this.configService.get<string>('MAILERSEND_FROM_NAME') ||
+      'Atenas Formaturas';
   }
 
   /**
@@ -231,7 +232,7 @@ export class MailerSendService {
         name: this.defaultFromName,
       },
       to: [to],
-      subject: `Bem-vindo(a) ao Atenas, ${to.name || ''}!`,
+      subject: `Bem-vindo(a) ao Atenas Formaturas, ${to.name || ''}!`,
       html: this.getWelcomeEmailHtml(to.name || 'usuário'),
       tags: ['welcome', 'onboarding'],
     });
@@ -277,7 +278,7 @@ export class MailerSendService {
         name: this.defaultFromName,
       },
       to: [to],
-      subject: 'Redefinição de Senha - Atenas',
+      subject: 'Redefinição de Senha - Atenas Formaturas',
       html: this.getPasswordResetEmailHtml(to.name || 'usuário', resetUrl),
       tags: ['password-reset', 'security'],
     });
@@ -321,7 +322,7 @@ export class MailerSendService {
         name: this.defaultFromName,
       },
       to: [to],
-      subject: 'Código de Verificação - Redefinição de Senha',
+      subject: 'Código de Verificação - Atenas Formaturas',
       html: this.getPasswordResetCodeEmailHtml(to.name || 'usuário', code),
       tags: ['password-reset-code', 'security'],
     });
@@ -423,7 +424,7 @@ export class MailerSendService {
         <body>
           <div class="container">
             <div class="header">
-              <h1>Bem-vindo(a) ao Atenas!</h1>
+              <h1>Bem-vindo(a) ao Atenas Formaturas!</h1>
             </div>
             <div class="content">
               <p>Olá ${name},</p>
@@ -432,7 +433,7 @@ export class MailerSendService {
               <p>Se precisar de ajuda, não hesite em entrar em contato conosco.</p>
             </div>
             <div class="footer">
-              <p>&copy; ${new Date().getFullYear()} Atenas. Todos os direitos reservados.</p>
+              <p>&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
             </div>
           </div>
         </body>
@@ -528,7 +529,7 @@ export class MailerSendService {
               <p>Se você não solicitou esta alteração, pode ignorar este email com segurança.</p>
             </div>
             <div class="footer">
-              <p>&copy; ${new Date().getFullYear()} Atenas. Todos os direitos reservados.</p>
+              <p>&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
             </div>
           </div>
         </body>
@@ -637,7 +638,7 @@ export class MailerSendService {
               <p class="security-note">Por segurança, nunca compartilhe este código com ninguém.</p>
             </div>
             <div class="footer">
-              <p>&copy; ${new Date().getFullYear()} Atenas. Todos os direitos reservados.</p>
+              <p>&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
             </div>
           </div>
         </body>
