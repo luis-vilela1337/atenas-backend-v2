@@ -371,54 +371,39 @@ export class MailerSendService {
       <html>
         <head>
           <meta charset="utf-8">
-          <meta name="color-scheme" content="light dark">
+          <meta name="color-scheme" content="light">
+          <meta name="supported-color-schemes" content="light">
           <style>
             body {
               font-family: Arial, sans-serif;
               line-height: 1.6;
-              color: #000000;
-              background-color: #ffffff;
+              color: #000000 !important;
+              background-color: #ffffff !important;
             }
             .container {
               max-width: 600px;
               margin: 0 auto;
               padding: 20px;
-              background-color: #ffffff;
+              background-color: #ffffff !important;
             }
             .header {
-              background: #fdf50e;
-              color: #000000;
+              background: #fdf50e !important;
+              color: #000000 !important;
               padding: 20px;
               text-align: center;
             }
             .content {
               padding: 20px;
-              background: #f9f9f9;
-              color: #000000;
+              background: #f9f9f9 !important;
+              color: #000000 !important;
             }
             .footer {
               padding: 20px;
               text-align: center;
               font-size: 12px;
-              color: #000000;
+              color: #000000 !important;
             }
-            p, h1, h2, h3 { color: #000000; }
-
-            /* Dark mode support */
-            @media (prefers-color-scheme: dark) {
-              body {
-                background-color: #1a1a1a;
-              }
-              .container {
-                background-color: #2a2a2a;
-              }
-              .content {
-                background: #2a2a2a;
-              }
-              .footer {
-                color: #e0e0e0;
-              }
-            }
+            p, h1, h2, h3 { color: #000000 !important; }
           </style>
         </head>
         <body>
@@ -447,35 +432,36 @@ export class MailerSendService {
       <html>
         <head>
           <meta charset="utf-8">
-          <meta name="color-scheme" content="light dark">
+          <meta name="color-scheme" content="light">
+          <meta name="supported-color-schemes" content="light">
           <style>
             body {
               font-family: Arial, sans-serif;
               line-height: 1.6;
-              color: #000000;
-              background-color: #ffffff;
+              color: #000000 !important;
+              background-color: #ffffff !important;
             }
             .container {
               max-width: 600px;
               margin: 0 auto;
               padding: 20px;
-              background-color: #ffffff;
+              background-color: #ffffff !important;
             }
             .header {
-              background: #fdf50e;
-              color: #000000;
+              background: #fdf50e !important;
+              color: #000000 !important;
               padding: 20px;
               text-align: center;
             }
             .content {
               padding: 20px;
-              background: #f9f9f9;
-              color: #000000;
+              background: #f9f9f9 !important;
+              color: #000000 !important;
             }
             .button {
               display: inline-block;
               padding: 12px 24px;
-              background: #fdf50e;
+              background: #fdf50e !important;
               color: #000000 !important;
               text-decoration: none;
               border-radius: 4px;
@@ -483,34 +469,15 @@ export class MailerSendService {
               font-weight: 600;
             }
             .button:hover {
-              background: #fef08a;
+              background: #fef08a !important;
             }
             .footer {
               padding: 20px;
               text-align: center;
               font-size: 12px;
-              color: #000000;
+              color: #000000 !important;
             }
-            p, h1, h2, h3, strong { color: #000000; }
-
-            /* Dark mode support */
-            @media (prefers-color-scheme: dark) {
-              body {
-                background-color: #1a1a1a;
-              }
-              .container {
-                background-color: #2a2a2a;
-              }
-              .content {
-                background: #2a2a2a;
-              }
-              .footer {
-                color: #e0e0e0;
-              }
-              p, strong {
-                color: #e0e0e0;
-              }
-            }
+            p, h1, h2, h3, strong { color: #000000 !important; }
           </style>
         </head>
         <body>
@@ -543,34 +510,35 @@ export class MailerSendService {
       <html>
         <head>
           <meta charset="utf-8">
-          <meta name="color-scheme" content="light dark">
+          <meta name="color-scheme" content="light">
+          <meta name="supported-color-schemes" content="light">
           <style>
             body {
               font-family: Arial, sans-serif;
               line-height: 1.6;
-              color: #000000;
-              background-color: #ffffff;
+              color: #000000 !important;
+              background-color: #ffffff !important;
             }
             .container {
               max-width: 600px;
               margin: 0 auto;
               padding: 20px;
-              background-color: #ffffff;
+              background-color: #ffffff !important;
             }
             .header {
-              background: #fdf50e;
-              color: #000000;
+              background: #fdf50e !important;
+              color: #000000 !important;
               padding: 20px;
               text-align: center;
             }
             .content {
               padding: 20px;
-              background: #f9f9f9;
-              color: #000000;
+              background: #f9f9f9 !important;
+              color: #000000 !important;
             }
             .code-box {
-              background: #fefce8;
-              border: 2px dashed #fdf50e;
+              background: #fefce8 !important;
+              border: 2px dashed #fdf50e !important;
               border-radius: 8px;
               padding: 20px;
               text-align: center;
@@ -580,45 +548,20 @@ export class MailerSendService {
               font-size: 32px;
               font-weight: bold;
               letter-spacing: 8px;
-              color: #000000;
+              color: #000000 !important;
               font-family: 'Courier New', monospace;
             }
             .footer {
               padding: 20px;
               text-align: center;
               font-size: 12px;
-              color: #000000;
+              color: #000000 !important;
             }
             .security-note {
-              color: #000000;
+              color: #000000 !important;
               font-size: 12px;
             }
-            p, h1, h2, h3, strong { color: #000000; }
-
-            /* Dark mode support */
-            @media (prefers-color-scheme: dark) {
-              body {
-                background-color: #1a1a1a;
-              }
-              .container {
-                background-color: #2a2a2a;
-              }
-              .content {
-                background: #2a2a2a;
-              }
-              .code-box {
-                background: #3a3a1a;
-              }
-              .footer {
-                color: #e0e0e0;
-              }
-              .security-note {
-                color: #a0a0a0;
-              }
-              p, strong {
-                color: #e0e0e0;
-              }
-            }
+            p, h1, h2, h3, strong { color: #000000 !important; }
           </style>
         </head>
         <body>
