@@ -370,12 +370,54 @@ export class MailerSendService {
       <html>
         <head>
           <meta charset="utf-8">
+          <meta name="color-scheme" content="light dark">
           <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: #fdf50e; color: #000000; padding: 20px; text-align: center; }
-            .content { padding: 20px; background: #f9f9f9; }
-            .footer { padding: 20px; text-align: center; font-size: 12px; color: #666; }
+            body {
+              font-family: Arial, sans-serif;
+              line-height: 1.6;
+              color: #000000;
+              background-color: #ffffff;
+            }
+            .container {
+              max-width: 600px;
+              margin: 0 auto;
+              padding: 20px;
+              background-color: #ffffff;
+            }
+            .header {
+              background: #fdf50e;
+              color: #000000;
+              padding: 20px;
+              text-align: center;
+            }
+            .content {
+              padding: 20px;
+              background: #f9f9f9;
+              color: #000000;
+            }
+            .footer {
+              padding: 20px;
+              text-align: center;
+              font-size: 12px;
+              color: #000000;
+            }
+            p, h1, h2, h3 { color: #000000; }
+
+            /* Dark mode support */
+            @media (prefers-color-scheme: dark) {
+              body {
+                background-color: #1a1a1a;
+              }
+              .container {
+                background-color: #2a2a2a;
+              }
+              .content {
+                background: #2a2a2a;
+              }
+              .footer {
+                color: #e0e0e0;
+              }
+            }
           </style>
         </head>
         <body>
@@ -404,16 +446,36 @@ export class MailerSendService {
       <html>
         <head>
           <meta charset="utf-8">
+          <meta name="color-scheme" content="light dark">
           <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: #fdf50e; color: #000000; padding: 20px; text-align: center; }
-            .content { padding: 20px; background: #f9f9f9; }
+            body {
+              font-family: Arial, sans-serif;
+              line-height: 1.6;
+              color: #000000;
+              background-color: #ffffff;
+            }
+            .container {
+              max-width: 600px;
+              margin: 0 auto;
+              padding: 20px;
+              background-color: #ffffff;
+            }
+            .header {
+              background: #fdf50e;
+              color: #000000;
+              padding: 20px;
+              text-align: center;
+            }
+            .content {
+              padding: 20px;
+              background: #f9f9f9;
+              color: #000000;
+            }
             .button {
               display: inline-block;
               padding: 12px 24px;
               background: #fdf50e;
-              color: #000000;
+              color: #000000 !important;
               text-decoration: none;
               border-radius: 4px;
               margin: 20px 0;
@@ -422,7 +484,32 @@ export class MailerSendService {
             .button:hover {
               background: #fef08a;
             }
-            .footer { padding: 20px; text-align: center; font-size: 12px; color: #666; }
+            .footer {
+              padding: 20px;
+              text-align: center;
+              font-size: 12px;
+              color: #000000;
+            }
+            p, h1, h2, h3, strong { color: #000000; }
+
+            /* Dark mode support */
+            @media (prefers-color-scheme: dark) {
+              body {
+                background-color: #1a1a1a;
+              }
+              .container {
+                background-color: #2a2a2a;
+              }
+              .content {
+                background: #2a2a2a;
+              }
+              .footer {
+                color: #e0e0e0;
+              }
+              p, strong {
+                color: #e0e0e0;
+              }
+            }
           </style>
         </head>
         <body>
@@ -455,11 +542,31 @@ export class MailerSendService {
       <html>
         <head>
           <meta charset="utf-8">
+          <meta name="color-scheme" content="light dark">
           <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: #fdf50e; color: #000000; padding: 20px; text-align: center; }
-            .content { padding: 20px; background: #f9f9f9; }
+            body {
+              font-family: Arial, sans-serif;
+              line-height: 1.6;
+              color: #000000;
+              background-color: #ffffff;
+            }
+            .container {
+              max-width: 600px;
+              margin: 0 auto;
+              padding: 20px;
+              background-color: #ffffff;
+            }
+            .header {
+              background: #fdf50e;
+              color: #000000;
+              padding: 20px;
+              text-align: center;
+            }
+            .content {
+              padding: 20px;
+              background: #f9f9f9;
+              color: #000000;
+            }
             .code-box {
               background: #fefce8;
               border: 2px dashed #fdf50e;
@@ -475,7 +582,42 @@ export class MailerSendService {
               color: #000000;
               font-family: 'Courier New', monospace;
             }
-            .footer { padding: 20px; text-align: center; font-size: 12px; color: #666; }
+            .footer {
+              padding: 20px;
+              text-align: center;
+              font-size: 12px;
+              color: #000000;
+            }
+            .security-note {
+              color: #000000;
+              font-size: 12px;
+            }
+            p, h1, h2, h3, strong { color: #000000; }
+
+            /* Dark mode support */
+            @media (prefers-color-scheme: dark) {
+              body {
+                background-color: #1a1a1a;
+              }
+              .container {
+                background-color: #2a2a2a;
+              }
+              .content {
+                background: #2a2a2a;
+              }
+              .code-box {
+                background: #3a3a1a;
+              }
+              .footer {
+                color: #e0e0e0;
+              }
+              .security-note {
+                color: #a0a0a0;
+              }
+              p, strong {
+                color: #e0e0e0;
+              }
+            }
           </style>
         </head>
         <body>
@@ -492,7 +634,7 @@ export class MailerSendService {
               </div>
               <p><strong>Este código é válido por 15 minutos.</strong></p>
               <p>Se você não solicitou esta alteração, pode ignorar este email com segurança.</p>
-              <p style="color: #999; font-size: 12px;">Por segurança, nunca compartilhe este código com ninguém.</p>
+              <p class="security-note">Por segurança, nunca compartilhe este código com ninguém.</p>
             </div>
             <div class="footer">
               <p>&copy; ${new Date().getFullYear()} Atenas. Todos os direitos reservados.</p>
