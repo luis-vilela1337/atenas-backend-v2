@@ -373,7 +373,7 @@ export class MailerSendService {
           <style>
             body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
             .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: #4A90E2; color: white; padding: 20px; text-align: center; }
+            .header { background: #eab308; color: #000000; padding: 20px; text-align: center; }
             .content { padding: 20px; background: #f9f9f9; }
             .footer { padding: 20px; text-align: center; font-size: 12px; color: #666; }
           </style>
@@ -407,16 +407,20 @@ export class MailerSendService {
           <style>
             body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
             .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: #E74C3C; color: white; padding: 20px; text-align: center; }
+            .header { background: #eab308; color: #000000; padding: 20px; text-align: center; }
             .content { padding: 20px; background: #f9f9f9; }
             .button {
               display: inline-block;
               padding: 12px 24px;
-              background: #E74C3C;
-              color: white;
+              background: #eab308;
+              color: #000000;
               text-decoration: none;
               border-radius: 4px;
               margin: 20px 0;
+              font-weight: 600;
+            }
+            .button:hover {
+              background: #facc15;
             }
             .footer { padding: 20px; text-align: center; font-size: 12px; color: #666; }
           </style>
@@ -454,11 +458,11 @@ export class MailerSendService {
           <style>
             body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
             .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: #E74C3C; color: white; padding: 20px; text-align: center; }
+            .header { background: #eab308; color: #000000; padding: 20px; text-align: center; }
             .content { padding: 20px; background: #f9f9f9; }
             .code-box {
-              background: #fff;
-              border: 2px dashed #E74C3C;
+              background: #fefce8;
+              border: 2px dashed #eab308;
               border-radius: 8px;
               padding: 20px;
               text-align: center;
@@ -468,7 +472,7 @@ export class MailerSendService {
               font-size: 32px;
               font-weight: bold;
               letter-spacing: 8px;
-              color: #E74C3C;
+              color: #ca8a04;
               font-family: 'Courier New', monospace;
             }
             .footer { padding: 20px; text-align: center; font-size: 12px; color: #666; }
