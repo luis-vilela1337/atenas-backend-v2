@@ -371,9 +371,19 @@ export class MailerSendService {
       <html>
         <head>
           <meta charset="utf-8">
-          <meta name="color-scheme" content="light">
+          <meta name="color-scheme" content="light only">
           <meta name="supported-color-schemes" content="light">
           <style>
+            :root {
+              color-scheme: light only !important;
+              supported-color-schemes: light !important;
+            }
+
+            /* Garantir que cores específicas não sejam invertidas */
+            body, table, td, div {
+              color-scheme: light only !important;
+            }
+
             body {
               font-family: Arial, sans-serif;
               line-height: 1.6;
@@ -388,6 +398,7 @@ export class MailerSendService {
             }
             .header {
               background: #fdf50e !important;
+              background-color: #fdf50e !important;
               color: #000000 !important;
               padding: 20px;
               text-align: center;
@@ -404,11 +415,21 @@ export class MailerSendService {
               color: #000000 !important;
             }
             p, h1, h2, h3 { color: #000000 !important; }
+
+            /* Media Query como Backup */
+            @media (prefers-color-scheme: dark) {
+              .header,
+              [style*="background-color: #fdf50e"],
+              [style*="background: #fdf50e"] {
+                background-color: #fdf50e !important;
+                background: #fdf50e !important;
+              }
+            }
           </style>
         </head>
         <body>
           <div class="container">
-            <div class="header">
+            <div class="header" style="background-color: #fdf50e !important;">
               <h1>Bem-vindo(a) ao Atenas Formaturas!</h1>
             </div>
             <div class="content">
@@ -432,9 +453,19 @@ export class MailerSendService {
       <html>
         <head>
           <meta charset="utf-8">
-          <meta name="color-scheme" content="light">
+          <meta name="color-scheme" content="light only">
           <meta name="supported-color-schemes" content="light">
           <style>
+            :root {
+              color-scheme: light only !important;
+              supported-color-schemes: light !important;
+            }
+
+            /* Garantir que cores específicas não sejam invertidas */
+            body, table, td, div {
+              color-scheme: light only !important;
+            }
+
             body {
               font-family: Arial, sans-serif;
               line-height: 1.6;
@@ -449,6 +480,7 @@ export class MailerSendService {
             }
             .header {
               background: #fdf50e !important;
+              background-color: #fdf50e !important;
               color: #000000 !important;
               padding: 20px;
               text-align: center;
@@ -462,6 +494,7 @@ export class MailerSendService {
               display: inline-block;
               padding: 12px 24px;
               background: #fdf50e !important;
+              background-color: #fdf50e !important;
               color: #000000 !important;
               text-decoration: none;
               border-radius: 4px;
@@ -470,6 +503,7 @@ export class MailerSendService {
             }
             .button:hover {
               background: #fef08a !important;
+              background-color: #fef08a !important;
             }
             .footer {
               padding: 20px;
@@ -478,11 +512,22 @@ export class MailerSendService {
               color: #000000 !important;
             }
             p, h1, h2, h3, strong { color: #000000 !important; }
+
+            /* Media Query como Backup */
+            @media (prefers-color-scheme: dark) {
+              .header,
+              .button,
+              [style*="background-color: #fdf50e"],
+              [style*="background: #fdf50e"] {
+                background-color: #fdf50e !important;
+                background: #fdf50e !important;
+              }
+            }
           </style>
         </head>
         <body>
           <div class="container">
-            <div class="header">
+            <div class="header" style="background-color: #fdf50e !important;">
               <h1>Redefinição de Senha</h1>
             </div>
             <div class="content">
@@ -490,7 +535,7 @@ export class MailerSendService {
               <p>Recebemos uma solicitação para redefinir a senha da sua conta.</p>
               <p>Clique no botão abaixo para criar uma nova senha:</p>
               <p style="text-align: center;">
-                <a href="${resetUrl}" class="button">Redefinir Senha</a>
+                <a href="${resetUrl}" class="button" style="background-color: #fdf50e !important;">Redefinir Senha</a>
               </p>
               <p><strong>Este link é válido por 1 hora.</strong></p>
               <p>Se você não solicitou esta alteração, pode ignorar este email com segurança.</p>
@@ -510,9 +555,19 @@ export class MailerSendService {
       <html>
         <head>
           <meta charset="utf-8">
-          <meta name="color-scheme" content="light">
+          <meta name="color-scheme" content="light only">
           <meta name="supported-color-schemes" content="light">
           <style>
+            :root {
+              color-scheme: light only !important;
+              supported-color-schemes: light !important;
+            }
+
+            /* Garantir que cores específicas não sejam invertidas */
+            body, table, td, div {
+              color-scheme: light only !important;
+            }
+
             body {
               font-family: Arial, sans-serif;
               line-height: 1.6;
@@ -527,6 +582,7 @@ export class MailerSendService {
             }
             .header {
               background: #fdf50e !important;
+              background-color: #fdf50e !important;
               color: #000000 !important;
               padding: 20px;
               text-align: center;
@@ -538,6 +594,7 @@ export class MailerSendService {
             }
             .code-box {
               background: #fefce8 !important;
+              background-color: #fefce8 !important;
               border: 2px dashed #fdf50e !important;
               border-radius: 8px;
               padding: 20px;
@@ -562,18 +619,31 @@ export class MailerSendService {
               font-size: 12px;
             }
             p, h1, h2, h3, strong { color: #000000 !important; }
+
+            /* Media Query como Backup */
+            @media (prefers-color-scheme: dark) {
+              .header,
+              .code-box,
+              [style*="background-color: #fdf50e"],
+              [style*="background: #fdf50e"],
+              [style*="border: 2px dashed #fdf50e"] {
+                background-color: #fdf50e !important;
+                background: #fdf50e !important;
+                border-color: #fdf50e !important;
+              }
+            }
           </style>
         </head>
         <body>
           <div class="container">
-            <div class="header">
+            <div class="header" style="background-color: #fdf50e !important;">
               <h1>Código de Verificação</h1>
             </div>
             <div class="content">
               <p>Olá ${name},</p>
               <p>Recebemos uma solicitação para redefinir a senha da sua conta.</p>
               <p>Use o código abaixo para redefinir sua senha:</p>
-              <div class="code-box">
+              <div class="code-box" style="border: 2px dashed #fdf50e !important;">
                 <div class="code">${code}</div>
               </div>
               <p><strong>Este código é válido por 15 minutos.</strong></p>
