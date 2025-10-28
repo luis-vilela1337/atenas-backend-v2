@@ -41,6 +41,7 @@ export class UpdateUserV2UseCase {
     }
     const identifierExists = await this.userRepository.identifierExists(
       input.identifier,
+      input.institutionId,
       userId,
     );
     if (identifierExists) {
