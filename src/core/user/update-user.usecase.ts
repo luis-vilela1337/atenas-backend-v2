@@ -32,16 +32,18 @@ export class UpdateUserV2UseCase {
     if (!institution) {
       throw new BadRequestException('Instituição não encontrada');
     }
-    const existingUserByEmail = await this.userRepository.findByEmail(
+    const emailExists = await this.userRepository.emailExists(
       input.email,
+      userId,
     );
-    if (existingUserByEmail && existingUserByEmail.id !== userId) {
+    if (emailExists) {
       throw new ConflictException('Email já está em uso por outro usuário');
     }
-    const existingUserByIdentifier = await this.userRepository.findByIdentifier(
+    const identifierExists = await this.userRepository.identifierExists(
       input.identifier,
+      userId,
     );
-    if (existingUserByIdentifier && existingUserByIdentifier.id !== userId) {
+    if (identifierExists) {
       throw new ConflictException(
         'Identificador já está em uso por outro usuário',
       );
