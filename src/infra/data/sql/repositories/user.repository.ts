@@ -192,11 +192,13 @@ export class UserSQLRepository {
   }
   async identifierExists(
     identifier: string,
+    institutionId: string,
     excludeId?: string,
   ): Promise<boolean> {
     const queryBuilder = this.user
       .createQueryBuilder('user')
-      .where('user.identifier = :identifier', { identifier });
+      .where('user.identifier = :identifier', { identifier })
+      .andWhere('user.institution.id = :institutionId', { institutionId });
 
     if (excludeId) {
       queryBuilder.andWhere('user.id != :excludeId', { excludeId });
