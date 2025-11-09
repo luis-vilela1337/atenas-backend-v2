@@ -194,6 +194,7 @@ export class OrdersController {
     return await this.updateOrderStatusApp.execute({
       orderId: id,
       status: dto.status,
+      driveLink: dto.driveLink,
     });
   }
 }

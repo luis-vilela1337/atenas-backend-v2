@@ -107,4 +107,5 @@ export interface UpdateOrderStatusInput {
   orderId: string;
   paymentStatus: OrderStatus;
   paymentGatewayId?: string;
+  driveLink?: string;
 }

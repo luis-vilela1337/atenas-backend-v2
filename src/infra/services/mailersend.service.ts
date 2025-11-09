@@ -329,8 +329,144 @@ export class MailerSendService {
   }
 
   /**
+   * Envia email de pedido concluído com link de download (arquivos digitais)
+   */
+  async sendDigitalFilesCompletedEmail(
+    to: EmailRecipient,
+    orderInfo: {
+      orderId: string;
+      displayId?: string;
+    },
+    driveLink: string,
+  ): Promise<EmailSendResponse> {
+    const templateId = this.configService.get<string>(
+      'MAILERSEND_DIGITAL_FILES_COMPLETED_TEMPLATE_ID',
+    );
+
+    if (templateId) {
+      return this.sendTemplateEmail({
+        from: {
+          email: this.defaultFromEmail,
+          name: this.defaultFromName,
+        },
+        to: [to],
+        templateId: templateId,
+        variables: [
+          {
+            email: to.email,
+            substitutions: {
+              name: to.name || 'Cliente',
+              order_id: orderInfo.displayId || orderInfo.orderId,
+              drive_link: driveLink,
+            },
+          },
+        ],
+        tags: ['order-completed', 'digital-files'],
+      });
+    }
+
+    return this.sendEmail({
+      from: {
+        email: this.defaultFromEmail,
+        name: this.defaultFromName,
+      },
+      to: [to],
+      subject: 'Pedido Concluído - Download Disponível - Atenas Formaturas',
+      html: this.getDigitalFilesCompletedEmailHtml(
+        to.name || 'Cliente',
+        orderInfo.displayId || orderInfo.orderId,
+        driveLink,
+      ),
+      tags: ['order-completed', 'digital-files'],
+    });
+  }
+
+  /**
+   * Envia email de pedido concluído para produtos físicos (álbum/genérico)
+   */
+  async sendPhysicalOrderCompletedEmail(
+    to: EmailRecipient,
+    orderInfo: {
+      orderId: string;
+      displayId?: string;
+      shippingAddress: {
+        street: string;
+        number: string;
+        complement?: string;
+        neighborhood: string;
+        city: string;
+        state: string;
+        zipCode: string;
+      };
+    },
+  ): Promise<EmailSendResponse> {
+    const templateId = this.configService.get<string>(
+      'MAILERSEND_PHYSICAL_ORDER_COMPLETED_TEMPLATE_ID',
+    );
+
+    if (templateId) {
+      return this.sendTemplateEmail({
+        from: {
+          email: this.defaultFromEmail,
+          name: this.defaultFromName,
+        },
+        to: [to],
+        templateId: templateId,
+        variables: [
+          {
+            email: to.email,
+            substitutions: {
+              name: to.name || 'Cliente',
+              order_id: orderInfo.displayId || orderInfo.orderId,
+              shipping_address: this.formatShippingAddress(
+                orderInfo.shippingAddress,
+              ),
+            },
+          },
+        ],
+        tags: ['order-completed', 'physical-order'],
+      });
+    }
+
+    return this.sendEmail({
+      from: {
+        email: this.defaultFromEmail,
+        name: this.defaultFromName,
+      },
+      to: [to],
+      subject: 'Pedido Concluído - Em Rota de Entrega - Atenas Formaturas',
+      html: this.getPhysicalOrderCompletedEmailHtml(
+        to.name || 'Cliente',
+        orderInfo.displayId || orderInfo.orderId,
+        orderInfo.shippingAddress,
+      ),
+      tags: ['order-completed', 'physical-order'],
+    });
+  }
+
+  /**
    * Helper methods
    */
+  private formatShippingAddress(address: {
+    street: string;
+    number: string;
+    complement?: string;
+    neighborhood: string;
+    city: string;
+    state: string;
+    zipCode: string;
+  }): string {
+    const parts = [
+      `${address.street}, ${address.number}`,
+      address.complement ? address.complement : null,
+      address.neighborhood,
+      `${address.city} - ${address.state}`,
+      `CEP: ${address.zipCode}`,
+    ].filter(Boolean);
+
+    return parts.join('<br>');
+  }
+
   private createSender(recipient: EmailRecipient): Sender {
     return new Sender(recipient.email, recipient.name);
   }
@@ -649,6 +785,255 @@ export class MailerSendService {
               <p><strong>Este código é válido por 15 minutos.</strong></p>
               <p>Se você não solicitou esta alteração, pode ignorar este email com segurança.</p>
               <p class="security-note">Por segurança, nunca compartilhe este código com ninguém.</p>
+            </div>
+            <div class="footer">
+              <p>&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `;
+  }
+
+  private getDigitalFilesCompletedEmailHtml(
+    name: string,
+    orderId: string,
+    driveLink: string,
+  ): string {
+    return `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="color-scheme" content="light only">
+          <meta name="supported-color-schemes" content="light">
+          <style>
+            :root {
+              color-scheme: light only !important;
+              supported-color-schemes: light !important;
+            }
+
+            /* Garantir que cores específicas não sejam invertidas */
+            body, table, td, div {
+              color-scheme: light only !important;
+            }
+
+            body {
+              font-family: Arial, sans-serif;
+              line-height: 1.6;
+              color: #000000 !important;
+              background-color: #ffffff !important;
+            }
+            .container {
+              max-width: 600px;
+              margin: 0 auto;
+              padding: 20px;
+              background-color: #ffffff !important;
+            }
+            .header {
+              background: #fdf50e !important;
+              background-color: #fdf50e !important;
+              color: #000000 !important;
+              padding: 20px;
+              text-align: center;
+            }
+            .content {
+              padding: 20px;
+              background: #f9f9f9 !important;
+              color: #000000 !important;
+            }
+            .button {
+              display: inline-block;
+              padding: 12px 24px;
+              background: #fdf50e !important;
+              background-color: #fdf50e !important;
+              color: #000000 !important;
+              text-decoration: none;
+              border-radius: 4px;
+              margin: 20px 0;
+              font-weight: 600;
+            }
+            .button:hover {
+              background: #fef08a !important;
+              background-color: #fef08a !important;
+            }
+            .info-box {
+              background: #fefce8 !important;
+              background-color: #fefce8 !important;
+              border-left: 4px solid #fdf50e !important;
+              border-radius: 4px;
+              padding: 15px;
+              margin: 20px 0;
+            }
+            .footer {
+              padding: 20px;
+              text-align: center;
+              font-size: 12px;
+              color: #000000 !important;
+            }
+            p, h1, h2, h3, strong { color: #000000 !important; }
+
+            /* Media Query como Backup */
+            @media (prefers-color-scheme: dark) {
+              .header,
+              .button,
+              [style*="background-color: #fdf50e"],
+              [style*="background: #fdf50e"] {
+                background-color: #fdf50e !important;
+                background: #fdf50e !important;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header" style="background-color: #fdf50e !important;">
+              <h1>🎉 Pedido Concluído!</h1>
+            </div>
+            <div class="content">
+              <p>Olá ${name},</p>
+              <p>Temos uma ótima notícia! Seu pedido <strong>#${orderId}</strong> foi processado com sucesso.</p>
+              <p>Aqui está o link para o download das fotografias adquiridas em nosso site.</p>
+
+              <div class="info-box">
+                <p><strong>⏰ Validade do Link:</strong></p>
+                <p>O link de download estará disponível por <strong>2 meses</strong> a partir da data de envio deste email.</p>
+                <p>Certifique-se de fazer o download dos seus arquivos dentro deste prazo para não perder acesso às suas memórias especiais.</p>
+              </div>
+
+              <p style="text-align: center;">
+                <a href="${driveLink}" class="button" style="background-color: #fdf50e !important;">📥 Fazer Download das Fotografias</a>
+              </p>
+
+              <p>Caso tenha alguma dúvida ou precise de suporte, não hesite em entrar em contato conosco pelo telefone <strong>(35) 3425-1899</strong>.</p>
+
+              <p>Agradecemos pela confiança e esperamos que você aproveite suas lembranças!</p>
+            </div>
+            <div class="footer">
+              <p>&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `;
+  }
+
+  private getPhysicalOrderCompletedEmailHtml(
+    name: string,
+    orderId: string,
+    shippingAddress: {
+      street: string;
+      number: string;
+      complement?: string;
+      neighborhood: string;
+      city: string;
+      state: string;
+      zipCode: string;
+    },
+  ): string {
+    const formattedAddress = this.formatShippingAddress(shippingAddress);
+
+    return `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="color-scheme" content="light only">
+          <meta name="supported-color-schemes" content="light">
+          <style>
+            :root {
+              color-scheme: light only !important;
+              supported-color-schemes: light !important;
+            }
+
+            /* Garantir que cores específicas não sejam invertidas */
+            body, table, td, div {
+              color-scheme: light only !important;
+            }
+
+            body {
+              font-family: Arial, sans-serif;
+              line-height: 1.6;
+              color: #000000 !important;
+              background-color: #ffffff !important;
+            }
+            .container {
+              max-width: 600px;
+              margin: 0 auto;
+              padding: 20px;
+              background-color: #ffffff !important;
+            }
+            .header {
+              background: #fdf50e !important;
+              background-color: #fdf50e !important;
+              color: #000000 !important;
+              padding: 20px;
+              text-align: center;
+            }
+            .content {
+              padding: 20px;
+              background: #f9f9f9 !important;
+              color: #000000 !important;
+            }
+            .address-box {
+              background: #fefce8 !important;
+              background-color: #fefce8 !important;
+              border-left: 4px solid #fdf50e !important;
+              border-radius: 4px;
+              padding: 15px;
+              margin: 20px 0;
+            }
+            .info-box {
+              background: #ffffff !important;
+              border: 2px solid #fdf50e !important;
+              border-radius: 4px;
+              padding: 15px;
+              margin: 20px 0;
+            }
+            .footer {
+              padding: 20px;
+              text-align: center;
+              font-size: 12px;
+              color: #000000 !important;
+            }
+            p, h1, h2, h3, strong { color: #000000 !important; }
+
+            /* Media Query como Backup */
+            @media (prefers-color-scheme: dark) {
+              .header,
+              [style*="background-color: #fdf50e"],
+              [style*="background: #fdf50e"] {
+                background-color: #fdf50e !important;
+                background: #fdf50e !important;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header" style="background-color: #fdf50e !important;">
+              <h1>🎉 Pedido Concluído!</h1>
+            </div>
+            <div class="content">
+              <p>Olá ${name},</p>
+              <p>Temos uma ótima notícia! Seu pedido <strong>#${orderId}</strong> foi processado com sucesso.</p>
+              <p>Seu produto já está embalado e pronto para entrega! Iremos enviá-lo para o endereço cadastrado abaixo:</p>
+
+              <div class="address-box">
+                <p><strong>📦 Endereço de Entrega:</strong></p>
+                <p>${formattedAddress}</p>
+              </div>
+
+              <div class="info-box">
+                <p><strong>⚠️ Alteração de Endereço?</strong></p>
+                <p>Caso tenha alguma alteração no endereço de entrega ou qualquer outra dúvida, peço que entre em contato com nosso atendimento o quanto antes:</p>
+                <p style="text-align: center; margin: 10px 0;">
+                  <strong style="font-size: 18px;">📞 (35) 3425-1899</strong>
+                </p>
+                <p style="font-size: 12px; margin-top: 10px;">Nossa equipe está à disposição para ajudá-lo com qualquer necessidade.</p>
+              </div>
+
+              <p>Agradecemos pela confiança e estamos ansiosos para que você receba suas lembranças especiais!</p>
             </div>
             <div class="footer">
               <p>&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
