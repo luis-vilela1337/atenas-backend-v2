@@ -735,6 +735,7 @@ export class MailerSendService {
               padding: 20px;
               text-align: center;
               margin: 20px 0;
+              color: #000000 !important;
             }
             .code {
               font-size: 32px;
@@ -860,6 +861,7 @@ export class MailerSendService {
               border-radius: 4px;
               padding: 15px;
               margin: 20px 0;
+              color: #000000 !important;
             }
             .footer {
               padding: 20px;
@@ -977,6 +979,7 @@ export class MailerSendService {
               border-radius: 4px;
               padding: 15px;
               margin: 20px 0;
+              color: #000000 !important;
             }
             .info-box {
               background-color: #ffffff !important;
@@ -984,6 +987,7 @@ export class MailerSendService {
               border-radius: 4px;
               padding: 15px;
               margin: 20px 0;
+              color: #000000 !important;
             }
             .footer {
               padding: 20px;
