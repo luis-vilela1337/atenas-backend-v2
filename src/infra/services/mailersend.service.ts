@@ -737,6 +737,7 @@ export class MailerSendService {
               margin: 20px 0;
               color: #000000 !important;
             }
+            .code-box p, .code-box strong { color: #000000 !important; }
             .code {
               font-size: 32px;
               font-weight: bold;
@@ -856,6 +857,7 @@ export class MailerSendService {
               background-color: #fef08a !important;
             }
             .info-box {
+              background: linear-gradient(#fefce8, #fefce8) !important;
               background-color: #fefce8 !important;
               border-left: 4px solid #F7E70B !important;
               border-radius: 4px;
@@ -863,6 +865,7 @@ export class MailerSendService {
               margin: 20px 0;
               color: #000000 !important;
             }
+            .info-box p, .info-box strong { color: #000000 !important; }
             .footer {
               padding: 20px;
               text-align: center;
@@ -974,6 +977,7 @@ export class MailerSendService {
               color: #000000 !important;
             }
             .address-box {
+              background: linear-gradient(#fefce8, #fefce8) !important;
               background-color: #fefce8 !important;
               border-left: 4px solid #F7E70B !important;
               border-radius: 4px;
@@ -981,7 +985,9 @@ export class MailerSendService {
               margin: 20px 0;
               color: #000000 !important;
             }
+            .address-box p, .address-box strong { color: #000000 !important; }
             .info-box {
+              background: linear-gradient(#ffffff, #ffffff) !important;
               background-color: #ffffff !important;
               border: 2px solid #F7E70B !important;
               border-radius: 4px;
@@ -989,6 +995,7 @@ export class MailerSendService {
               margin: 20px 0;
               color: #000000 !important;
             }
+            .info-box p, .info-box strong { color: #000000 !important; }
             .footer {
               padding: 20px;
               text-align: center;
