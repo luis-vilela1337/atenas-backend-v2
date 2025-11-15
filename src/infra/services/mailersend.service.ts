@@ -728,6 +728,7 @@ export class MailerSendService {
               color: #000000 !important;
             }
             .code-box {
+              background: linear-gradient(#fefce8, #fefce8) !important;
               background-color: #fefce8 !important;
               border: 2px dashed #F7E70B !important;
               border-radius: 8px;
@@ -760,7 +761,8 @@ export class MailerSendService {
               .code-box,
               [style*="background-color: #F7E70B"],
               [style*="border: 2px dashed #F7E70B"] {
-                background-color: #F7E70B !important;
+                background: linear-gradient(#fefce8, #fefce8) !important;
+                background-color: #fefce8 !important;
                 border-color: #F7E70B !important;
               }
             }
