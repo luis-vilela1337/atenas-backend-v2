@@ -524,12 +524,14 @@ export class MailerSendService {
               font-family: Arial, sans-serif;
               line-height: 1.6;
               color: #000000 !important;
+              background: linear-gradient(#ffffff, #ffffff) !important;
               background-color: #ffffff !important;
             }
             .container {
               max-width: 600px;
               margin: 0 auto;
               padding: 20px;
+              background: linear-gradient(#ffffff, #ffffff) !important;
               background-color: #ffffff !important;
             }
             .header {
@@ -541,7 +543,8 @@ export class MailerSendService {
             }
             .content {
               padding: 20px;
-              background: #f9f9f9 !important;
+              background: linear-gradient(#f9f9f9, #f9f9f9) !important;
+              background-color: #f9f9f9 !important;
               color: #000000 !important;
             }
             .footer {
@@ -606,12 +609,14 @@ export class MailerSendService {
               font-family: Arial, sans-serif;
               line-height: 1.6;
               color: #000000 !important;
+              background: linear-gradient(#ffffff, #ffffff) !important;
               background-color: #ffffff !important;
             }
             .container {
               max-width: 600px;
               margin: 0 auto;
               padding: 20px;
+              background: linear-gradient(#ffffff, #ffffff) !important;
               background-color: #ffffff !important;
             }
             .header {
@@ -623,7 +628,8 @@ export class MailerSendService {
             }
             .content {
               padding: 20px;
-              background: #f9f9f9 !important;
+              background: linear-gradient(#f9f9f9, #f9f9f9) !important;
+              background-color: #f9f9f9 !important;
               color: #000000 !important;
             }
             .button {
@@ -708,12 +714,14 @@ export class MailerSendService {
               font-family: Arial, sans-serif;
               line-height: 1.6;
               color: #000000 !important;
+              background: linear-gradient(#ffffff, #ffffff) !important;
               background-color: #ffffff !important;
             }
             .container {
               max-width: 600px;
               margin: 0 auto;
               padding: 20px;
+              background: linear-gradient(#ffffff, #ffffff) !important;
               background-color: #ffffff !important;
             }
             .header {
@@ -725,11 +733,12 @@ export class MailerSendService {
             }
             .content {
               padding: 20px;
-              background: #f9f9f9 !important;
+              background: linear-gradient(#f9f9f9, #f9f9f9) !important;
+              background-color: #f9f9f9 !important;
               color: #000000 !important;
             }
             .code-box {
-              background: #fefce8 !important;
+              background: linear-gradient(#fefce8, #fefce8) !important;
               background-color: #fefce8 !important;
               border: 2px dashed #F7E70B !important;
               border-radius: 8px;
@@ -822,12 +831,14 @@ export class MailerSendService {
               font-family: Arial, sans-serif;
               line-height: 1.6;
               color: #000000 !important;
+              background: linear-gradient(#ffffff, #ffffff) !important;
               background-color: #ffffff !important;
             }
             .container {
               max-width: 600px;
               margin: 0 auto;
               padding: 20px;
+              background: linear-gradient(#ffffff, #ffffff) !important;
               background-color: #ffffff !important;
             }
             .header {
@@ -839,7 +850,8 @@ export class MailerSendService {
             }
             .content {
               padding: 20px;
-              background: #f9f9f9 !important;
+              background: linear-gradient(#f9f9f9, #f9f9f9) !important;
+              background-color: #f9f9f9 !important;
               color: #000000 !important;
             }
             .button {
@@ -858,7 +870,7 @@ export class MailerSendService {
               background-color: #fef08a !important;
             }
             .info-box {
-              background: #fefce8 !important;
+              background: linear-gradient(#fefce8, #fefce8) !important;
               background-color: #fefce8 !important;
               border-left: 4px solid #F7E70B !important;
               border-radius: 4px;
@@ -955,12 +967,14 @@ export class MailerSendService {
               font-family: Arial, sans-serif;
               line-height: 1.6;
               color: #000000 !important;
+              background: linear-gradient(#ffffff, #ffffff) !important;
               background-color: #ffffff !important;
             }
             .container {
               max-width: 600px;
               margin: 0 auto;
               padding: 20px;
+              background: linear-gradient(#ffffff, #ffffff) !important;
               background-color: #ffffff !important;
             }
             .header {
@@ -972,11 +986,12 @@ export class MailerSendService {
             }
             .content {
               padding: 20px;
-              background: #f9f9f9 !important;
+              background: linear-gradient(#f9f9f9, #f9f9f9) !important;
+              background-color: #f9f9f9 !important;
               color: #000000 !important;
             }
             .address-box {
-              background: #fefce8 !important;
+              background: linear-gradient(#fefce8, #fefce8) !important;
               background-color: #fefce8 !important;
               border-left: 4px solid #F7E70B !important;
               border-radius: 4px;
@@ -984,7 +999,8 @@ export class MailerSendService {
               margin: 20px 0;
             }
             .info-box {
-              background: #ffffff !important;
+              background: linear-gradient(#ffffff, #ffffff) !important;
+              background-color: #ffffff !important;
               border: 2px solid #F7E70B !important;
               border-radius: 4px;
               padding: 15px;
