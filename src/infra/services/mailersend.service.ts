@@ -524,18 +524,15 @@ export class MailerSendService {
               font-family: Arial, sans-serif;
               line-height: 1.6;
               color: #000000 !important;
-              background: linear-gradient(#ffffff, #ffffff) !important;
               background-color: #ffffff !important;
             }
             .container {
               max-width: 600px;
               margin: 0 auto;
               padding: 20px;
-              background: linear-gradient(#ffffff, #ffffff) !important;
               background-color: #ffffff !important;
             }
             .header {
-              background: linear-gradient(#F7E70B, #F7E70B) !important;
               background-color: #F7E70B !important;
               color: #000000 !important;
               padding: 20px;
@@ -543,7 +540,6 @@ export class MailerSendService {
             }
             .content {
               padding: 20px;
-              background: linear-gradient(#f9f9f9, #f9f9f9) !important;
               background-color: #f9f9f9 !important;
               color: #000000 !important;
             }
@@ -559,8 +555,7 @@ export class MailerSendService {
             @media (prefers-color-scheme: dark) {
               .header,
               [style*="background-color: #F7E70B"],
-              [style*="background: linear-gradient(#F7E70B, #F7E70B)"] {
-                background: linear-gradient(#F7E70B, #F7E70B) !important;
+              [style*="background-color: #F7E70B"] {
                 background-color: #F7E70B !important;
               }
             }
@@ -568,17 +563,17 @@ export class MailerSendService {
         </head>
         <body>
           <div class="container">
-            <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
-              <h1>Bem-vindo(a) ao Atenas Formaturas!</h1>
+            <div class="header" style="background-color: #F7E70B;">
+              <h1 style="color: #000000 !important;">Bem-vindo(a) ao Atenas Formaturas!</h1>
             </div>
             <div class="content">
-              <p>Olá ${name},</p>
-              <p>É um prazer ter você conosco! Sua conta foi criada com sucesso.</p>
-              <p>Agora você pode aproveitar todos os recursos da nossa plataforma.</p>
-              <p>Se precisar de ajuda, não hesite em entrar em contato conosco.</p>
+              <p style="color: #000000 !important;">Olá ${name},</p>
+              <p style="color: #000000 !important;">É um prazer ter você conosco! Sua conta foi criada com sucesso.</p>
+              <p style="color: #000000 !important;">Agora você pode aproveitar todos os recursos da nossa plataforma.</p>
+              <p style="color: #000000 !important;">Se precisar de ajuda, não hesite em entrar em contato conosco.</p>
             </div>
             <div class="footer">
-              <p>&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
+              <p style="color: #000000 !important;">&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
             </div>
           </div>
         </body>
@@ -609,18 +604,15 @@ export class MailerSendService {
               font-family: Arial, sans-serif;
               line-height: 1.6;
               color: #000000 !important;
-              background: linear-gradient(#ffffff, #ffffff) !important;
               background-color: #ffffff !important;
             }
             .container {
               max-width: 600px;
               margin: 0 auto;
               padding: 20px;
-              background: linear-gradient(#ffffff, #ffffff) !important;
               background-color: #ffffff !important;
             }
             .header {
-              background: linear-gradient(#F7E70B, #F7E70B) !important;
               background-color: #F7E70B !important;
               color: #000000 !important;
               padding: 20px;
@@ -628,14 +620,12 @@ export class MailerSendService {
             }
             .content {
               padding: 20px;
-              background: linear-gradient(#f9f9f9, #f9f9f9) !important;
               background-color: #f9f9f9 !important;
               color: #000000 !important;
             }
             .button {
               display: inline-block;
               padding: 12px 24px;
-              background: linear-gradient(#F7E70B, #F7E70B) !important;
               background-color: #F7E70B !important;
               color: #000000 !important;
               text-decoration: none;
@@ -644,7 +634,6 @@ export class MailerSendService {
               font-weight: 600;
             }
             .button:hover {
-              background: linear-gradient(#fef08a, #fef08a) !important;
               background-color: #fef08a !important;
             }
             .footer {
@@ -660,8 +649,7 @@ export class MailerSendService {
               .header,
               .button,
               [style*="background-color: #F7E70B"],
-              [style*="background: linear-gradient(#F7E70B, #F7E70B)"] {
-                background: linear-gradient(#F7E70B, #F7E70B) !important;
+              [style*="background-color: #F7E70B"] {
                 background-color: #F7E70B !important;
               }
             }
@@ -669,21 +657,21 @@ export class MailerSendService {
         </head>
         <body>
           <div class="container">
-            <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
-              <h1>Redefinição de Senha</h1>
+            <div class="header" style="background-color: #F7E70B;">
+              <h1 style="color: #000000 !important;">Redefinição de Senha</h1>
             </div>
             <div class="content">
-              <p>Olá ${name},</p>
-              <p>Recebemos uma solicitação para redefinir a senha da sua conta.</p>
-              <p>Clique no botão abaixo para criar uma nova senha:</p>
-              <p style="text-align: center;">
-                <a href="${resetUrl}" class="button" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">Redefinir Senha</a>
+              <p style="color: #000000 !important;">Olá ${name},</p>
+              <p style="color: #000000 !important;">Recebemos uma solicitação para redefinir a senha da sua conta.</p>
+              <p style="color: #000000 !important;">Clique no botão abaixo para criar uma nova senha:</p>
+              <p style="text-align: center; color: #000000 !important;">
+                <a href="${resetUrl}" class="button" style="background-color: #F7E70B; color: #000000 !important;">Redefinir Senha</a>
               </p>
-              <p><strong>Este link é válido por 1 hora.</strong></p>
-              <p>Se você não solicitou esta alteração, pode ignorar este email com segurança.</p>
+              <p style="color: #000000 !important;"><strong style="color: #000000 !important;">Este link é válido por 1 hora.</strong></p>
+              <p style="color: #000000 !important;">Se você não solicitou esta alteração, pode ignorar este email com segurança.</p>
             </div>
             <div class="footer">
-              <p>&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
+              <p style="color: #000000 !important;">&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
             </div>
           </div>
         </body>
@@ -714,18 +702,15 @@ export class MailerSendService {
               font-family: Arial, sans-serif;
               line-height: 1.6;
               color: #000000 !important;
-              background: linear-gradient(#ffffff, #ffffff) !important;
               background-color: #ffffff !important;
             }
             .container {
               max-width: 600px;
               margin: 0 auto;
               padding: 20px;
-              background: linear-gradient(#ffffff, #ffffff) !important;
               background-color: #ffffff !important;
             }
             .header {
-              background: linear-gradient(#F7E70B, #F7E70B) !important;
               background-color: #F7E70B !important;
               color: #000000 !important;
               padding: 20px;
@@ -733,12 +718,10 @@ export class MailerSendService {
             }
             .content {
               padding: 20px;
-              background: linear-gradient(#f9f9f9, #f9f9f9) !important;
               background-color: #f9f9f9 !important;
               color: #000000 !important;
             }
             .code-box {
-              background: linear-gradient(#fefce8, #fefce8) !important;
               background-color: #fefce8 !important;
               border: 2px dashed #F7E70B !important;
               border-radius: 8px;
@@ -770,9 +753,7 @@ export class MailerSendService {
               .header,
               .code-box,
               [style*="background-color: #F7E70B"],
-              [style*="background: linear-gradient(#F7E70B, #F7E70B)"],
               [style*="border: 2px dashed #F7E70B"] {
-                background: linear-gradient(#F7E70B, #F7E70B) !important;
                 background-color: #F7E70B !important;
                 border-color: #F7E70B !important;
               }
@@ -781,22 +762,22 @@ export class MailerSendService {
         </head>
         <body>
           <div class="container">
-            <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
-              <h1>Código de Verificação</h1>
+            <div class="header" style="background-color: #F7E70B;">
+              <h1 style="color: #000000 !important;">Código de Verificação</h1>
             </div>
             <div class="content">
-              <p>Olá ${name},</p>
-              <p>Recebemos uma solicitação para redefinir a senha da sua conta.</p>
-              <p>Use o código abaixo para redefinir sua senha:</p>
+              <p style="color: #000000 !important;">Olá ${name},</p>
+              <p style="color: #000000 !important;">Recebemos uma solicitação para redefinir a senha da sua conta.</p>
+              <p style="color: #000000 !important;">Use o código abaixo para redefinir sua senha:</p>
               <div class="code-box" style="border: 2px dashed #F7E70B !important;">
-                <div class="code">${code}</div>
+                <div class="code" style="color: #000000 !important;">${code}</div>
               </div>
-              <p><strong>Este código é válido por 15 minutos.</strong></p>
-              <p>Se você não solicitou esta alteração, pode ignorar este email com segurança.</p>
-              <p class="security-note">Por segurança, nunca compartilhe este código com ninguém.</p>
+              <p style="color: #000000 !important;"><strong style="color: #000000 !important;">Este código é válido por 15 minutos.</strong></p>
+              <p style="color: #000000 !important;">Se você não solicitou esta alteração, pode ignorar este email com segurança.</p>
+              <p class="security-note" style="color: #000000 !important;">Por segurança, nunca compartilhe este código com ninguém.</p>
             </div>
             <div class="footer">
-              <p>&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
+              <p style="color: #000000 !important;">&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
             </div>
           </div>
         </body>
@@ -831,18 +812,15 @@ export class MailerSendService {
               font-family: Arial, sans-serif;
               line-height: 1.6;
               color: #000000 !important;
-              background: linear-gradient(#ffffff, #ffffff) !important;
               background-color: #ffffff !important;
             }
             .container {
               max-width: 600px;
               margin: 0 auto;
               padding: 20px;
-              background: linear-gradient(#ffffff, #ffffff) !important;
               background-color: #ffffff !important;
             }
             .header {
-              background: linear-gradient(#F7E70B, #F7E70B) !important;
               background-color: #F7E70B !important;
               color: #000000 !important;
               padding: 20px;
@@ -850,14 +828,12 @@ export class MailerSendService {
             }
             .content {
               padding: 20px;
-              background: linear-gradient(#f9f9f9, #f9f9f9) !important;
               background-color: #f9f9f9 !important;
               color: #000000 !important;
             }
             .button {
               display: inline-block;
               padding: 12px 24px;
-              background: linear-gradient(#F7E70B, #F7E70B) !important;
               background-color: #F7E70B !important;
               color: #000000 !important;
               text-decoration: none;
@@ -866,11 +842,9 @@ export class MailerSendService {
               font-weight: 600;
             }
             .button:hover {
-              background: linear-gradient(#fef08a, #fef08a) !important;
               background-color: #fef08a !important;
             }
             .info-box {
-              background: linear-gradient(#fefce8, #fefce8) !important;
               background-color: #fefce8 !important;
               border-left: 4px solid #F7E70B !important;
               border-radius: 4px;
@@ -890,8 +864,7 @@ export class MailerSendService {
               .header,
               .button,
               [style*="background-color: #F7E70B"],
-              [style*="background: linear-gradient(#F7E70B, #F7E70B)"] {
-                background: linear-gradient(#F7E70B, #F7E70B) !important;
+              [style*="background-color: #F7E70B"] {
                 background-color: #F7E70B !important;
               }
             }
@@ -899,30 +872,30 @@ export class MailerSendService {
         </head>
         <body>
           <div class="container">
-            <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
-              <h1>🎉 Pedido Concluído!</h1>
+            <div class="header" style="background-color: #F7E70B;">
+              <h1 style="color: #000000 !important;">🎉 Pedido Concluído!</h1>
             </div>
             <div class="content">
-              <p>Olá ${name},</p>
-              <p>Temos uma ótima notícia! Seu pedido <strong>#${orderId}</strong> foi processado com sucesso.</p>
-              <p>Aqui está o link para o download das fotografias adquiridas em nosso site.</p>
+              <p style="color: #000000 !important;">Olá ${name},</p>
+              <p style="color: #000000 !important;">Temos uma ótima notícia! Seu pedido <strong style="color: #000000 !important;">#${orderId}</strong> foi processado com sucesso.</p>
+              <p style="color: #000000 !important;">Aqui está o link para o download das fotografias adquiridas em nosso site.</p>
 
               <div class="info-box">
-                <p><strong>⏰ Validade do Link:</strong></p>
-                <p>O link de download estará disponível por <strong>2 meses</strong> a partir da data de envio deste email.</p>
-                <p>Certifique-se de fazer o download dos seus arquivos dentro deste prazo para não perder acesso às suas memórias especiais.</p>
+                <p style="color: #000000 !important;"><strong style="color: #000000 !important;">⏰ Validade do Link:</strong></p>
+                <p style="color: #000000 !important;">O link de download estará disponível por <strong style="color: #000000 !important;">2 meses</strong> a partir da data de envio deste email.</p>
+                <p style="color: #000000 !important;">Certifique-se de fazer o download dos seus arquivos dentro deste prazo para não perder acesso às suas memórias especiais.</p>
               </div>
 
-              <p style="text-align: center;">
-                <a href="${driveLink}" class="button" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">📥 Fazer Download das Fotografias</a>
+              <p style="text-align: center; color: #000000 !important;">
+                <a href="${driveLink}" class="button" style="background-color: #F7E70B; color: #000000 !important;">📥 Fazer Download das Fotografias</a>
               </p>
 
-              <p>Caso tenha alguma dúvida ou precise de suporte, não hesite em entrar em contato conosco pelo telefone <strong>(35) 3425-1899</strong>.</p>
+              <p style="color: #000000 !important;">Caso tenha alguma dúvida ou precise de suporte, não hesite em entrar em contato conosco pelo telefone <strong style="color: #000000 !important;">(35) 3425-1899</strong>.</p>
 
-              <p>Agradecemos pela confiança e esperamos que você aproveite suas lembranças!</p>
+              <p style="color: #000000 !important;">Agradecemos pela confiança e esperamos que você aproveite suas lembranças!</p>
             </div>
             <div class="footer">
-              <p>&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
+              <p style="color: #000000 !important;">&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
             </div>
           </div>
         </body>
@@ -967,18 +940,15 @@ export class MailerSendService {
               font-family: Arial, sans-serif;
               line-height: 1.6;
               color: #000000 !important;
-              background: linear-gradient(#ffffff, #ffffff) !important;
               background-color: #ffffff !important;
             }
             .container {
               max-width: 600px;
               margin: 0 auto;
               padding: 20px;
-              background: linear-gradient(#ffffff, #ffffff) !important;
               background-color: #ffffff !important;
             }
             .header {
-              background: linear-gradient(#F7E70B, #F7E70B) !important;
               background-color: #F7E70B !important;
               color: #000000 !important;
               padding: 20px;
@@ -986,12 +956,10 @@ export class MailerSendService {
             }
             .content {
               padding: 20px;
-              background: linear-gradient(#f9f9f9, #f9f9f9) !important;
               background-color: #f9f9f9 !important;
               color: #000000 !important;
             }
             .address-box {
-              background: linear-gradient(#fefce8, #fefce8) !important;
               background-color: #fefce8 !important;
               border-left: 4px solid #F7E70B !important;
               border-radius: 4px;
@@ -999,7 +967,6 @@ export class MailerSendService {
               margin: 20px 0;
             }
             .info-box {
-              background: linear-gradient(#ffffff, #ffffff) !important;
               background-color: #ffffff !important;
               border: 2px solid #F7E70B !important;
               border-radius: 4px;
@@ -1018,8 +985,7 @@ export class MailerSendService {
             @media (prefers-color-scheme: dark) {
               .header,
               [style*="background-color: #F7E70B"],
-              [style*="background: linear-gradient(#F7E70B, #F7E70B)"] {
-                background: linear-gradient(#F7E70B, #F7E70B) !important;
+              [style*="background-color: #F7E70B"] {
                 background-color: #F7E70B !important;
               }
             }
@@ -1027,32 +993,32 @@ export class MailerSendService {
         </head>
         <body>
           <div class="container">
-            <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
-              <h1>🎉 Pedido Concluído!</h1>
+            <div class="header" style="background-color: #F7E70B;">
+              <h1 style="color: #000000 !important;">🎉 Pedido Concluído!</h1>
             </div>
             <div class="content">
-              <p>Olá ${name},</p>
-              <p>Temos uma ótima notícia! Seu pedido <strong>#${orderId}</strong> foi processado com sucesso.</p>
-              <p>Seu produto já está embalado e pronto para entrega! Iremos enviá-lo para o endereço cadastrado abaixo:</p>
+              <p style="color: #000000 !important;">Olá ${name},</p>
+              <p style="color: #000000 !important;">Temos uma ótima notícia! Seu pedido <strong style="color: #000000 !important;">#${orderId}</strong> foi processado com sucesso.</p>
+              <p style="color: #000000 !important;">Seu produto já está embalado e pronto para entrega! Iremos enviá-lo para o endereço cadastrado abaixo:</p>
 
               <div class="address-box">
-                <p><strong>📦 Endereço de Entrega:</strong></p>
-                <p>${formattedAddress}</p>
+                <p style="color: #000000 !important;"><strong style="color: #000000 !important;">📦 Endereço de Entrega:</strong></p>
+                <p style="color: #000000 !important;">${formattedAddress}</p>
               </div>
 
               <div class="info-box">
-                <p><strong>⚠️ Alteração de Endereço?</strong></p>
-                <p>Caso tenha alguma alteração no endereço de entrega ou qualquer outra dúvida, peço que entre em contato com nosso atendimento o quanto antes:</p>
-                <p style="text-align: center; margin: 10px 0;">
-                  <strong style="font-size: 18px;">📞 (35) 3425-1899</strong>
+                <p style="color: #000000 !important;"><strong style="color: #000000 !important;">⚠️ Alteração de Endereço?</strong></p>
+                <p style="color: #000000 !important;">Caso tenha alguma alteração no endereço de entrega ou qualquer outra dúvida, peço que entre em contato com nosso atendimento o quanto antes:</p>
+                <p style="text-align: center; margin: 10px 0; color: #000000 !important;">
+                  <strong style="font-size: 18px; color: #000000 !important;">📞 (35) 3425-1899</strong>
                 </p>
-                <p style="font-size: 12px; margin-top: 10px;">Nossa equipe está à disposição para ajudá-lo com qualquer necessidade.</p>
+                <p style="font-size: 12px; margin-top: 10px; color: #000000 !important;">Nossa equipe está à disposição para ajudá-lo com qualquer necessidade.</p>
               </div>
 
-              <p>Agradecemos pela confiança e estamos ansiosos para que você receba suas lembranças especiais!</p>
+              <p style="color: #000000 !important;">Agradecemos pela confiança e estamos ansiosos para que você receba suas lembranças especiais!</p>
             </div>
             <div class="footer">
-              <p>&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
+              <p style="color: #000000 !important;">&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
             </div>
           </div>
         </body>
