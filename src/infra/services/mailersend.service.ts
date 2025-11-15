@@ -533,6 +533,7 @@ export class MailerSendService {
               background-color: #ffffff !important;
             }
             .header {
+              background: linear-gradient(#F7E70B, #F7E70B) !important;
               background-color: #F7E70B !important;
               color: #000000 !important;
               padding: 20px;
@@ -556,6 +557,7 @@ export class MailerSendService {
               .header,
               [style*="background-color: #F7E70B"],
               [style*="background-color: #F7E70B"] {
+                background: linear-gradient(#F7E70B, #F7E70B) !important;
                 background-color: #F7E70B !important;
               }
             }
@@ -563,7 +565,7 @@ export class MailerSendService {
         </head>
         <body>
           <div class="container">
-            <div class="header" style="background-color: #F7E70B;">
+            <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
               <h1 style="color: #000000 !important;">Bem-vindo(a) ao Atenas Formaturas!</h1>
             </div>
             <div class="content">
@@ -613,6 +615,7 @@ export class MailerSendService {
               background-color: #ffffff !important;
             }
             .header {
+              background: linear-gradient(#F7E70B, #F7E70B) !important;
               background-color: #F7E70B !important;
               color: #000000 !important;
               padding: 20px;
@@ -626,6 +629,7 @@ export class MailerSendService {
             .button {
               display: inline-block;
               padding: 12px 24px;
+              background: linear-gradient(#F7E70B, #F7E70B) !important;
               background-color: #F7E70B !important;
               color: #000000 !important;
               text-decoration: none;
@@ -650,6 +654,7 @@ export class MailerSendService {
               .button,
               [style*="background-color: #F7E70B"],
               [style*="background-color: #F7E70B"] {
+                background: linear-gradient(#F7E70B, #F7E70B) !important;
                 background-color: #F7E70B !important;
               }
             }
@@ -657,7 +662,7 @@ export class MailerSendService {
         </head>
         <body>
           <div class="container">
-            <div class="header" style="background-color: #F7E70B;">
+            <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
               <h1 style="color: #000000 !important;">Redefinição de Senha</h1>
             </div>
             <div class="content">
@@ -665,7 +670,7 @@ export class MailerSendService {
               <p style="color: #000000 !important;">Recebemos uma solicitação para redefinir a senha da sua conta.</p>
               <p style="color: #000000 !important;">Clique no botão abaixo para criar uma nova senha:</p>
               <p style="text-align: center; color: #000000 !important;">
-                <a href="${resetUrl}" class="button" style="background-color: #F7E70B; color: #000000 !important;">Redefinir Senha</a>
+                <a href="${resetUrl}" class="button" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B; color: #000000 !important;">Redefinir Senha</a>
               </p>
               <p style="color: #000000 !important;"><strong style="color: #000000 !important;">Este link é válido por 1 hora.</strong></p>
               <p style="color: #000000 !important;">Se você não solicitou esta alteração, pode ignorar este email com segurança.</p>
@@ -711,6 +716,7 @@ export class MailerSendService {
               background-color: #ffffff !important;
             }
             .header {
+              background: linear-gradient(#F7E70B, #F7E70B) !important;
               background-color: #F7E70B !important;
               color: #000000 !important;
               padding: 20px;
@@ -762,7 +768,7 @@ export class MailerSendService {
         </head>
         <body>
           <div class="container">
-            <div class="header" style="background-color: #F7E70B;">
+            <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
               <h1 style="color: #000000 !important;">Código de Verificação</h1>
             </div>
             <div class="content">
@@ -821,6 +827,7 @@ export class MailerSendService {
               background-color: #ffffff !important;
             }
             .header {
+              background: linear-gradient(#F7E70B, #F7E70B) !important;
               background-color: #F7E70B !important;
               color: #000000 !important;
               padding: 20px;
@@ -834,6 +841,7 @@ export class MailerSendService {
             .button {
               display: inline-block;
               padding: 12px 24px;
+              background: linear-gradient(#F7E70B, #F7E70B) !important;
               background-color: #F7E70B !important;
               color: #000000 !important;
               text-decoration: none;
@@ -865,6 +873,7 @@ export class MailerSendService {
               .button,
               [style*="background-color: #F7E70B"],
               [style*="background-color: #F7E70B"] {
+                background: linear-gradient(#F7E70B, #F7E70B) !important;
                 background-color: #F7E70B !important;
               }
             }
@@ -872,7 +881,7 @@ export class MailerSendService {
         </head>
         <body>
           <div class="container">
-            <div class="header" style="background-color: #F7E70B;">
+            <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
               <h1 style="color: #000000 !important;">🎉 Pedido Concluído!</h1>
             </div>
             <div class="content">
@@ -887,7 +896,7 @@ export class MailerSendService {
               </div>
 
               <p style="text-align: center; color: #000000 !important;">
-                <a href="${driveLink}" class="button" style="background-color: #F7E70B; color: #000000 !important;">📥 Fazer Download das Fotografias</a>
+                <a href="${driveLink}" class="button" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B; color: #000000 !important;">📥 Fazer Download das Fotografias</a>
               </p>
 
               <p style="color: #000000 !important;">Caso tenha alguma dúvida ou precise de suporte, não hesite em entrar em contato conosco pelo telefone <strong style="color: #000000 !important;">(35) 3425-1899</strong>.</p>
@@ -949,6 +958,7 @@ export class MailerSendService {
               background-color: #ffffff !important;
             }
             .header {
+              background: linear-gradient(#F7E70B, #F7E70B) !important;
               background-color: #F7E70B !important;
               color: #000000 !important;
               padding: 20px;
@@ -986,6 +996,7 @@ export class MailerSendService {
               .header,
               [style*="background-color: #F7E70B"],
               [style*="background-color: #F7E70B"] {
+                background: linear-gradient(#F7E70B, #F7E70B) !important;
                 background-color: #F7E70B !important;
               }
             }
@@ -993,7 +1004,7 @@ export class MailerSendService {
         </head>
         <body>
           <div class="container">
-            <div class="header" style="background-color: #F7E70B;">
+            <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
               <h1 style="color: #000000 !important;">🎉 Pedido Concluído!</h1>
             </div>
             <div class="content">
