@@ -523,8 +523,9 @@ export class MailerSendService {
             body {
               font-family: Arial, sans-serif;
               line-height: 1.6;
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
               background-color: #ffffff !important;
             }
             .container {
@@ -536,34 +537,39 @@ export class MailerSendService {
             .header {
               background: linear-gradient(#F7E70B, #F7E70B) !important;
               background-color: #F7E70B !important;
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
               padding: 20px;
               text-align: center;
             }
             .content {
               padding: 20px;
               background-color: #f9f9f9 !important;
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
             }
             .footer {
               padding: 20px;
               text-align: center;
               font-size: 12px;
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
             }
             .text-protected {
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
-              text-shadow: 0 0 0 #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              text-shadow: 0 0 0 #1a1a1a !important;
+              filter: none !important;
               padding: 2px 4px;
               border: 1px solid transparent;
             }
             p, h1, h2, h3 {
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
             }
 
             /* Media Query como Backup */
@@ -600,16 +606,16 @@ export class MailerSendService {
         <body>
           <div class="container">
             <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
-              <h1 style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;"><span class="text-protected">Bem-vindo(a) ao Atenas Formaturas!</span></h1>
+              <h1 style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;"><span class="text-protected">Bem-vindo(a) ao Atenas Formaturas!</span></h1>
             </div>
             <div class="content">
-              <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">Olá ${name},</p>
-              <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">É um prazer ter você conosco! Sua conta foi criada com sucesso.</p>
-              <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">Agora você pode aproveitar todos os recursos da nossa plataforma.</p>
-              <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">Se precisar de ajuda, não hesite em entrar em contato conosco.</p>
+              <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">Olá ${name},</p>
+              <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">É um prazer ter você conosco! Sua conta foi criada com sucesso.</p>
+              <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">Agora você pode aproveitar todos os recursos da nossa plataforma.</p>
+              <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">Se precisar de ajuda, não hesite em entrar em contato conosco.</p>
             </div>
             <div class="footer">
-              <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
+              <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
             </div>
           </div>
         </body>
@@ -639,8 +645,9 @@ export class MailerSendService {
             body {
               font-family: Arial, sans-serif;
               line-height: 1.6;
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
               background-color: #ffffff !important;
             }
             .container {
@@ -652,33 +659,37 @@ export class MailerSendService {
             .header {
               background: linear-gradient(#F7E70B, #F7E70B) !important;
               background-color: #F7E70B !important;
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
               padding: 20px;
               text-align: center;
             }
             .content {
               padding: 20px;
               background-color: #f9f9f9 !important;
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
             }
             .button {
               display: inline-block;
               padding: 12px 24px;
               background: linear-gradient(#F7E70B, #F7E70B) !important;
               background-color: #F7E70B !important;
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
               text-decoration: none;
               border-radius: 4px;
               margin: 20px 0;
               font-weight: 600;
             }
             .text-protected {
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
-              text-shadow: 0 0 0 #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              text-shadow: 0 0 0 #1a1a1a !important;
+              filter: none !important;
               padding: 2px 4px;
               border: 1px solid transparent;
             }
@@ -689,12 +700,14 @@ export class MailerSendService {
               padding: 20px;
               text-align: center;
               font-size: 12px;
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
             }
             p, h1, h2, h3, strong {
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
             }
 
             /* Media Query como Backup */
@@ -736,20 +749,20 @@ export class MailerSendService {
         <body>
           <div class="container">
             <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
-              <h1 style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;"><span class="text-protected">Redefinição de Senha</span></h1>
+              <h1 style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;"><span class="text-protected">Redefinição de Senha</span></h1>
             </div>
             <div class="content">
-              <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">Olá ${name},</p>
-              <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">Recebemos uma solicitação para redefinir a senha da sua conta.</p>
-              <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">Clique no botão abaixo para criar uma nova senha:</p>
+              <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">Olá ${name},</p>
+              <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">Recebemos uma solicitação para redefinir a senha da sua conta.</p>
+              <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">Clique no botão abaixo para criar uma nova senha:</p>
               <p style="text-align: center; color: #111111 !important;">
-                <a href="${resetUrl}" class="button" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B; color: #111111 !important; -webkit-text-fill-color: #111111 !important;"><span class="text-protected">Redefinir Senha</span></a>
+                <a href="${resetUrl}" class="button" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B; color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;"><span class="text-protected">Redefinir Senha</span></a>
               </p>
-              <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;"><strong style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">Este link é válido por 1 hora.</strong></p>
-              <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">Se você não solicitou esta alteração, pode ignorar este email com segurança.</p>
+              <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;"><strong style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">Este link é válido por 1 hora.</strong></p>
+              <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">Se você não solicitou esta alteração, pode ignorar este email com segurança.</p>
             </div>
             <div class="footer">
-              <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
+              <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
             </div>
           </div>
         </body>
@@ -779,8 +792,9 @@ export class MailerSendService {
             body {
               font-family: Arial, sans-serif;
               line-height: 1.6;
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
               background-color: #ffffff !important;
             }
             .container {
@@ -792,16 +806,18 @@ export class MailerSendService {
             .header {
               background: linear-gradient(#F7E70B, #F7E70B) !important;
               background-color: #F7E70B !important;
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
               padding: 20px;
               text-align: center;
             }
             .content {
               padding: 20px;
               background-color: #f9f9f9 !important;
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
             }
             .code-box {
               background: linear-gradient(#fefce8, #fefce8) !important;
@@ -811,44 +827,51 @@ export class MailerSendService {
               padding: 20px;
               text-align: center;
               margin: 20px 0;
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
             }
             .code-box p, .code-box strong {
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
             }
             .code {
               font-size: 32px;
               font-weight: bold;
               letter-spacing: 8px;
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
-              text-shadow: 0 0 0 #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              text-shadow: 0 0 0 #1a1a1a !important;
+              filter: none !important;
               font-family: 'Courier New', monospace;
             }
             .footer {
               padding: 20px;
               text-align: center;
               font-size: 12px;
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
             }
             .security-note {
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
               font-size: 12px;
             }
             .text-protected {
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
-              text-shadow: 0 0 0 #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              text-shadow: 0 0 0 #1a1a1a !important;
+              filter: none !important;
               padding: 2px 4px;
               border: 1px solid transparent;
             }
             p, h1, h2, h3, strong {
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
             }
 
             /* Media Query como Backup */
@@ -895,21 +918,21 @@ export class MailerSendService {
         <body>
           <div class="container">
             <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
-              <h1 style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;"><span class="text-protected">Código de Verificação</span></h1>
+              <h1 style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;"><span class="text-protected">Código de Verificação</span></h1>
             </div>
             <div class="content">
-              <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">Olá ${name},</p>
-              <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">Recebemos uma solicitação para redefinir a senha da sua conta.</p>
-              <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">Use o código abaixo para redefinir sua senha:</p>
+              <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">Olá ${name},</p>
+              <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">Recebemos uma solicitação para redefinir a senha da sua conta.</p>
+              <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">Use o código abaixo para redefinir sua senha:</p>
               <div class="code-box" style="border: 2px dashed #F7E70B !important;">
-                <div class="code" style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;"><span class="text-protected">${code}</span></div>
+                <div class="code" style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;"><span class="text-protected">${code}</span></div>
               </div>
-              <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;"><strong style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">Este código é válido por 15 minutos.</strong></p>
-              <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">Se você não solicitou esta alteração, pode ignorar este email com segurança.</p>
-              <p class="security-note" style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">Por segurança, nunca compartilhe este código com ninguém.</p>
+              <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;"><strong style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">Este código é válido por 15 minutos.</strong></p>
+              <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">Se você não solicitou esta alteração, pode ignorar este email com segurança.</p>
+              <p class="security-note" style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">Por segurança, nunca compartilhe este código com ninguém.</p>
             </div>
             <div class="footer">
-              <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
+              <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
             </div>
           </div>
         </body>
@@ -943,8 +966,9 @@ export class MailerSendService {
             body {
               font-family: Arial, sans-serif;
               line-height: 1.6;
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
               background-color: #ffffff !important;
             }
             .container {
@@ -956,33 +980,37 @@ export class MailerSendService {
             .header {
               background: linear-gradient(#F7E70B, #F7E70B) !important;
               background-color: #F7E70B !important;
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
               padding: 20px;
               text-align: center;
             }
             .content {
               padding: 20px;
               background-color: #f9f9f9 !important;
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
             }
             .button {
               display: inline-block;
               padding: 12px 24px;
               background: linear-gradient(#F7E70B, #F7E70B) !important;
               background-color: #F7E70B !important;
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
               text-decoration: none;
               border-radius: 4px;
               margin: 20px 0;
               font-weight: 600;
             }
             .text-protected {
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
-              text-shadow: 0 0 0 #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              text-shadow: 0 0 0 #1a1a1a !important;
+              filter: none !important;
               padding: 2px 4px;
               border: 1px solid transparent;
             }
@@ -996,30 +1024,35 @@ export class MailerSendService {
               border-radius: 4px;
               padding: 15px;
               margin: 20px 0;
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
             }
             .info-box p, .info-box strong {
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
             }
             .footer {
               padding: 20px;
               text-align: center;
               font-size: 12px;
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
             }
             .text-protected {
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
-              text-shadow: 0 0 0 #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              text-shadow: 0 0 0 #1a1a1a !important;
+              filter: none !important;
               padding: 2px 4px;
               border: 1px solid transparent;
             }
             p, h1, h2, h3, strong {
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
             }
 
             /* Media Query como Backup */
@@ -1065,29 +1098,29 @@ export class MailerSendService {
         <body>
           <div class="container">
             <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
-              <h1 style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;"><span class="text-protected">🎉 Pedido Concluído!</span></h1>
+              <h1 style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;"><span class="text-protected">🎉 Pedido Concluído!</span></h1>
             </div>
             <div class="content">
-              <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">Olá ${name},</p>
-              <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">Temos uma ótima notícia! Seu pedido <strong style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">#${orderId}</strong> foi processado com sucesso.</p>
-              <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">Aqui está o link para o download das fotografias adquiridas em nosso site.</p>
+              <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">Olá ${name},</p>
+              <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">Temos uma ótima notícia! Seu pedido <strong style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">#${orderId}</strong> foi processado com sucesso.</p>
+              <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">Aqui está o link para o download das fotografias adquiridas em nosso site.</p>
 
               <div class="info-box">
-                <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;"><strong style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">⏰ Validade do Link:</strong></p>
-                <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">O link de download estará disponível por <strong style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">2 meses</strong> a partir da data de envio deste email.</p>
-                <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">Certifique-se de fazer o download dos seus arquivos dentro deste prazo para não perder acesso às suas memórias especiais.</p>
+                <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;"><strong style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">⏰ Validade do Link:</strong></p>
+                <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">O link de download estará disponível por <strong style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">2 meses</strong> a partir da data de envio deste email.</p>
+                <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">Certifique-se de fazer o download dos seus arquivos dentro deste prazo para não perder acesso às suas memórias especiais.</p>
               </div>
 
               <p style="text-align: center; color: #111111 !important;">
-                <a href="${driveLink}" class="button" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B; color: #111111 !important; -webkit-text-fill-color: #111111 !important;"><span class="text-protected">📥 Fazer Download das Fotografias</span></a>
+                <a href="${driveLink}" class="button" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B; color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;"><span class="text-protected">📥 Fazer Download das Fotografias</span></a>
               </p>
 
-              <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">Caso tenha alguma dúvida ou precise de suporte, não hesite em entrar em contato conosco pelo telefone <strong style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">(35) 3425-1899</strong>.</p>
+              <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">Caso tenha alguma dúvida ou precise de suporte, não hesite em entrar em contato conosco pelo telefone <strong style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">(35) 3425-1899</strong>.</p>
 
-              <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">Agradecemos pela confiança e esperamos que você aproveite suas lembranças!</p>
+              <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">Agradecemos pela confiança e esperamos que você aproveite suas lembranças!</p>
             </div>
             <div class="footer">
-              <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
+              <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
             </div>
           </div>
         </body>
@@ -1131,8 +1164,9 @@ export class MailerSendService {
             body {
               font-family: Arial, sans-serif;
               line-height: 1.6;
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
               background-color: #ffffff !important;
             }
             .container {
@@ -1144,16 +1178,18 @@ export class MailerSendService {
             .header {
               background: linear-gradient(#F7E70B, #F7E70B) !important;
               background-color: #F7E70B !important;
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
               padding: 20px;
               text-align: center;
             }
             .content {
               padding: 20px;
               background-color: #f9f9f9 !important;
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
             }
             .address-box {
               background: linear-gradient(#fefce8, #fefce8) !important;
@@ -1162,12 +1198,14 @@ export class MailerSendService {
               border-radius: 4px;
               padding: 15px;
               margin: 20px 0;
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
             }
             .address-box p, .address-box strong {
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
             }
             .info-box {
               background: linear-gradient(#ffffff, #ffffff) !important;
@@ -1176,29 +1214,35 @@ export class MailerSendService {
               border-radius: 4px;
               padding: 15px;
               margin: 20px 0;
-              color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
             }
             .info-box p, .info-box strong {
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
             }
             .footer {
               padding: 20px;
               text-align: center;
               font-size: 12px;
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
             }
             .text-protected {
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
-              text-shadow: 0 0 0 #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              text-shadow: 0 0 0 #1a1a1a !important;
+              filter: none !important;
               padding: 2px 4px;
               border: 1px solid transparent;
             }
             p, h1, h2, h3, strong {
-              color: #111111 !important;
-              -webkit-text-fill-color: #111111 !important;
+              color: #1a1a1a !important;
+              -webkit-text-fill-color: #1a1a1a !important;
+              filter: none !important;
             }
 
             /* Media Query como Backup */
@@ -1243,31 +1287,31 @@ export class MailerSendService {
         <body>
           <div class="container">
             <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
-              <h1 style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;"><span class="text-protected">🎉 Pedido Concluído!</span></h1>
+              <h1 style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;"><span class="text-protected">🎉 Pedido Concluído!</span></h1>
             </div>
             <div class="content">
-              <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">Olá ${name},</p>
-              <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">Temos uma ótima notícia! Seu pedido <strong style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">#${orderId}</strong> foi processado com sucesso.</p>
-              <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">Seu produto já está embalado e pronto para entrega! Iremos enviá-lo para o endereço cadastrado abaixo:</p>
+              <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">Olá ${name},</p>
+              <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">Temos uma ótima notícia! Seu pedido <strong style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">#${orderId}</strong> foi processado com sucesso.</p>
+              <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">Seu produto já está embalado e pronto para entrega! Iremos enviá-lo para o endereço cadastrado abaixo:</p>
 
               <div class="address-box">
-                <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;"><strong style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">📦 Endereço de Entrega:</strong></p>
-                <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">${formattedAddress}</p>
+                <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;"><strong style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">📦 Endereço de Entrega:</strong></p>
+                <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">${formattedAddress}</p>
               </div>
 
               <div class="info-box">
-                <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;"><strong style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">⚠️ Alteração de Endereço?</strong></p>
-                <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">Caso tenha alguma alteração no endereço de entrega ou qualquer outra dúvida, peço que entre em contato com nosso atendimento o quanto antes:</p>
+                <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;"><strong style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">⚠️ Alteração de Endereço?</strong></p>
+                <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">Caso tenha alguma alteração no endereço de entrega ou qualquer outra dúvida, peço que entre em contato com nosso atendimento o quanto antes:</p>
                 <p style="text-align: center; margin: 10px 0; color: #111111 !important;">
                   <strong style="font-size: 18px; color: #111111 !important;">📞 (35) 3425-1899</strong>
                 </p>
                 <p style="font-size: 12px; margin-top: 10px; color: #111111 !important;">Nossa equipe está à disposição para ajudá-lo com qualquer necessidade.</p>
               </div>
 
-              <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">Agradecemos pela confiança e estamos ansiosos para que você receba suas lembranças especiais!</p>
+              <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">Agradecemos pela confiança e estamos ansiosos para que você receba suas lembranças especiais!</p>
             </div>
             <div class="footer">
-              <p style="color: #111111 !important; -webkit-text-fill-color: #111111 !important;">&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
+              <p style="color: #1a1a1a !important; -webkit-text-fill-color: #1a1a1a !important; filter: none !important;">&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
             </div>
           </div>
         </body>
