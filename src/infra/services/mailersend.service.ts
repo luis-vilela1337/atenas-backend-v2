@@ -560,10 +560,10 @@ export class MailerSendService {
                 background: linear-gradient(#F7E70B, #F7E70B) !important;
                 background-color: #F7E70B !important;
               }
-              .header, .header h1, .header h2, .header h3 { color: #000000 !important; }
-              .content, .content p, .content strong { color: #000000 !important; }
-              .footer, .footer p { color: #000000 !important; }
-              p, h1, h2, h3, strong { color: #000000 !important; }
+              .header, .header h1, .header h2, .header h3 { color: #ffffff !important; }
+              .content, .content p, .content strong { color: #ffffff !important; }
+              .footer, .footer p { color: #ffffff !important; }
+              p, h1, h2, h3, strong { color: #ffffff !important; }
             }
           </style>
         </head>
@@ -661,11 +661,11 @@ export class MailerSendService {
                 background: linear-gradient(#F7E70B, #F7E70B) !important;
                 background-color: #F7E70B !important;
               }
-              .header, .header h1, .header h2, .header h3 { color: #000000 !important; }
-              .content, .content p, .content strong { color: #000000 !important; }
-              .button { color: #000000 !important; }
-              .footer, .footer p { color: #000000 !important; }
-              p, h1, h2, h3, strong { color: #000000 !important; }
+              .header, .header h1, .header h2, .header h3 { color: #ffffff !important; }
+              .content, .content p, .content strong { color: #ffffff !important; }
+              .button { color: #ffffff !important; }
+              .footer, .footer p { color: #ffffff !important; }
+              p, h1, h2, h3, strong { color: #ffffff !important; }
             }
           </style>
         </head>
@@ -776,12 +776,12 @@ export class MailerSendService {
                 background-color: #fefce8 !important;
                 border-color: #F7E70B !important;
               }
-              .header, .header h1, .header h2, .header h3 { color: #000000 !important; }
-              .content, .content p, .content strong { color: #000000 !important; }
-              .code-box, .code-box p, .code-box strong, .code { color: #000000 !important; }
-              .footer, .footer p { color: #000000 !important; }
-              .security-note { color: #000000 !important; }
-              p, h1, h2, h3, strong { color: #000000 !important; }
+              .header, .header h1, .header h2, .header h3 { color: #ffffff !important; }
+              .content, .content p, .content strong { color: #ffffff !important; }
+              .code-box, .code-box p, .code-box strong, .code { color: #ffffff !important; }
+              .footer, .footer p { color: #ffffff !important; }
+              .security-note { color: #ffffff !important; }
+              p, h1, h2, h3, strong { color: #ffffff !important; }
             }
           </style>
         </head>
@@ -898,12 +898,12 @@ export class MailerSendService {
                 background: linear-gradient(#F7E70B, #F7E70B) !important;
                 background-color: #F7E70B !important;
               }
-              .header, .header h1, .header h2, .header h3 { color: #000000 !important; }
-              .content, .content p, .content strong { color: #000000 !important; }
-              .button { color: #000000 !important; }
-              .info-box, .info-box p, .info-box strong { color: #000000 !important; }
-              .footer, .footer p { color: #000000 !important; }
-              p, h1, h2, h3, strong { color: #000000 !important; }
+              .header, .header h1, .header h2, .header h3 { color: #ffffff !important; }
+              .content, .content p, .content strong { color: #ffffff !important; }
+              .button { color: #ffffff !important; }
+              .info-box, .info-box p, .info-box strong { color: #ffffff !important; }
+              .footer, .footer p { color: #ffffff !important; }
+              p, h1, h2, h3, strong { color: #ffffff !important; }
             }
           </style>
         </head>
@@ -1033,12 +1033,12 @@ export class MailerSendService {
                 background: linear-gradient(#F7E70B, #F7E70B) !important;
                 background-color: #F7E70B !important;
               }
-              .header, .header h1, .header h2, .header h3 { color: #000000 !important; }
-              .content, .content p, .content strong { color: #000000 !important; }
-              .address-box, .address-box p, .address-box strong { color: #000000 !important; }
-              .info-box, .info-box p, .info-box strong { color: #000000 !important; }
-              .footer, .footer p { color: #000000 !important; }
-              p, h1, h2, h3, strong { color: #000000 !important; }
+              .header, .header h1, .header h2, .header h3 { color: #ffffff !important; }
+              .content, .content p, .content strong { color: #ffffff !important; }
+              .address-box, .address-box p, .address-box strong { color: #ffffff !important; }
+              .info-box, .info-box p, .info-box strong { color: #ffffff !important; }
+              .footer, .footer p { color: #ffffff !important; }
+              p, h1, h2, h3, strong { color: #ffffff !important; }
             }
           </style>
         </head>
