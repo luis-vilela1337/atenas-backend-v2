@@ -984,7 +984,8 @@ export class MailerSendService {
               margin: 20px 0;
             }
             .info-box {
-              background: #ffffff !important;
+              background: linear-gradient(#F7E70B, #F7E70B) !important;
+              background-color: #F7E70B !important;
               border: 2px solid #F7E70B !important;
               border-radius: 4px;
               padding: 15px;
