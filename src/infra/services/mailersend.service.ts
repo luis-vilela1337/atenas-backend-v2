@@ -894,13 +894,9 @@ export class MailerSendService {
               <p>Olá ${name},</p>
               <p>Temos uma ótima notícia! Seu pedido <strong>#${orderId}</strong> foi processado com sucesso.</p>
               <p>Aqui está o link para o download das fotografias adquiridas em nosso site.</p>
-
-              <div class="info-box" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
                 <p><strong>⏰ Validade do Link:</strong></p>
                 <p>O link de download estará disponível por <strong>2 meses</strong> a partir da data de envio deste email.</p>
                 <p>Certifique-se de fazer o download dos seus arquivos dentro deste prazo para não perder acesso às suas memórias especiais.</p>
-              </div>
-
               <p style="text-align: center;">
                 <a href="${driveLink}" class="button" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">📥 Fazer Download das Fotografias</a>
               </p>
@@ -1020,20 +1016,16 @@ export class MailerSendService {
               <p>Temos uma ótima notícia! Seu pedido <strong>#${orderId}</strong> foi processado com sucesso.</p>
               <p>Seu produto já está embalado e pronto para entrega! Iremos enviá-lo para o endereço cadastrado abaixo:</p>
 
-              <div class="address-box">
+              <div class="address-box" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;>
                 <p><strong>📦 Endereço de Entrega:</strong></p>
                 <p>${formattedAddress}</p>
               </div>
-
-              <div class="info-box" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
                 <p><strong>⚠️ Alteração de Endereço?</strong></p>
                 <p>Caso tenha alguma alteração no endereço de entrega ou qualquer outra dúvida, peço que entre em contato com nosso atendimento o quanto antes:</p>
                 <p style="text-align: center; margin: 10px 0;">
                   <strong style="font-size: 18px;">📞 (35) 3425-1890</strong>
                 </p>
                 <p style="font-size: 12px; margin-top: 10px;">Nossa equipe está à disposição para ajudá-lo com qualquer necessidade.</p>
-              </div>
-
               <p>Agradecemos pela confiança e estamos ansiosos para que você receba suas lembranças especiais!</p>
             </div>
             <div class="footer">
