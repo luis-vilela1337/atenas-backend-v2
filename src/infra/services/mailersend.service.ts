@@ -550,6 +550,11 @@ export class MailerSendService {
               font-size: 12px;
               color: #111111 !important;
             }
+            .text-protected {
+              color: #111111 !important;
+              padding: 2px 4px;
+              border: 1px solid transparent;
+            }
             p, h1, h2, h3 { color: #111111 !important; }
 
             /* Media Query como Backup */
@@ -563,6 +568,7 @@ export class MailerSendService {
               .header, .header h1, .header h2, .header h3 { color: #111111 !important; }
               .content, .content p, .content strong { color: #111111 !important; }
               .footer, .footer p { color: #111111 !important; }
+              .text-protected { color: #111111 !important; }
               p, h1, h2, h3, strong { color: #111111 !important; }
             }
           </style>
@@ -570,7 +576,7 @@ export class MailerSendService {
         <body>
           <div class="container">
             <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
-              <h1 style="color: #111111 !important;">Bem-vindo(a) ao Atenas Formaturas!</h1>
+              <h1 style="color: #111111 !important;"><span class="text-protected">Bem-vindo(a) ao Atenas Formaturas!</span></h1>
             </div>
             <div class="content">
               <p style="color: #111111 !important;">Olá ${name},</p>
@@ -641,6 +647,11 @@ export class MailerSendService {
               margin: 20px 0;
               font-weight: 600;
             }
+            .text-protected {
+              color: #111111 !important;
+              padding: 2px 4px;
+              border: 1px solid transparent;
+            }
             .button:hover {
               background-color: #fef08a !important;
             }
@@ -665,6 +676,7 @@ export class MailerSendService {
               .content, .content p, .content strong { color: #111111 !important; }
               .button { color: #111111 !important; }
               .footer, .footer p { color: #111111 !important; }
+              .text-protected { color: #111111 !important; }
               p, h1, h2, h3, strong { color: #111111 !important; }
             }
           </style>
@@ -672,14 +684,14 @@ export class MailerSendService {
         <body>
           <div class="container">
             <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
-              <h1 style="color: #111111 !important;">Redefinição de Senha</h1>
+              <h1 style="color: #111111 !important;"><span class="text-protected">Redefinição de Senha</span></h1>
             </div>
             <div class="content">
               <p style="color: #111111 !important;">Olá ${name},</p>
               <p style="color: #111111 !important;">Recebemos uma solicitação para redefinir a senha da sua conta.</p>
               <p style="color: #111111 !important;">Clique no botão abaixo para criar uma nova senha:</p>
               <p style="text-align: center; color: #111111 !important;">
-                <a href="${resetUrl}" class="button" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B; color: #111111 !important;">Redefinir Senha</a>
+                <a href="${resetUrl}" class="button" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B; color: #111111 !important;"><span class="text-protected">Redefinir Senha</span></a>
               </p>
               <p style="color: #111111 !important;"><strong style="color: #111111 !important;">Este link é válido por 1 hora.</strong></p>
               <p style="color: #111111 !important;">Se você não solicitou esta alteração, pode ignorar este email com segurança.</p>
@@ -764,6 +776,11 @@ export class MailerSendService {
               color: #111111 !important;
               font-size: 12px;
             }
+            .text-protected {
+              color: #111111 !important;
+              padding: 2px 4px;
+              border: 1px solid transparent;
+            }
             p, h1, h2, h3, strong { color: #111111 !important; }
 
             /* Media Query como Backup */
@@ -781,6 +798,7 @@ export class MailerSendService {
               .code-box, .code-box p, .code-box strong, .code { color: #111111 !important; }
               .footer, .footer p { color: #111111 !important; }
               .security-note { color: #111111 !important; }
+              .text-protected { color: #111111 !important; }
               p, h1, h2, h3, strong { color: #111111 !important; }
             }
           </style>
@@ -788,14 +806,14 @@ export class MailerSendService {
         <body>
           <div class="container">
             <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
-              <h1 style="color: #111111 !important;">Código de Verificação</h1>
+              <h1 style="color: #111111 !important;"><span class="text-protected">Código de Verificação</span></h1>
             </div>
             <div class="content">
               <p style="color: #111111 !important;">Olá ${name},</p>
               <p style="color: #111111 !important;">Recebemos uma solicitação para redefinir a senha da sua conta.</p>
               <p style="color: #111111 !important;">Use o código abaixo para redefinir sua senha:</p>
               <div class="code-box" style="border: 2px dashed #F7E70B !important;">
-                <div class="code" style="color: #111111 !important;">${code}</div>
+                <div class="code" style="color: #111111 !important;"><span class="text-protected">${code}</span></div>
               </div>
               <p style="color: #111111 !important;"><strong style="color: #111111 !important;">Este código é válido por 15 minutos.</strong></p>
               <p style="color: #111111 !important;">Se você não solicitou esta alteração, pode ignorar este email com segurança.</p>
@@ -868,6 +886,11 @@ export class MailerSendService {
               margin: 20px 0;
               font-weight: 600;
             }
+            .text-protected {
+              color: #111111 !important;
+              padding: 2px 4px;
+              border: 1px solid transparent;
+            }
             .button:hover {
               background-color: #fef08a !important;
             }
@@ -887,6 +910,11 @@ export class MailerSendService {
               font-size: 12px;
               color: #111111 !important;
             }
+            .text-protected {
+              color: #111111 !important;
+              padding: 2px 4px;
+              border: 1px solid transparent;
+            }
             p, h1, h2, h3, strong { color: #111111 !important; }
 
             /* Media Query como Backup */
@@ -903,6 +931,7 @@ export class MailerSendService {
               .button { color: #111111 !important; }
               .info-box, .info-box p, .info-box strong { color: #111111 !important; }
               .footer, .footer p { color: #111111 !important; }
+              .text-protected { color: #111111 !important; }
               p, h1, h2, h3, strong { color: #111111 !important; }
             }
           </style>
@@ -910,7 +939,7 @@ export class MailerSendService {
         <body>
           <div class="container">
             <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
-              <h1 style="color: #111111 !important;">🎉 Pedido Concluído!</h1>
+              <h1 style="color: #111111 !important;"><span class="text-protected">🎉 Pedido Concluído!</span></h1>
             </div>
             <div class="content">
               <p style="color: #111111 !important;">Olá ${name},</p>
@@ -924,7 +953,7 @@ export class MailerSendService {
               </div>
 
               <p style="text-align: center; color: #111111 !important;">
-                <a href="${driveLink}" class="button" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B; color: #111111 !important;">📥 Fazer Download das Fotografias</a>
+                <a href="${driveLink}" class="button" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B; color: #111111 !important;"><span class="text-protected">📥 Fazer Download das Fotografias</span></a>
               </p>
 
               <p style="color: #111111 !important;">Caso tenha alguma dúvida ou precise de suporte, não hesite em entrar em contato conosco pelo telefone <strong style="color: #111111 !important;">(35) 3425-1899</strong>.</p>
@@ -1023,6 +1052,11 @@ export class MailerSendService {
               font-size: 12px;
               color: #111111 !important;
             }
+            .text-protected {
+              color: #111111 !important;
+              padding: 2px 4px;
+              border: 1px solid transparent;
+            }
             p, h1, h2, h3, strong { color: #111111 !important; }
 
             /* Media Query como Backup */
@@ -1038,6 +1072,7 @@ export class MailerSendService {
               .address-box, .address-box p, .address-box strong { color: #111111 !important; }
               .info-box, .info-box p, .info-box strong { color: #111111 !important; }
               .footer, .footer p { color: #111111 !important; }
+              .text-protected { color: #111111 !important; }
               p, h1, h2, h3, strong { color: #111111 !important; }
             }
           </style>
@@ -1045,7 +1080,7 @@ export class MailerSendService {
         <body>
           <div class="container">
             <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
-              <h1 style="color: #111111 !important;">🎉 Pedido Concluído!</h1>
+              <h1 style="color: #111111 !important;"><span class="text-protected">🎉 Pedido Concluído!</span></h1>
             </div>
             <div class="content">
               <p style="color: #111111 !important;">Olá ${name},</p>
