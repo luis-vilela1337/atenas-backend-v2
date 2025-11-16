@@ -523,20 +523,8 @@ export class MailerSendService {
             body {
               font-family: Arial, sans-serif;
               line-height: 1.6;
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: none !important;
-            }
-            body::before {
-              content: '';
-              position: fixed;
-              top: 0;
-              left: 0;
-              width: 100%;
-              height: 100%;
+              color: #000000 !important;
               background-color: #ffffff !important;
-              z-index: -1;
             }
             .container {
               max-width: 600px;
@@ -547,89 +535,30 @@ export class MailerSendService {
             .header {
               background: linear-gradient(#F7E70B, #F7E70B) !important;
               background-color: #F7E70B !important;
+              color: #000000 !important;
               padding: 20px;
               text-align: center;
             }
-            .header h1, .header h2, .header h3, .header p, .header span {
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: none !important;
-            }
             .content {
               padding: 20px;
-              background-color: #f9f9f9 !important;
-            }
-            .content p, .content h1, .content h2, .content h3, .content strong, .content span, .content a {
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: none !important;
+              background: #f9f9f9 !important;
+              color: #000000 !important;
             }
             .footer {
               padding: 20px;
               text-align: center;
               font-size: 12px;
+              color: #000000 !important;
             }
-            .footer p, .footer span, .footer strong {
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: none !important;
-            }
-            .text-protected {
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              text-shadow: 0 0 0 #000 !important;
-              filter: none !important;
-              padding: 2px 4px;
-              border: 1px solid transparent;
-            }
-            p, h1, h2, h3 {
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: none !important;
-            }
+            p, h1, h2, h3 { color: #000000 !important; }
 
             /* Media Query como Backup */
             @media (prefers-color-scheme: dark) {
               .header,
               [style*="background-color: #F7E70B"],
-              [style*="background-color: #F7E70B"] {
+              [style*="background: linear-gradient(#F7E70B, #F7E70B)"] {
                 background: linear-gradient(#F7E70B, #F7E70B) !important;
                 background-color: #F7E70B !important;
-              }
-              .header, .header h1, .header h2, .header h3 {
-                background: linear-gradient(#000, #000);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                filter: none !important;
-              }
-              .content, .content p, .content strong {
-                background: linear-gradient(#000, #000);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                filter: none !important;
-              }
-              .footer, .footer p {
-                background: linear-gradient(#000, #000);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                filter: none !important;
-              }
-              .text-protected {
-                background: linear-gradient(#000, #000);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                filter: none !important;
-              }
-              p, h1, h2, h3, strong {
-                background: linear-gradient(#000, #000);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                filter: none !important;
               }
             }
           </style>
@@ -637,16 +566,16 @@ export class MailerSendService {
         <body>
           <div class="container">
             <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
-              <h1 style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;"><span class="text-protected">Bem-vindo(a) ao Atenas Formaturas!</span></h1>
+              <h1>Bem-vindo(a) ao Atenas Formaturas!</h1>
             </div>
             <div class="content">
-              <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">Olá ${name},</p>
-              <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">É um prazer ter você conosco! Sua conta foi criada com sucesso.</p>
-              <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">Agora você pode aproveitar todos os recursos da nossa plataforma.</p>
-              <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">Se precisar de ajuda, não hesite em entrar em contato conosco.</p>
+              <p>Olá ${name},</p>
+              <p>É um prazer ter você conosco! Sua conta foi criada com sucesso.</p>
+              <p>Agora você pode aproveitar todos os recursos da nossa plataforma.</p>
+              <p>Se precisar de ajuda, não hesite em entrar em contato conosco.</p>
             </div>
             <div class="footer">
-              <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
+              <p>&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
             </div>
           </div>
         </body>
@@ -676,20 +605,8 @@ export class MailerSendService {
             body {
               font-family: Arial, sans-serif;
               line-height: 1.6;
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: none !important;
-            }
-            body::before {
-              content: '';
-              position: fixed;
-              top: 0;
-              left: 0;
-              width: 100%;
-              height: 100%;
+              color: #000000 !important;
               background-color: #ffffff !important;
-              z-index: -1;
             }
             .container {
               max-width: 600px;
@@ -700,114 +617,46 @@ export class MailerSendService {
             .header {
               background: linear-gradient(#F7E70B, #F7E70B) !important;
               background-color: #F7E70B !important;
+              color: #000000 !important;
               padding: 20px;
               text-align: center;
             }
-            .header h1, .header h2, .header h3, .header p, .header span {
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: none !important;
-            }
             .content {
               padding: 20px;
-              background-color: #f9f9f9 !important;
-            }
-            .content p, .content h1, .content h2, .content h3, .content strong, .content span, .content a {
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: none !important;
+              background: #f9f9f9 !important;
+              color: #000000 !important;
             }
             .button {
               display: inline-block;
               padding: 12px 24px;
               background: linear-gradient(#F7E70B, #F7E70B) !important;
               background-color: #F7E70B !important;
-              color: #000 !important;
-              filter: none !important;
+              color: #000000 !important;
               text-decoration: none;
               border-radius: 4px;
               margin: 20px 0;
               font-weight: 600;
             }
-            .button span {
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-            }
-            .text-protected {
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              text-shadow: 0 0 0 #000 !important;
-              filter: none !important;
-              padding: 2px 4px;
-              border: 1px solid transparent;
-            }
             .button:hover {
+              background: linear-gradient(#fef08a, #fef08a) !important;
               background-color: #fef08a !important;
             }
             .footer {
               padding: 20px;
               text-align: center;
               font-size: 12px;
+              color: #000000 !important;
             }
-            .footer p, .footer span, .footer strong {
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: none !important;
-            }
-            p, h1, h2, h3, strong {
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: none !important;
-            }
+            p, h1, h2, h3, strong { color: #000000 !important; }
 
             /* Media Query como Backup */
             @media (prefers-color-scheme: dark) {
               .header,
               .button,
               [style*="background-color: #F7E70B"],
-              [style*="background-color: #F7E70B"] {
+              [style*="background: linear-gradient(#F7E70B, #F7E70B)"] {
                 background: linear-gradient(#F7E70B, #F7E70B) !important;
                 background-color: #F7E70B !important;
-              }
-              .header, .header h1, .header h2, .header h3 {
-                background: linear-gradient(#000, #000);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                filter: none !important;
-              }
-              .content, .content p, .content strong {
-                background: linear-gradient(#000, #000);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                filter: none !important;
-              }
-              .button {
-                color: #000 !important;
-                filter: none !important;
-              }
-              .footer, .footer p {
-                background: linear-gradient(#000, #000);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                filter: none !important;
-              }
-              .text-protected {
-                background: linear-gradient(#000, #000);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                filter: none !important;
-              }
-              p, h1, h2, h3, strong {
-                background: linear-gradient(#000, #000);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                filter: none !important;
               }
             }
           </style>
@@ -815,20 +664,20 @@ export class MailerSendService {
         <body>
           <div class="container">
             <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
-              <h1 style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;"><span class="text-protected">Redefinição de Senha</span></h1>
+              <h1>Redefinição de Senha</h1>
             </div>
             <div class="content">
-              <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">Olá ${name},</p>
-              <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">Recebemos uma solicitação para redefinir a senha da sua conta.</p>
-              <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">Clique no botão abaixo para criar uma nova senha:</p>
-              <p style="text-align: center; background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-                <a href="${resetUrl}" class="button" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B; color: #000 !important; filter: none !important;"><span class="text-protected">Redefinir Senha</span></a>
+              <p>Olá ${name},</p>
+              <p>Recebemos uma solicitação para redefinir a senha da sua conta.</p>
+              <p>Clique no botão abaixo para criar uma nova senha:</p>
+              <p style="text-align: center;">
+                <a href="${resetUrl}" class="button" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">Redefinir Senha</a>
               </p>
-              <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;"><strong style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">Este link é válido por 1 hora.</strong></p>
-              <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">Se você não solicitou esta alteração, pode ignorar este email com segurança.</p>
+              <p><strong>Este link é válido por 1 hora.</strong></p>
+              <p>Se você não solicitou esta alteração, pode ignorar este email com segurança.</p>
             </div>
             <div class="footer">
-              <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
+              <p>&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
             </div>
           </div>
         </body>
@@ -858,20 +707,8 @@ export class MailerSendService {
             body {
               font-family: Arial, sans-serif;
               line-height: 1.6;
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: none !important;
-            }
-            body::before {
-              content: '';
-              position: fixed;
-              top: 0;
-              left: 0;
-              width: 100%;
-              height: 100%;
+              color: #000000 !important;
               background-color: #ffffff !important;
-              z-index: -1;
             }
             .container {
               max-width: 600px;
@@ -882,27 +719,17 @@ export class MailerSendService {
             .header {
               background: linear-gradient(#F7E70B, #F7E70B) !important;
               background-color: #F7E70B !important;
+              color: #000000 !important;
               padding: 20px;
               text-align: center;
             }
-            .header h1, .header h2, .header h3, .header p, .header span {
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: none !important;
-            }
             .content {
               padding: 20px;
-              background-color: #f9f9f9 !important;
-            }
-            .content p, .content h1, .content h2, .content h3, .content strong, .content span, .content a {
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: none !important;
+              background: #f9f9f9 !important;
+              color: #000000 !important;
             }
             .code-box {
-              background: linear-gradient(#fefce8, #fefce8) !important;
+              background: #fefce8 !important;
               background-color: #fefce8 !important;
               border: 2px dashed #F7E70B !important;
               border-radius: 8px;
@@ -910,108 +737,35 @@ export class MailerSendService {
               text-align: center;
               margin: 20px 0;
             }
-            .code-box p, .code-box strong {
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: none !important;
-            }
             .code {
               font-size: 32px;
               font-weight: bold;
               letter-spacing: 8px;
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              text-shadow: 0 0 0 #000 !important;
-              filter: none !important;
+              color: #000000 !important;
               font-family: 'Courier New', monospace;
             }
             .footer {
               padding: 20px;
               text-align: center;
               font-size: 12px;
-            }
-            .footer p, .footer span, .footer strong {
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: none !important;
+              color: #000000 !important;
             }
             .security-note {
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: none !important;
+              color: #000000 !important;
               font-size: 12px;
             }
-            .text-protected {
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              text-shadow: 0 0 0 #000 !important;
-              filter: none !important;
-              padding: 2px 4px;
-              border: 1px solid transparent;
-            }
-            p, h1, h2, h3, strong {
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: none !important;
-            }
+            p, h1, h2, h3, strong { color: #000000 !important; }
 
             /* Media Query como Backup */
             @media (prefers-color-scheme: dark) {
               .header,
               .code-box,
               [style*="background-color: #F7E70B"],
+              [style*="background: linear-gradient(#F7E70B, #F7E70B)"],
               [style*="border: 2px dashed #F7E70B"] {
-                background: linear-gradient(#fefce8, #fefce8) !important;
-                background-color: #fefce8 !important;
+                background: linear-gradient(#F7E70B, #F7E70B) !important;
+                background-color: #F7E70B !important;
                 border-color: #F7E70B !important;
-              }
-              .header, .header h1, .header h2, .header h3 {
-                background: linear-gradient(#000, #000);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                filter: none !important;
-              }
-              .content, .content p, .content strong {
-                background: linear-gradient(#000, #000);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                filter: none !important;
-              }
-              .code-box, .code-box p, .code-box strong, .code {
-                background: linear-gradient(#000, #000);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                filter: none !important;
-              }
-              .footer, .footer p {
-                background: linear-gradient(#000, #000);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                filter: none !important;
-              }
-              .security-note {
-                background: linear-gradient(#000, #000);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                filter: none !important;
-              }
-              .text-protected {
-                background: linear-gradient(#000, #000);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                filter: none !important;
-              }
-              p, h1, h2, h3, strong {
-                background: linear-gradient(#000, #000);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                filter: none !important;
               }
             }
           </style>
@@ -1019,21 +773,21 @@ export class MailerSendService {
         <body>
           <div class="container">
             <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
-              <h1 style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;"><span class="text-protected">Código de Verificação</span></h1>
+              <h1>Código de Verificação</h1>
             </div>
             <div class="content">
-              <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">Olá ${name},</p>
-              <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">Recebemos uma solicitação para redefinir a senha da sua conta.</p>
-              <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">Use o código abaixo para redefinir sua senha:</p>
+              <p>Olá ${name},</p>
+              <p>Recebemos uma solicitação para redefinir a senha da sua conta.</p>
+              <p>Use o código abaixo para redefinir sua senha:</p>
               <div class="code-box" style="border: 2px dashed #F7E70B !important;">
-                <div class="code" style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;"><span class="text-protected">${code}</span></div>
+                <div class="code">${code}</div>
               </div>
-              <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;"><strong style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">Este código é válido por 15 minutos.</strong></p>
-              <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">Se você não solicitou esta alteração, pode ignorar este email com segurança.</p>
-              <p class="security-note" style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">Por segurança, nunca compartilhe este código com ninguém.</p>
+              <p><strong>Este código é válido por 15 minutos.</strong></p>
+              <p>Se você não solicitou esta alteração, pode ignorar este email com segurança.</p>
+              <p class="security-note">Por segurança, nunca compartilhe este código com ninguém.</p>
             </div>
             <div class="footer">
-              <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
+              <p>&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
             </div>
           </div>
         </body>
@@ -1067,20 +821,8 @@ export class MailerSendService {
             body {
               font-family: Arial, sans-serif;
               line-height: 1.6;
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: none !important;
-            }
-            body::before {
-              content: '';
-              position: fixed;
-              top: 0;
-              left: 0;
-              width: 100%;
-              height: 100%;
+              color: #000000 !important;
               background-color: #ffffff !important;
-              z-index: -1;
             }
             .container {
               max-width: 600px;
@@ -1091,134 +833,54 @@ export class MailerSendService {
             .header {
               background: linear-gradient(#F7E70B, #F7E70B) !important;
               background-color: #F7E70B !important;
+              color: #000000 !important;
               padding: 20px;
               text-align: center;
             }
-            .header h1, .header h2, .header h3, .header p, .header span {
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: none !important;
-            }
             .content {
               padding: 20px;
-              background-color: #f9f9f9 !important;
-            }
-            .content p, .content h1, .content h2, .content h3, .content strong, .content span, .content a {
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: none !important;
+              background: #f9f9f9 !important;
+              color: #000000 !important;
             }
             .button {
               display: inline-block;
               padding: 12px 24px;
               background: linear-gradient(#F7E70B, #F7E70B) !important;
               background-color: #F7E70B !important;
-              color: #000 !important;
-              filter: none !important;
+              color: #000000 !important;
               text-decoration: none;
               border-radius: 4px;
               margin: 20px 0;
               font-weight: 600;
             }
-            .button span {
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-            }
-            .text-protected {
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              text-shadow: 0 0 0 #000 !important;
-              filter: none !important;
-              padding: 2px 4px;
-              border: 1px solid transparent;
-            }
             .button:hover {
+              background: linear-gradient(#fef08a, #fef08a) !important;
               background-color: #fef08a !important;
             }
             .info-box {
-              background: linear-gradient(#fefce8, #fefce8) !important;
+              background: #fefce8 !important;
               background-color: #fefce8 !important;
               border-left: 4px solid #F7E70B !important;
               border-radius: 4px;
               padding: 15px;
               margin: 20px 0;
             }
-            .info-box p, .info-box strong {
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: none !important;
-            }
             .footer {
               padding: 20px;
               text-align: center;
               font-size: 12px;
+              color: #000000 !important;
             }
-            .footer p, .footer span, .footer strong {
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: none !important;
-            }
-            p, h1, h2, h3, strong {
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: none !important;
-            }
+            p, h1, h2, h3, strong { color: #000000 !important; }
 
             /* Media Query como Backup */
             @media (prefers-color-scheme: dark) {
               .header,
               .button,
               [style*="background-color: #F7E70B"],
-              [style*="background-color: #F7E70B"] {
+              [style*="background: linear-gradient(#F7E70B, #F7E70B)"] {
                 background: linear-gradient(#F7E70B, #F7E70B) !important;
                 background-color: #F7E70B !important;
-              }
-              .header, .header h1, .header h2, .header h3 {
-                background: linear-gradient(#000, #000);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                filter: none !important;
-              }
-              .content, .content p, .content strong {
-                background: linear-gradient(#000, #000);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                filter: none !important;
-              }
-              .button {
-                color: #000 !important;
-                filter: none !important;
-              }
-              .info-box, .info-box p, .info-box strong {
-                background: linear-gradient(#000, #000);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                filter: none !important;
-              }
-              .footer, .footer p {
-                background: linear-gradient(#000, #000);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                filter: none !important;
-              }
-              .text-protected {
-                background: linear-gradient(#000, #000);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                filter: none !important;
-              }
-              p, h1, h2, h3, strong {
-                background: linear-gradient(#000, #000);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                filter: none !important;
               }
             }
           </style>
@@ -1226,29 +888,29 @@ export class MailerSendService {
         <body>
           <div class="container">
             <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
-              <h1 style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;"><span class="text-protected">🎉 Pedido Concluído!</span></h1>
+              <h1>🎉 Pedido Concluído!</h1>
             </div>
             <div class="content">
-              <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">Olá ${name},</p>
-              <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">Temos uma ótima notícia! Seu pedido <strong style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">#${orderId}</strong> foi processado com sucesso.</p>
-              <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">Aqui está o link para o download das fotografias adquiridas em nosso site.</p>
+              <p>Olá ${name},</p>
+              <p>Temos uma ótima notícia! Seu pedido <strong>#${orderId}</strong> foi processado com sucesso.</p>
+              <p>Aqui está o link para o download das fotografias adquiridas em nosso site.</p>
 
               <div class="info-box">
-                <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;"><strong style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">⏰ Validade do Link:</strong></p>
-                <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">O link de download estará disponível por <strong style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">2 meses</strong> a partir da data de envio deste email.</p>
-                <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">Certifique-se de fazer o download dos seus arquivos dentro deste prazo para não perder acesso às suas memórias especiais.</p>
+                <p><strong>⏰ Validade do Link:</strong></p>
+                <p>O link de download estará disponível por <strong>2 meses</strong> a partir da data de envio deste email.</p>
+                <p>Certifique-se de fazer o download dos seus arquivos dentro deste prazo para não perder acesso às suas memórias especiais.</p>
               </div>
 
-              <p style="text-align: center; background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-                <a href="${driveLink}" class="button" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B; color: #000 !important; filter: none !important;"><span class="text-protected">📥 Fazer Download das Fotografias</span></a>
+              <p style="text-align: center;">
+                <a href="${driveLink}" class="button" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">📥 Fazer Download das Fotografias</a>
               </p>
 
-              <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">Caso tenha alguma dúvida ou precise de suporte, não hesite em entrar em contato conosco pelo telefone <strong style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">(35) 3425-1899</strong>.</p>
+              <p>Caso tenha alguma dúvida ou precise de suporte, não hesite em entrar em contato conosco pelo telefone <strong>(35) 3425-1899</strong>.</p>
 
-              <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">Agradecemos pela confiança e esperamos que você aproveite suas lembranças!</p>
+              <p>Agradecemos pela confiança e esperamos que você aproveite suas lembranças!</p>
             </div>
             <div class="footer">
-              <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
+              <p>&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
             </div>
           </div>
         </body>
@@ -1292,20 +954,8 @@ export class MailerSendService {
             body {
               font-family: Arial, sans-serif;
               line-height: 1.6;
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: none !important;
-            }
-            body::before {
-              content: '';
-              position: fixed;
-              top: 0;
-              left: 0;
-              width: 100%;
-              height: 100%;
+              color: #000000 !important;
               background-color: #ffffff !important;
-              z-index: -1;
             }
             .container {
               max-width: 600px;
@@ -1316,124 +966,45 @@ export class MailerSendService {
             .header {
               background: linear-gradient(#F7E70B, #F7E70B) !important;
               background-color: #F7E70B !important;
+              color: #000000 !important;
               padding: 20px;
               text-align: center;
             }
-            .header h1, .header h2, .header h3, .header p, .header span {
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: none !important;
-            }
             .content {
               padding: 20px;
-              background-color: #f9f9f9 !important;
-            }
-            .content p, .content h1, .content h2, .content h3, .content strong, .content span, .content a {
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: none !important;
+              background: #f9f9f9 !important;
+              color: #000000 !important;
             }
             .address-box {
-              background: linear-gradient(#fefce8, #fefce8) !important;
+              background: #fefce8 !important;
               background-color: #fefce8 !important;
               border-left: 4px solid #F7E70B !important;
               border-radius: 4px;
               padding: 15px;
               margin: 20px 0;
             }
-            .address-box p, .address-box strong {
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: none !important;
-            }
             .info-box {
-              background: linear-gradient(#ffffff, #ffffff) !important;
-              background-color: #ffffff !important;
+              background: #ffffff !important;
               border: 2px solid #F7E70B !important;
               border-radius: 4px;
               padding: 15px;
               margin: 20px 0;
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: none !important;
-            }
-            .info-box p, .info-box strong {
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: none !important;
             }
             .footer {
               padding: 20px;
               text-align: center;
               font-size: 12px;
+              color: #000000 !important;
             }
-            .footer p, .footer span, .footer strong {
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: none !important;
-            }
-            p, h1, h2, h3, strong {
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: none !important;
-            }
+            p, h1, h2, h3, strong { color: #000000 !important; }
 
             /* Media Query como Backup */
             @media (prefers-color-scheme: dark) {
               .header,
               [style*="background-color: #F7E70B"],
-              [style*="background-color: #F7E70B"] {
+              [style*="background: linear-gradient(#F7E70B, #F7E70B)"] {
                 background: linear-gradient(#F7E70B, #F7E70B) !important;
                 background-color: #F7E70B !important;
-              }
-              .header, .header h1, .header h2, .header h3 {
-                background: linear-gradient(#000, #000);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                filter: none !important;
-              }
-              .content, .content p, .content strong {
-                background: linear-gradient(#000, #000);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                filter: none !important;
-              }
-              .address-box, .address-box p, .address-box strong {
-                background: linear-gradient(#000, #000);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                filter: none !important;
-              }
-              .info-box, .info-box p, .info-box strong {
-                background: linear-gradient(#000, #000);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                filter: none !important;
-              }
-              .footer, .footer p {
-                background: linear-gradient(#000, #000);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                filter: none !important;
-              }
-              .text-protected {
-                background: linear-gradient(#000, #000);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                filter: none !important;
-              }
-              p, h1, h2, h3, strong {
-                background: linear-gradient(#000, #000);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                filter: none !important;
               }
             }
           </style>
@@ -1441,31 +1012,31 @@ export class MailerSendService {
         <body>
           <div class="container">
             <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
-              <h1 style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;"><span class="text-protected">🎉 Pedido Concluído!</span></h1>
+              <h1>🎉 Pedido Concluído!</h1>
             </div>
             <div class="content">
-              <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">Olá ${name},</p>
-              <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">Temos uma ótima notícia! Seu pedido <strong style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">#${orderId}</strong> foi processado com sucesso.</p>
-              <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">Seu produto já está embalado e pronto para entrega! Iremos enviá-lo para o endereço cadastrado abaixo:</p>
+              <p>Olá ${name},</p>
+              <p>Temos uma ótima notícia! Seu pedido <strong>#${orderId}</strong> foi processado com sucesso.</p>
+              <p>Seu produto já está embalado e pronto para entrega! Iremos enviá-lo para o endereço cadastrado abaixo:</p>
 
               <div class="address-box">
-                <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;"><strong style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">📦 Endereço de Entrega:</strong></p>
-                <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">${formattedAddress}</p>
+                <p><strong>📦 Endereço de Entrega:</strong></p>
+                <p>${formattedAddress}</p>
               </div>
 
               <div class="info-box">
-                <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;"><strong style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">⚠️ Alteração de Endereço?</strong></p>
-                <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">Caso tenha alguma alteração no endereço de entrega ou qualquer outra dúvida, peço que entre em contato com nosso atendimento o quanto antes:</p>
-                <p style="text-align: center; margin: 10px 0; background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-                  <strong style="font-size: 18px; background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">📞 (35) 3425-1899</strong>
+                <p><strong>⚠️ Alteração de Endereço?</strong></p>
+                <p>Caso tenha alguma alteração no endereço de entrega ou qualquer outra dúvida, peço que entre em contato com nosso atendimento o quanto antes:</p>
+                <p style="text-align: center; margin: 10px 0;">
+                  <strong style="font-size: 18px;">📞 (35) 3425-1899</strong>
                 </p>
-                <p style="font-size: 12px; margin-top: 10px; background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Nossa equipe está à disposição para ajudá-lo com qualquer necessidade.</p>
+                <p style="font-size: 12px; margin-top: 10px;">Nossa equipe está à disposição para ajudá-lo com qualquer necessidade.</p>
               </div>
 
-              <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">Agradecemos pela confiança e estamos ansiosos para que você receba suas lembranças especiais!</p>
+              <p>Agradecemos pela confiança e estamos ansiosos para que você receba suas lembranças especiais!</p>
             </div>
             <div class="footer">
-              <p style="background: linear-gradient(#000, #000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: none !important;">&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
+              <p>&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
             </div>
           </div>
         </body>
