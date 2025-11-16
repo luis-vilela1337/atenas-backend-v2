@@ -905,7 +905,7 @@ export class MailerSendService {
                 <a href="${driveLink}" class="button" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">📥 Fazer Download das Fotografias</a>
               </p>
 
-              <p>Caso tenha alguma dúvida ou precise de suporte, não hesite em entrar em contato conosco pelo telefone <strong>(35) 3425-1899</strong>.</p>
+              <p>Caso tenha alguma dúvida ou precise de suporte, não hesite em entrar em contato conosco pelo telefone <strong>(35) 3425-1890</strong>.</p>
 
               <p>Agradecemos pela confiança e esperamos que você aproveite suas lembranças!</p>
             </div>
@@ -1029,7 +1029,7 @@ export class MailerSendService {
                 <p><strong>⚠️ Alteração de Endereço?</strong></p>
                 <p>Caso tenha alguma alteração no endereço de entrega ou qualquer outra dúvida, peço que entre em contato com nosso atendimento o quanto antes:</p>
                 <p style="text-align: center; margin: 10px 0;">
-                  <strong style="font-size: 18px;">📞 (35) 3425-1899</strong>
+                  <strong style="font-size: 18px;">📞 (35) 3425-1890</strong>
                 </p>
                 <p style="font-size: 12px; margin-top: 10px;">Nossa equipe está à disposição para ajudá-lo com qualquer necessidade.</p>
               </div>
