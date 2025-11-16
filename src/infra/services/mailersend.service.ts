@@ -858,9 +858,9 @@ export class MailerSendService {
               background-color: #fef08a !important;
             }
             .info-box {
-              background: #fefce8 !important;
-              background-color: #fefce8 !important;
-              border-left: 4px solid #F7E70B !important;
+              background: linear-gradient(#F7E70B, #F7E70B) !important;
+              background-color: #F7E70B !important;
+              border: 2px solid #F7E70B !important;
               border-radius: 4px;
               padding: 15px;
               margin: 20px 0;
@@ -895,7 +895,7 @@ export class MailerSendService {
               <p>Temos uma ótima notícia! Seu pedido <strong>#${orderId}</strong> foi processado com sucesso.</p>
               <p>Aqui está o link para o download das fotografias adquiridas em nosso site.</p>
 
-              <div class="info-box">
+              <div class="info-box" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
                 <p><strong>⏰ Validade do Link:</strong></p>
                 <p>O link de download estará disponível por <strong>2 meses</strong> a partir da data de envio deste email.</p>
                 <p>Certifique-se de fazer o download dos seus arquivos dentro deste prazo para não perder acesso às suas memórias especiais.</p>
@@ -1025,7 +1025,7 @@ export class MailerSendService {
                 <p>${formattedAddress}</p>
               </div>
 
-              <div class="info-box">
+              <div class="info-box" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
                 <p><strong>⚠️ Alteração de Endereço?</strong></p>
                 <p>Caso tenha alguma alteração no endereço de entrega ou qualquer outra dúvida, peço que entre em contato com nosso atendimento o quanto antes:</p>
                 <p style="text-align: center; margin: 10px 0;">
