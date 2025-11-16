@@ -729,8 +729,8 @@ export class MailerSendService {
               color: #000000 !important;
             }
             .code-box {
-              background: #fefce8 !important;
-              background-color: #fefce8 !important;
+              background: linear-gradient(#F7E70B, #F7E70B) !important;
+              background-color: #F7E70B !important;
               border: 2px dashed #F7E70B !important;
               border-radius: 8px;
               padding: 20px;
@@ -779,7 +779,7 @@ export class MailerSendService {
               <p>Olá ${name},</p>
               <p>Recebemos uma solicitação para redefinir a senha da sua conta.</p>
               <p>Use o código abaixo para redefinir sua senha:</p>
-              <div class="code-box" style="background: 2px dashed linear-gradient(#F7E70B, #F7E70B) !important;">
+              <div class="code-box" style="background: linear-gradient(#F7E70B, #F7E70B) !important;">
                 <div class="code">${code}</div>
               </div>
               <p><strong>Este código é válido por 15 minutos.</strong></p>
