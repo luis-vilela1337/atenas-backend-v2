@@ -550,7 +550,7 @@ export class MailerSendService {
               padding: 20px;
               text-align: center;
             }
-            .header * {
+            .header h1, .header h2, .header h3, .header p, .header span {
               background: linear-gradient(#000, #000);
               -webkit-background-clip: text;
               -webkit-text-fill-color: transparent;
@@ -560,7 +560,7 @@ export class MailerSendService {
               padding: 20px;
               background-color: #f9f9f9 !important;
             }
-            .content * {
+            .content p, .content h1, .content h2, .content h3, .content strong, .content span, .content a {
               background: linear-gradient(#000, #000);
               -webkit-background-clip: text;
               -webkit-text-fill-color: transparent;
@@ -571,7 +571,7 @@ export class MailerSendService {
               text-align: center;
               font-size: 12px;
             }
-            .footer * {
+            .footer p, .footer span, .footer strong {
               background: linear-gradient(#000, #000);
               -webkit-background-clip: text;
               -webkit-text-fill-color: transparent;
@@ -703,7 +703,7 @@ export class MailerSendService {
               padding: 20px;
               text-align: center;
             }
-            .header * {
+            .header h1, .header h2, .header h3, .header p, .header span {
               background: linear-gradient(#000, #000);
               -webkit-background-clip: text;
               -webkit-text-fill-color: transparent;
@@ -713,7 +713,7 @@ export class MailerSendService {
               padding: 20px;
               background-color: #f9f9f9 !important;
             }
-            .content * {
+            .content p, .content h1, .content h2, .content h3, .content strong, .content span, .content a {
               background: linear-gradient(#000, #000);
               -webkit-background-clip: text;
               -webkit-text-fill-color: transparent;
@@ -724,14 +724,17 @@ export class MailerSendService {
               padding: 12px 24px;
               background: linear-gradient(#F7E70B, #F7E70B) !important;
               background-color: #F7E70B !important;
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
+              color: #000 !important;
               filter: none !important;
               text-decoration: none;
               border-radius: 4px;
               margin: 20px 0;
               font-weight: 600;
+            }
+            .button span {
+              background: linear-gradient(#000, #000);
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
             }
             .text-protected {
               background: linear-gradient(#000, #000);
@@ -750,7 +753,7 @@ export class MailerSendService {
               text-align: center;
               font-size: 12px;
             }
-            .footer * {
+            .footer p, .footer span, .footer strong {
               background: linear-gradient(#000, #000);
               -webkit-background-clip: text;
               -webkit-text-fill-color: transparent;
@@ -882,7 +885,7 @@ export class MailerSendService {
               padding: 20px;
               text-align: center;
             }
-            .header * {
+            .header h1, .header h2, .header h3, .header p, .header span {
               background: linear-gradient(#000, #000);
               -webkit-background-clip: text;
               -webkit-text-fill-color: transparent;
@@ -892,7 +895,7 @@ export class MailerSendService {
               padding: 20px;
               background-color: #f9f9f9 !important;
             }
-            .content * {
+            .content p, .content h1, .content h2, .content h3, .content strong, .content span, .content a {
               background: linear-gradient(#000, #000);
               -webkit-background-clip: text;
               -webkit-text-fill-color: transparent;
@@ -906,10 +909,6 @@ export class MailerSendService {
               padding: 20px;
               text-align: center;
               margin: 20px 0;
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: none !important;
             }
             .code-box p, .code-box strong {
               background: linear-gradient(#000, #000);
@@ -933,7 +932,7 @@ export class MailerSendService {
               text-align: center;
               font-size: 12px;
             }
-            .footer * {
+            .footer p, .footer span, .footer strong {
               background: linear-gradient(#000, #000);
               -webkit-background-clip: text;
               -webkit-text-fill-color: transparent;
@@ -1095,7 +1094,7 @@ export class MailerSendService {
               padding: 20px;
               text-align: center;
             }
-            .header * {
+            .header h1, .header h2, .header h3, .header p, .header span {
               background: linear-gradient(#000, #000);
               -webkit-background-clip: text;
               -webkit-text-fill-color: transparent;
@@ -1105,7 +1104,7 @@ export class MailerSendService {
               padding: 20px;
               background-color: #f9f9f9 !important;
             }
-            .content * {
+            .content p, .content h1, .content h2, .content h3, .content strong, .content span, .content a {
               background: linear-gradient(#000, #000);
               -webkit-background-clip: text;
               -webkit-text-fill-color: transparent;
@@ -1116,14 +1115,17 @@ export class MailerSendService {
               padding: 12px 24px;
               background: linear-gradient(#F7E70B, #F7E70B) !important;
               background-color: #F7E70B !important;
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
+              color: #000 !important;
               filter: none !important;
               text-decoration: none;
               border-radius: 4px;
               margin: 20px 0;
               font-weight: 600;
+            }
+            .button span {
+              background: linear-gradient(#000, #000);
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
             }
             .text-protected {
               background: linear-gradient(#000, #000);
@@ -1144,10 +1146,6 @@ export class MailerSendService {
               border-radius: 4px;
               padding: 15px;
               margin: 20px 0;
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: none !important;
             }
             .info-box p, .info-box strong {
               background: linear-gradient(#000, #000);
@@ -1160,20 +1158,11 @@ export class MailerSendService {
               text-align: center;
               font-size: 12px;
             }
-            .footer * {
+            .footer p, .footer span, .footer strong {
               background: linear-gradient(#000, #000);
               -webkit-background-clip: text;
               -webkit-text-fill-color: transparent;
               filter: none !important;
-            }
-            .text-protected {
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              text-shadow: 0 0 0 #000 !important;
-              filter: none !important;
-              padding: 2px 4px;
-              border: 1px solid transparent;
             }
             p, h1, h2, h3, strong {
               background: linear-gradient(#000, #000);
@@ -1330,7 +1319,7 @@ export class MailerSendService {
               padding: 20px;
               text-align: center;
             }
-            .header * {
+            .header h1, .header h2, .header h3, .header p, .header span {
               background: linear-gradient(#000, #000);
               -webkit-background-clip: text;
               -webkit-text-fill-color: transparent;
@@ -1340,7 +1329,7 @@ export class MailerSendService {
               padding: 20px;
               background-color: #f9f9f9 !important;
             }
-            .content * {
+            .content p, .content h1, .content h2, .content h3, .content strong, .content span, .content a {
               background: linear-gradient(#000, #000);
               -webkit-background-clip: text;
               -webkit-text-fill-color: transparent;
@@ -1353,10 +1342,6 @@ export class MailerSendService {
               border-radius: 4px;
               padding: 15px;
               margin: 20px 0;
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: none !important;
             }
             .address-box p, .address-box strong {
               background: linear-gradient(#000, #000);
@@ -1387,20 +1372,11 @@ export class MailerSendService {
               text-align: center;
               font-size: 12px;
             }
-            .footer * {
+            .footer p, .footer span, .footer strong {
               background: linear-gradient(#000, #000);
               -webkit-background-clip: text;
               -webkit-text-fill-color: transparent;
               filter: none !important;
-            }
-            .text-protected {
-              background: linear-gradient(#000, #000);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              text-shadow: 0 0 0 #000 !important;
-              filter: none !important;
-              padding: 2px 4px;
-              border: 1px solid transparent;
             }
             p, h1, h2, h3, strong {
               background: linear-gradient(#000, #000);
