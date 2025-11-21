@@ -11,13 +11,21 @@ import { OrderRepositoryInterface } from '../repositories/order.repository.inter
 import { MercadoPagoRepositoryInterface } from '../../mercado-pago/repositories/mercado-pago.repository.interface';
 import { PaymentPreference } from '../../mercado-pago/entities/payment-preference.entity';
 import { UserSQLRepository } from '../../../infra/data/sql/repositories/user.repository';
+import { InstitutionProductSQLRepository } from '../../../infra/data/sql/repositories/institution-product.repostitoy';
+import {
+  AlbumDetails,
+  GenericDetails,
+  DigitalFilesDetails,
+} from '../../../infra/data/sql/entities/institution-products.entity';
 import { ConfigService } from '@nestjs/config';
+import Decimal from 'decimal.js';
 
 export class CreateOrderUseCase {
   constructor(
     private readonly orderRepository: OrderRepositoryInterface,
     private readonly mercadoPagoRepository: MercadoPagoRepositoryInterface,
     private readonly userRepository: UserSQLRepository,
+    private readonly institutionProductRepository: InstitutionProductSQLRepository,
     private readonly configService: ConfigService,
   ) {}
 
@@ -26,7 +34,10 @@ export class CreateOrderUseCase {
       // 1. Validate selection details consistency
       this.validateSelectionDetails(input.cartItems);
 
-      // 2. Validate shipping requirements
+      // 2. Validate cart item prices against database
+      await this.validateCartItemPrices(input.userId, input.cartItems);
+
+      // 3. Validate shipping requirements
       this.validateShippingRequirement(input.cartItems, input.shippingDetails);
 
       // 2. Update user address if shipping details are provided and different
@@ -155,6 +166,7 @@ export class CreateOrderUseCase {
         productName: item.productName,
         productType: item.productType,
         itemPrice: item.totalPrice,
+        quantity: item.quantity,
         details: this.createOrderItemDetails(item.selectionDetails),
       })),
     };
@@ -226,17 +238,26 @@ export class CreateOrderUseCase {
 
     return {
       items: order.items.map((item) => {
+        // Calculate adjusted price using Decimal.js
         const adjustedPrice =
           amountToPay !== undefined
-            ? (item.itemPrice * paymentAmount) / totalAmount
+            ? new Decimal(item.itemPrice)
+                .times(paymentAmount)
+                .div(totalAmount)
+                .toNumber()
             : item.itemPrice;
+
+        // Calculate unit price by dividing total price by quantity using Decimal.js
+        const unitPrice = new Decimal(adjustedPrice)
+          .div(item.quantity)
+          .toNumber();
 
         return {
           id: item.productId,
           title: item.productName,
           description: `${item.productName} - ${item.productType}`,
-          quantity: 1,
-          unit_price: adjustedPrice,
+          quantity: item.quantity,
+          unit_price: unitPrice,
         };
       }),
       payer: {
@@ -354,5 +375,214 @@ export class CreateOrderUseCase {
         state: shippingDetails.state,
       });
     }
+  }
+
+  private async validateCartItemPrices(
+    userId: string,
+    cartItems: CartItem[],
+  ): Promise<void> {
+    // Get user to retrieve institutionId
+    const user = await this.userRepository.findById(userId);
+    if (!user || !user.institution) {
+      throw new Error('User or institution not found');
+    }
+
+    const institutionId = user.institution.id;
+
+    // Validate each cart item
+    for (const item of cartItems) {
+      // Fetch institution product from database
+      const institutionProduct =
+        await this.institutionProductRepository.findByProductAndInstitution(
+          item.productId,
+          institutionId,
+        );
+
+      if (!institutionProduct) {
+        throw new Error(
+          `Product ${item.productId} not found for institution ${institutionId}`,
+        );
+      }
+
+      // Calculate expected unit price based on product type
+      const expectedUnitPrice = this.calculateExpectedPrice(
+        institutionProduct.details,
+        institutionProduct.flag,
+        item.selectionDetails,
+      );
+
+      // Calculate expected total price (unitPrice * quantity) using Decimal.js
+      const expectedTotalPrice = new Decimal(expectedUnitPrice)
+        .times(item.quantity)
+        .toNumber();
+
+      // Validate with tolerance for rounding (0.02 cents tolerance)
+      const priceDifference = new Decimal(expectedTotalPrice)
+        .minus(item.totalPrice)
+        .abs()
+        .toNumber();
+
+      if (priceDifference > 0.02) {
+        throw new Error(
+          `Invalid price for product ${
+            item.productName
+          }. Expected: R$ ${expectedTotalPrice.toFixed(
+            2,
+          )}, Received: R$ ${item.totalPrice.toFixed(2)}`,
+        );
+      }
+    }
+  }
+
+  private calculateExpectedPrice(
+    details: any,
+    productType: string,
+    selectionDetails: any,
+  ): number {
+    if (!details) {
+      throw new Error('Product details not found');
+    }
+
+    switch (productType) {
+      case 'ALBUM':
+        return this.calculateAlbumPrice(
+          details as AlbumDetails,
+          selectionDetails,
+        );
+      case 'GENERIC':
+        return this.calculateGenericPrice(
+          details as GenericDetails,
+          selectionDetails,
+        );
+      case 'DIGITAL_FILES':
+        return this.calculateDigitalFilesPrice(
+          details as DigitalFilesDetails,
+          selectionDetails,
+        );
+      default:
+        throw new Error(`Unsupported product type: ${productType}`);
+    }
+  }
+
+  private calculateAlbumPrice(
+    details: AlbumDetails,
+    selectionDetails: any,
+  ): number {
+    const photoCount = selectionDetails.albumPhotos?.length || 0;
+
+    if (photoCount < details.minPhoto || photoCount > details.maxPhoto) {
+      throw new Error(
+        `Album photo count must be between ${details.minPhoto} and ${details.maxPhoto}`,
+      );
+    }
+
+    // Use Decimal.js for precise calculation
+    return new Decimal(details.valorEncadernacao)
+      .plus(new Decimal(photoCount).times(details.valorFoto))
+      .toNumber();
+  }
+
+  private calculateGenericPrice(
+    details: GenericDetails,
+    selectionDetails: any,
+  ): number {
+    let totalPrice = new Decimal(0);
+
+    // Handle individual photos
+    if (selectionDetails.photos && selectionDetails.photos.length > 0) {
+      if (!details.isAvailableUnit) {
+        throw new Error(
+          'Individual photo purchase not available for this product',
+        );
+      }
+
+      for (const photo of selectionDetails.photos) {
+        const event = details.events.find((e) => e.id === photo.eventId);
+        if (
+          !event ||
+          event.valorPhoto === undefined ||
+          event.valorPhoto === null
+        ) {
+          throw new Error(
+            `Event ${photo.eventId} not found or has no unit price`,
+          );
+        }
+        totalPrice = totalPrice.plus(event.valorPhoto);
+      }
+    }
+
+    // Handle event packages
+    if (selectionDetails.events && selectionDetails.events.length > 0) {
+      for (const selectedEvent of selectionDetails.events) {
+        const event = details.events.find((e) => e.id === selectedEvent.id);
+        if (!event) {
+          throw new Error(`Event ${selectedEvent.id} not found`);
+        }
+
+        if (selectedEvent.isPackage) {
+          if (event.valorPack === undefined || event.valorPack === null) {
+            throw new Error(`Event ${selectedEvent.id} has no package price`);
+          }
+          totalPrice = totalPrice.plus(event.valorPack);
+        }
+      }
+    }
+
+    return totalPrice.toNumber();
+  }
+
+  private calculateDigitalFilesPrice(
+    details: DigitalFilesDetails,
+    selectionDetails: any,
+  ): number {
+    // Full package
+    if (selectionDetails.isFullPackage) {
+      if (!details.valorPackTotal) {
+        throw new Error('Full package price not configured');
+      }
+      return details.valorPackTotal;
+    }
+
+    let totalPrice = new Decimal(0);
+
+    // Individual photos
+    if (selectionDetails.photos && selectionDetails.photos.length > 0) {
+      if (!details.isAvailableUnit) {
+        throw new Error('Individual photo purchase not available');
+      }
+
+      for (const photo of selectionDetails.photos) {
+        const event = details.events?.find((e) => e.id === photo.eventId);
+        if (
+          !event ||
+          event.valorPhoto === undefined ||
+          event.valorPhoto === null
+        ) {
+          throw new Error(
+            `Event ${photo.eventId} not found or has no unit price`,
+          );
+        }
+        totalPrice = totalPrice.plus(event.valorPhoto);
+      }
+    }
+
+    // Event packages
+    if (selectionDetails.events && selectionDetails.events.length > 0) {
+      for (const selectedEvent of selectionDetails.events) {
+        const event = details.events?.find((e) => e.id === selectedEvent.id);
+        if (!event) {
+          throw new Error(`Event ${selectedEvent.id} not found`);
+        }
+
+        if (selectedEvent.isPackage) {
+          if (event.valorPack === undefined || event.valorPack === null) {
+            throw new Error(`Event ${selectedEvent.id} has no package price`);
+          }
+          totalPrice = totalPrice.plus(event.valorPack);
+        }
+      }
+    }
+
+    return totalPrice.toNumber();
   }
 }

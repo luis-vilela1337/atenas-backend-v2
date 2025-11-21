@@ -9,6 +9,7 @@ import {
   IsString,
   IsUUID,
   IsBoolean,
+  IsInt,
   ValidateNested,
   Min,
   ValidateIf,
@@ -184,6 +185,16 @@ export class CartItemDto {
   @IsNumber()
   @Min(0.0)
   totalPrice!: number;
+
+  @ApiProperty({
+    description: 'Quantidade do item',
+    example: 1,
+    minimum: 1,
+  })
+  @IsInt()
+  @Min(1)
+  @IsNotEmpty()
+  quantity!: number;
 
   @ApiProperty({
     description: 'Detalhes da seleção do item',

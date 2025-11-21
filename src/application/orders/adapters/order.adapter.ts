@@ -64,6 +64,7 @@ export class OrderAdapter {
       productName: item.productName,
       productType: item.productType,
       totalPrice: item.totalPrice,
+      quantity: item.quantity,
       selectionDetails: this.toSelectionDetails(item.selectionDetails),
     };
   }

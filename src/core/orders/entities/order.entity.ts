@@ -42,6 +42,7 @@ export interface CartItem {
   productName: string;
   productType: 'GENERIC' | 'DIGITAL_FILES' | 'ALBUM';
   totalPrice: number;
+  quantity: number;
   selectionDetails: SelectionDetails;
 }
 
@@ -58,6 +59,7 @@ export interface OrderItem {
   productName: string;
   productType: 'GENERIC' | 'DIGITAL_FILES' | 'ALBUM';
   itemPrice: number;
+  quantity: number;
   details: OrderItemDetail[];
 }
 

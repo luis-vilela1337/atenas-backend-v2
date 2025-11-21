@@ -53,6 +53,9 @@ export class OrderItem {
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   itemPrice!: number;
 
+  @Column({ type: 'integer', nullable: true })
+  quantity!: number;
+
   @OneToMany(() => OrderItemDetail, (detail) => detail.orderItem, {
     cascade: true,
     eager: false,

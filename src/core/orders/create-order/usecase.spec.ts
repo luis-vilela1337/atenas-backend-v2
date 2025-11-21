@@ -3,6 +3,7 @@ import { CreateOrderUseCase } from './usecase';
 import { OrderRepositoryInterface } from '../repositories/order.repository.interface';
 import { MercadoPagoRepositoryInterface } from '../../mercado-pago/repositories/mercado-pago.repository.interface';
 import { UserSQLRepository } from '../../../infra/data/sql/repositories/user.repository';
+import { InstitutionProductSQLRepository } from '../../../infra/data/sql/repositories/institution-product.repostitoy';
 import { CreateOrderInput, Order, OrderStatus } from '../entities/order.entity';
 
 describe('CreateOrderUseCase', () => {
@@ -10,6 +11,7 @@ describe('CreateOrderUseCase', () => {
   let orderRepository: jest.Mocked<OrderRepositoryInterface>;
   let mercadoPagoRepository: jest.Mocked<MercadoPagoRepositoryInterface>;
   let userRepository: jest.Mocked<UserSQLRepository>;
+  let institutionProductRepository: jest.Mocked<InstitutionProductSQLRepository>;
   let configService: jest.Mocked<ConfigService>;
 
   const mockInput: CreateOrderInput = {
@@ -20,6 +22,7 @@ describe('CreateOrderUseCase', () => {
         productName: 'Test Product',
         productType: 'GENERIC',
         totalPrice: 100,
+        quantity: 1,
         selectionDetails: {
           photos: [{ id: 'photo-1', eventId: 'event-1' }],
         },
@@ -74,6 +77,17 @@ describe('CreateOrderUseCase', () => {
       updateUser: jest.fn(),
     } as any;
 
+    institutionProductRepository = {
+      findByProductAndInstitution: jest.fn(),
+      findById: jest.fn(),
+      createInstitutionProduct: jest.fn(),
+      findAllPaginated: jest.fn(),
+      updateInstitutionProduct: jest.fn(),
+      deleteInstitutionProduct: jest.fn(),
+      findByInstitutionId: jest.fn(),
+      findByProductId: jest.fn(),
+    } as any;
+
     configService = {
       get: jest.fn(),
     } as any;
@@ -82,17 +96,37 @@ describe('CreateOrderUseCase', () => {
       orderRepository,
       mercadoPagoRepository,
       userRepository,
+      institutionProductRepository,
       configService,
     );
 
-    // Default mock setup
+    // Default mock setup - must be after mock creation
     userRepository.findById.mockResolvedValue({
       id: 'user-123',
       identifier: 'USER001',
       institution: {
+        id: 'institution-123',
         contractNumber: 'INST001',
       },
     } as any);
+
+    // Mock institution product with pricing details - default for all tests
+    institutionProductRepository.findByProductAndInstitution.mockResolvedValue({
+      id: 'inst-product-1',
+      flag: 'GENERIC',
+      details: {
+        isAvailableUnit: true,
+        events: [
+          {
+            id: 'event-1',
+            valorPhoto: 100,
+            valorPack: 500,
+          },
+        ],
+      },
+    } as any);
+
+    // Note: mockResolvedValue can be overridden in individual tests
   });
 
   describe('FREE Payment Flow - R$ 0,00', () => {
@@ -100,8 +134,26 @@ describe('CreateOrderUseCase', () => {
       // GIVEN
       const freeOrderInput = {
         ...mockInput,
-        cartItems: [{ ...mockInput.cartItems[0], totalPrice: 0 }],
+        cartItems: [{ ...mockInput.cartItems[0], totalPrice: 0, quantity: 1 }],
       };
+
+      // Mock price validation for free product
+      institutionProductRepository.findByProductAndInstitution.mockResolvedValue(
+        {
+          id: 'inst-product-1',
+          flag: 'GENERIC',
+          details: {
+            isAvailableUnit: true,
+            events: [
+              {
+                id: 'event-1',
+                valorPhoto: 0,
+                valorPack: 0,
+              },
+            ],
+          },
+        } as any,
+      );
 
       configService.get.mockReturnValue('https://seudominio.com/success');
       orderRepository.createOrder.mockResolvedValue({
@@ -117,6 +169,7 @@ describe('CreateOrderUseCase', () => {
         orderId: 'order-123',
         checkoutUrl: 'https://seudominio.com/success',
         paymentMethod: 'FREE',
+        contractNumber: undefined,
       });
       expect(orderRepository.createOrder).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -147,6 +200,7 @@ describe('CreateOrderUseCase', () => {
         orderId: 'order-123',
         checkoutUrl: 'https://seudominio.com/success',
         paymentMethod: 'CREDIT',
+        contractNumber: undefined,
         creditUsed: 100,
         remainingCredit: 50,
       });
@@ -182,6 +236,7 @@ describe('CreateOrderUseCase', () => {
         orderId: 'order-123',
         checkoutUrl: 'https://seudominio.com/success',
         paymentMethod: 'CREDIT',
+        contractNumber: undefined,
         creditUsed: 100,
         remainingCredit: 0,
       });
@@ -215,15 +270,23 @@ describe('CreateOrderUseCase', () => {
         orderId: 'order-123',
         checkoutUrl: 'https://mercadopago.com/checkout/123',
         paymentMethod: 'MERCADO_PAGO',
+        contractNumber: undefined,
+        creditUsed: 50,
+        remainingCredit: 0,
       });
       expect(userRepository.findUserCreditByUserId).toHaveBeenCalledWith(
         'user-123',
       );
-      expect(userRepository.updateUserCredit).not.toHaveBeenCalled();
+      // Should deduct partial credit (50) before using Mercado Pago
+      expect(userRepository.updateUserCredit).toHaveBeenCalledWith(
+        'user-123',
+        0,
+      );
       expect(orderRepository.createOrder).toHaveBeenCalledWith(
         expect.objectContaining({
           paymentStatus: OrderStatus.PENDING,
           totalAmount: 100,
+          creditUsed: 50,
         }),
       );
       expect(mercadoPagoRepository.createPreference).toHaveBeenCalled();
@@ -255,6 +318,9 @@ describe('CreateOrderUseCase', () => {
         orderId: 'order-123',
         checkoutUrl: 'https://mercadopago.com/checkout/456',
         paymentMethod: 'MERCADO_PAGO',
+        contractNumber: undefined,
+        creditUsed: 0,
+        remainingCredit: 0,
       });
       expect(userRepository.updateUserCredit).not.toHaveBeenCalled();
     });

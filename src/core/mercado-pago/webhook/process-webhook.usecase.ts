@@ -157,13 +157,18 @@ export class ProcessWebhookUseCase {
       }
 
       // Find order by payment gateway ID (preference ID) first
-      let order = await this.orderRepository!.findOrderByPaymentGatewayId(
+      if (!this.orderRepository) {
+        console.warn('Order repository not available');
+        return;
+      }
+
+      let order = await this.orderRepository.findOrderByPaymentGatewayId(
         paymentStatus.paymentId,
       );
 
       // If not found by payment gateway ID, try by order ID directly
       if (!order) {
-        order = await this.orderRepository!.findOrderById(orderId);
+        order = await this.orderRepository.findOrderById(orderId);
       }
 
       if (!order) {
@@ -196,7 +201,7 @@ export class ProcessWebhookUseCase {
           );
         }
 
-        await this.orderRepository!.updateOrderStatus(order.id, orderStatus);
+        await this.orderRepository.updateOrderStatus(order.id, orderStatus);
         console.log(`Order ${order.id} status updated to: ${orderStatus}`);
       }
     } catch (error) {

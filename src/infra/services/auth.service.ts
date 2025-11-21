@@ -23,6 +23,7 @@ export class AuthService {
     try {
       const user = await this.usersRepo.findByEmail(email);
       if (user && (await bcrypt.compare(password, user.passwordHash))) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { passwordHash: _, ...safe } = user;
 
         if (safe.profileImage) {
@@ -95,8 +96,8 @@ export class AuthService {
     });
 
     const {
-      passwordHash: _,
-      currentHashedRefreshToken: __,
+      passwordHash, // eslint-disable-line @typescript-eslint/no-unused-vars
+      currentHashedRefreshToken, // eslint-disable-line @typescript-eslint/no-unused-vars
       ...safeUser
     } = user;
 

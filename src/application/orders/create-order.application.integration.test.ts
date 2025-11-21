@@ -1,25 +1,23 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { CreateOrderApplication } from './create-order.application';
 import { CreateOrderUseCase } from '@core/orders/create-order/usecase';
 import { OrderRepositoryInterface } from '@core/orders/repositories/order.repository.interface';
 import { MercadoPagoRepositoryInterface } from '@core/mercado-pago/repositories/mercado-pago.repository.interface';
 import { UserSQLRepository } from '../../infra/data/sql/repositories/user.repository';
+import { InstitutionProductSQLRepository } from '../../infra/data/sql/repositories/institution-product.repostitoy';
 import { CreateOrderDto } from '@presentation/orders/dto/create-order.dto';
 import { OrderAdapter } from './adapters/order.adapter';
 import {
-  CreateOrderInput,
   CreateOrderResult,
   OrderStatus,
 } from '@core/orders/entities/order.entity';
 
 describe('CreateOrderApplication - Integration Tests', () => {
-  let app: TestingModule;
   let createOrderApplication: CreateOrderApplication;
   let orderRepository: jest.Mocked<OrderRepositoryInterface>;
   let mercadoPagoRepository: jest.Mocked<MercadoPagoRepositoryInterface>;
   let userRepository: jest.Mocked<UserSQLRepository>;
-  let configService: ConfigService;
 
   const mockOrderRepository = {
     createOrder: jest.fn(),
@@ -39,11 +37,23 @@ describe('CreateOrderApplication - Integration Tests', () => {
     findUserCreditByUserId: jest.fn(),
     updateUserCredit: jest.fn(),
     findById: jest.fn(),
+    updateUser: jest.fn(),
     create: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
     findAll: jest.fn(),
     count: jest.fn(),
+  };
+
+  const mockInstitutionProductRepository = {
+    findByProductAndInstitution: jest.fn(),
+    findById: jest.fn(),
+    createInstitutionProduct: jest.fn(),
+    findAllPaginated: jest.fn(),
+    updateInstitutionProduct: jest.fn(),
+    deleteInstitutionProduct: jest.fn(),
+    findByInstitutionId: jest.fn(),
+    findByProductId: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -69,17 +79,47 @@ describe('CreateOrderApplication - Integration Tests', () => {
           provide: UserSQLRepository,
           useValue: mockUserRepository,
         },
+        {
+          provide: InstitutionProductSQLRepository,
+          useValue: mockInstitutionProductRepository,
+        },
       ],
     }).compile();
 
-    app = module;
     createOrderApplication = module.get<CreateOrderApplication>(
       CreateOrderApplication,
     );
     orderRepository = module.get('OrderRepositoryInterface');
     mercadoPagoRepository = module.get('MercadoPagoRepositoryInterface');
     userRepository = module.get(UserSQLRepository);
-    configService = module.get<ConfigService>(ConfigService);
+
+    // Default mocks
+    mockUserRepository.findById.mockResolvedValue({
+      id: 'user-123',
+      identifier: 'USER001',
+      institution: {
+        id: 'institution-123',
+        contractNumber: 'INST001',
+      },
+    } as any);
+
+    // Mock institution product with default pricing
+    mockInstitutionProductRepository.findByProductAndInstitution.mockResolvedValue(
+      {
+        id: 'inst-product-1',
+        flag: 'GENERIC',
+        details: {
+          isAvailableUnit: true,
+          events: [
+            {
+              id: 'event-1',
+              valorPhoto: 100,
+              valorPack: 500,
+            },
+          ],
+        },
+      } as any,
+    );
 
     // Reset all mocks before each test
     jest.clearAllMocks();
@@ -99,6 +139,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
             productName: 'Free Digital Photos',
             productType: 'DIGITAL_FILES',
             totalPrice: 0,
+            quantity: 1,
             selectionDetails: {
               photos: [
                 { id: 'photo-1', eventId: 'event-1' },
@@ -174,6 +215,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
             productName: 'Free Item 1',
             productType: 'DIGITAL_FILES',
             totalPrice: 0,
+            quantity: 1,
             selectionDetails: {
               photos: [{ id: 'photo-1', eventId: 'event-1' }],
             },
@@ -183,6 +225,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
             productName: 'Free Item 2',
             productType: 'DIGITAL_FILES',
             totalPrice: 0,
+            quantity: 1,
             selectionDetails: {
               photos: [{ id: 'photo-2', eventId: 'event-2' }],
             },
@@ -239,6 +282,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
             productName: 'Premium Photo Package',
             productType: 'GENERIC',
             totalPrice: 150,
+            quantity: 1,
             selectionDetails: {
               photos: [
                 { id: 'photo-1', eventId: 'event-1' },
@@ -331,6 +375,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
             productName: 'Exact Credit Product',
             productType: 'ALBUM',
             totalPrice: 100,
+            quantity: 1,
             selectionDetails: {
               albumPhotos: ['photo-1', 'photo-2', 'photo-3'],
             },
@@ -382,7 +427,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
         exactCreditOrderDto,
         userId,
       );
-      const result = await createOrderApplication.execute(input);
+      await createOrderApplication.execute(input);
 
       // THEN
       expect(userRepository.updateUserCredit).toHaveBeenCalledWith(userId, 0); // Exactly zero remaining
@@ -405,6 +450,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
             productName: 'Expensive Photo Package',
             productType: 'GENERIC',
             totalPrice: 500,
+            quantity: 1,
             selectionDetails: {
               photos: [
                 { id: 'photo-1', eventId: 'event-1' },
@@ -504,6 +550,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
             productName: 'Standard Package',
             productType: 'DIGITAL_FILES',
             totalPrice: 25.5,
+            quantity: 1,
             selectionDetails: {
               events: [{ id: 'event-1', isPackage: true }],
             },
@@ -563,6 +610,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
             productName: 'Physical Photo Print',
             productType: 'GENERIC', // Requires shipping
             totalPrice: 50,
+            quantity: 1,
             selectionDetails: {
               photos: [{ id: 'photo-1', eventId: 'event-1' }],
             },
@@ -603,6 +651,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
             productName: 'Photo Album',
             productType: 'ALBUM', // Requires shipping
             totalPrice: 120,
+            quantity: 1,
             selectionDetails: {
               albumPhotos: ['photo-1', 'photo-2'],
             },
@@ -639,6 +688,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
             productName: 'Digital Photos Package',
             productType: 'DIGITAL_FILES', // Does NOT require shipping
             totalPrice: 30,
+            quantity: 1,
             selectionDetails: {
               photos: [{ id: 'photo-1', eventId: 'event-1' }],
             },
@@ -697,6 +747,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
             productName: 'Digital Photos',
             productType: 'DIGITAL_FILES', // No shipping required
             totalPrice: 20,
+            quantity: 1,
             selectionDetails: {
               photos: [{ id: 'photo-1', eventId: 'event-1' }],
             },
@@ -706,6 +757,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
             productName: 'Printed Photos',
             productType: 'GENERIC', // Shipping required!
             totalPrice: 40,
+            quantity: 1,
             selectionDetails: {
               photos: [{ id: 'photo-2', eventId: 'event-2' }],
             },
@@ -746,6 +798,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
             productName: 'Error Test Product',
             productType: 'DIGITAL_FILES',
             totalPrice: 25,
+            quantity: 1,
             selectionDetails: {
               photos: [{ id: 'photo-1', eventId: 'event-1' }],
             },
@@ -781,6 +834,7 @@ describe('CreateOrderApplication - Integration Tests', () => {
             productName: 'MP Error Test Product',
             productType: 'DIGITAL_FILES',
             totalPrice: 75,
+            quantity: 1,
             selectionDetails: {
               photos: [{ id: 'photo-1', eventId: 'event-1' }],
             },
