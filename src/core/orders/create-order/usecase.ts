@@ -165,7 +165,7 @@ export class CreateOrderUseCase {
         productId: item.productId,
         productName: item.productName,
         productType: item.productType,
-        itemPrice: item.totalPrice * item.quantity, // totalPrice is unit price, multiply by quantity
+        itemPrice: item.totalPrice, // Store unit price as received from frontend
         quantity: item.quantity,
         details: this.createOrderItemDetails(item.selectionDetails),
       })),
@@ -238,19 +238,14 @@ export class CreateOrderUseCase {
 
     return {
       items: order.items.map((item) => {
-        // Calculate adjusted price using Decimal.js
-        const adjustedPrice =
+        // itemPrice is already unit price, calculate adjusted price if partial payment
+        const unitPrice =
           amountToPay !== undefined
             ? new Decimal(item.itemPrice)
                 .times(paymentAmount)
                 .div(totalAmount)
                 .toNumber()
             : item.itemPrice;
-
-        // Calculate unit price by dividing total price by quantity using Decimal.js
-        const unitPrice = new Decimal(adjustedPrice)
-          .div(item.quantity)
-          .toNumber();
 
         return {
           id: item.productId,

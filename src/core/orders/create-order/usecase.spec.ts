@@ -394,7 +394,7 @@ describe('CreateOrderUseCase', () => {
             productId: 'product-1',
             productName: 'Test Product',
             productType: 'GENERIC',
-            itemPrice: 100, // 50 * 2
+            itemPrice: 50, // Unit price
             quantity: 2,
             details: [],
           },
@@ -414,7 +414,7 @@ describe('CreateOrderUseCase', () => {
           totalAmount: 100, // 50 * 2
           items: expect.arrayContaining([
             expect.objectContaining({
-              itemPrice: 100, // totalPrice * quantity = 50 * 2
+              itemPrice: 50, // Unit price from frontend
               quantity: 2,
             }),
           ]),
@@ -426,7 +426,7 @@ describe('CreateOrderUseCase', () => {
           items: expect.arrayContaining([
             expect.objectContaining({
               quantity: 2,
-              unit_price: 50, // itemPrice / quantity = 100 / 2
+              unit_price: 50, // itemPrice is already unit price
             }),
           ]),
         }),
@@ -507,7 +507,7 @@ describe('CreateOrderUseCase', () => {
             productId: 'product-1',
             productName: 'Product 1',
             productType: 'GENERIC',
-            itemPrice: 75, // 25 * 3
+            itemPrice: 25, // Unit price
             quantity: 3,
             details: [],
           },
@@ -516,7 +516,7 @@ describe('CreateOrderUseCase', () => {
             productId: 'product-2',
             productName: 'Product 2',
             productType: 'DIGITAL_FILES',
-            itemPrice: 100, // 50 * 2
+            itemPrice: 50, // Unit price
             quantity: 2,
             details: [],
           },
@@ -537,12 +537,12 @@ describe('CreateOrderUseCase', () => {
           items: expect.arrayContaining([
             expect.objectContaining({
               productId: 'product-1',
-              itemPrice: 75, // 25 * 3
+              itemPrice: 25, // Unit price
               quantity: 3,
             }),
             expect.objectContaining({
               productId: 'product-2',
-              itemPrice: 100, // 50 * 2
+              itemPrice: 50, // Unit price
               quantity: 2,
             }),
           ]),
