@@ -353,4 +353,201 @@ describe('CreateOrderUseCase', () => {
       );
     });
   });
+
+  describe('Quantity Calculation Tests', () => {
+    it('GIVEN item with quantity > 1 WHEN creating order THEN should calculate total correctly', async () => {
+      // GIVEN
+      const multiQuantityInput = {
+        ...mockInput,
+        cartItems: [
+          {
+            ...mockInput.cartItems[0],
+            totalPrice: 50, // Unit price
+            quantity: 2, // 2 items
+          },
+        ],
+      };
+
+      // Mock institution product with correct price
+      institutionProductRepository.findByProductAndInstitution.mockResolvedValue({
+        id: 'inst-product-1',
+        flag: 'GENERIC',
+        details: {
+          isAvailableUnit: true,
+          events: [
+            {
+              id: 'event-1',
+              valorPhoto: 50, // Must match totalPrice (unit price)
+              valorPack: 500,
+            },
+          ],
+        },
+      } as any);
+
+      userRepository.findUserCreditByUserId.mockResolvedValue(0);
+      orderRepository.createOrder.mockResolvedValue({
+        ...mockOrder,
+        totalAmount: 100, // 50 * 2 = 100
+        items: [
+          {
+            id: 'item-1',
+            productId: 'product-1',
+            productName: 'Test Product',
+            productType: 'GENERIC',
+            itemPrice: 100, // 50 * 2
+            quantity: 2,
+            details: [],
+          },
+        ],
+      });
+      mercadoPagoRepository.createPreference.mockResolvedValue({
+        id: 'pref-123',
+        checkoutUrl: 'https://mp.com/checkout',
+      });
+
+      // WHEN
+      const result = await useCase.execute(multiQuantityInput);
+
+      // THEN
+      expect(orderRepository.createOrder).toHaveBeenCalledWith(
+        expect.objectContaining({
+          totalAmount: 100, // 50 * 2
+          items: expect.arrayContaining([
+            expect.objectContaining({
+              itemPrice: 100, // totalPrice * quantity = 50 * 2
+              quantity: 2,
+            }),
+          ]),
+        }),
+      );
+
+      expect(mercadoPagoRepository.createPreference).toHaveBeenCalledWith(
+        expect.objectContaining({
+          items: expect.arrayContaining([
+            expect.objectContaining({
+              quantity: 2,
+              unit_price: 50, // itemPrice / quantity = 100 / 2
+            }),
+          ]),
+        }),
+      );
+    });
+
+    it('GIVEN multiple items with different quantities WHEN creating order THEN should calculate totals correctly', async () => {
+      // GIVEN
+      const multiItemInput = {
+        ...mockInput,
+        cartItems: [
+          {
+            productId: 'product-1',
+            productName: 'Product 1',
+            productType: 'GENERIC' as const,
+            totalPrice: 25, // Unit price
+            quantity: 3, // 3 items = 75 total
+            selectionDetails: {
+              photos: [{ id: 'photo-1', eventId: 'event-1' }],
+            },
+          },
+          {
+            productId: 'product-2',
+            productName: 'Product 2',
+            productType: 'DIGITAL_FILES' as const,
+            totalPrice: 50, // Unit price
+            quantity: 2, // 2 items = 100 total
+            selectionDetails: {
+              photos: [{ id: 'photo-2', eventId: 'event-1' }],
+            },
+          },
+        ],
+      };
+
+      // Mock institution product with correct prices for both products
+      institutionProductRepository.findByProductAndInstitution.mockImplementation(
+        (productId: string) => {
+          if (productId === 'product-1') {
+            return Promise.resolve({
+              id: 'inst-product-1',
+              flag: 'GENERIC',
+              details: {
+                isAvailableUnit: true,
+                events: [
+                  {
+                    id: 'event-1',
+                    valorPhoto: 25, // Must match product-1 unit price
+                    valorPack: 500,
+                  },
+                ],
+              },
+            } as any);
+          }
+          return Promise.resolve({
+            id: 'inst-product-2',
+            flag: 'GENERIC',
+            details: {
+              isAvailableUnit: true,
+              events: [
+                {
+                  id: 'event-1',
+                  valorPhoto: 50, // Must match product-2 unit price
+                  valorPack: 500,
+                },
+              ],
+            },
+          } as any);
+        },
+      );
+
+      userRepository.findUserCreditByUserId.mockResolvedValue(0);
+      orderRepository.createOrder.mockResolvedValue({
+        ...mockOrder,
+        totalAmount: 175, // 75 + 100 = 175
+        items: [
+          {
+            id: 'item-1',
+            productId: 'product-1',
+            productName: 'Product 1',
+            productType: 'GENERIC',
+            itemPrice: 75, // 25 * 3
+            quantity: 3,
+            details: [],
+          },
+          {
+            id: 'item-2',
+            productId: 'product-2',
+            productName: 'Product 2',
+            productType: 'DIGITAL_FILES',
+            itemPrice: 100, // 50 * 2
+            quantity: 2,
+            details: [],
+          },
+        ],
+      });
+      mercadoPagoRepository.createPreference.mockResolvedValue({
+        id: 'pref-456',
+        checkoutUrl: 'https://mp.com/checkout',
+      });
+
+      // WHEN
+      await useCase.execute(multiItemInput);
+
+      // THEN
+      expect(orderRepository.createOrder).toHaveBeenCalledWith(
+        expect.objectContaining({
+          totalAmount: 175, // (25 * 3) + (50 * 2)
+          items: expect.arrayContaining([
+            expect.objectContaining({
+              productId: 'product-1',
+              itemPrice: 75, // 25 * 3
+              quantity: 3,
+            }),
+            expect.objectContaining({
+              productId: 'product-2',
+              itemPrice: 100, // 50 * 2
+              quantity: 2,
+            }),
+          ]),
+        }),
+      );
+    });
+  });
 });

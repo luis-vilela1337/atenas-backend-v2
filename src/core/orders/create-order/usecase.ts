@@ -48,9 +48,9 @@ export class CreateOrderUseCase {
         );
       }
 
-      // 3. Calculate total amount
+      // 3. Calculate total amount (totalPrice is unit price, multiply by quantity)
       const totalAmount = input.cartItems.reduce(
-        (sum, item) => sum + item.totalPrice,
+        (sum, item) => sum + item.totalPrice * item.quantity,
         0,
       );
 
@@ -165,7 +165,7 @@ export class CreateOrderUseCase {
         productId: item.productId,
         productName: item.productName,
         productType: item.productType,
-        itemPrice: item.totalPrice,
+        itemPrice: item.totalPrice * item.quantity, // totalPrice is unit price, multiply by quantity
         quantity: item.quantity,
         details: this.createOrderItemDetails(item.selectionDetails),
       })),
@@ -416,9 +416,14 @@ export class CreateOrderUseCase {
         .times(item.quantity)
         .toNumber();
 
+      // Calculate received total price (totalPrice from frontend is unit price)
+      const receivedTotalPrice = new Decimal(item.totalPrice)
+        .times(item.quantity)
+        .toNumber();
+
       // Validate with tolerance for rounding (0.02 cents tolerance)
       const priceDifference = new Decimal(expectedTotalPrice)
-        .minus(item.totalPrice)
+        .minus(receivedTotalPrice)
         .abs()
         .toNumber();
 
@@ -428,7 +433,7 @@ export class CreateOrderUseCase {
             item.productName
           }. Expected: R$ ${expectedTotalPrice.toFixed(
             2,
-          )}, Received: R$ ${item.totalPrice.toFixed(2)}`,
+          )}, Received: R$ ${receivedTotalPrice.toFixed(2)}`,
         );
       }
     }
