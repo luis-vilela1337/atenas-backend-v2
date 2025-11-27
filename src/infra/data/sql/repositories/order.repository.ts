@@ -56,6 +56,7 @@ export class OrderRepository implements OrderRepositoryInterface {
           productName: itemData.productName,
           productType: itemData.productType,
           itemPrice: itemData.itemPrice,
+          quantity: itemData.quantity,
         });
 
         const savedItem = await this.orderItemRepo.save(orderItem);
@@ -86,6 +87,7 @@ export class OrderRepository implements OrderRepositoryInterface {
           productName: savedItem.productName,
           productType: savedItem.productType,
           itemPrice: savedItem.itemPrice,
+          quantity: savedItem.quantity,
           details: createdDetails,
         });
       }
@@ -422,6 +424,7 @@ export class OrderRepository implements OrderRepositoryInterface {
           productName: item.productName,
           productType: item.productType,
           itemPrice: Number(item.itemPrice),
+          quantity: item.quantity,
           details:
             item.details?.map((detail) => ({
               id: detail.id,

@@ -156,6 +156,7 @@ export class OrderAdapter {
           productName: item.productName,
           productType: item.productType,
           itemPrice: item.itemPrice,
+          quantity: item.quantity,
           createdAt: order.createdAt.toISOString(),
           details,
         };

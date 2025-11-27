@@ -63,6 +63,9 @@ export class OrderItemDto {
   itemPrice: number;
 
   @ApiProperty()
+  quantity: number;
+
+  @ApiProperty()
   createdAt: string;
 
   @ApiProperty({ type: [OrderItemDetailsDto] })
