@@ -68,8 +68,10 @@ export class UserEventPhotosApplication {
   async findByUser(userId: string): Promise<UserEventPhotosResponseDto> {
     const photos = await this.findByUserUseCase.execute(userId);
 
+    const validPhotos = photos.filter((photo) => photo.event !== null);
+
     const photosWithUrls = await Promise.all(
-      photos.map(async (photo) => ({
+      validPhotos.map(async (photo) => ({
         ...photo,
         signedUrl: await this.imageStorageService.generateSignedUrl(
           photo.fileName,
@@ -82,7 +84,7 @@ export class UserEventPhotosApplication {
 
     return {
       eventGroups,
-      totalPhotos: photos.length,
+      totalPhotos: validPhotos.length,
     };
   }
 
