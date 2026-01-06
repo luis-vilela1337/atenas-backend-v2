@@ -38,6 +38,7 @@ import { CreateOrderApplication } from '@application/orders/create-order.applica
 import { FindOrdersApplication } from '@application/orders/find-orders.application';
 import { FindOrderByIdApplication } from '@application/orders/find-order-by-id.application';
 import { UpdateOrderStatusApplication } from '@application/orders/update-order-status.application';
+import { UpdateProfileApplication } from '@application/profile/update-profile.application';
 
 @Module({
   imports: [
@@ -89,6 +90,8 @@ import { UpdateOrderStatusApplication } from '@application/orders/update-order-s
     FindOrdersApplication,
     FindOrderByIdApplication,
     UpdateOrderStatusApplication,
+    // profile
+    UpdateProfileApplication,
   ],
   exports: [
     //user
@@ -133,6 +136,8 @@ import { UpdateOrderStatusApplication } from '@application/orders/update-order-s
     FindOrdersApplication,
     FindOrderByIdApplication,
     UpdateOrderStatusApplication,
+    // profile
+    UpdateProfileApplication,
   ],
 })
 export class ApplicationModule {}

@@ -12,6 +12,7 @@ import { ProductsController } from '@presentation/products/controller/products.c
 import { UserEventPhotosController } from '@presentation/user-event-photos/controller';
 import { MercadoPagoController } from '@presentation/mercado-pago/controller/mercado-pago.controller';
 import { OrdersController } from '@presentation/orders/controller/orders.controller';
+import { ProfileController } from '@presentation/profile/controller';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { OrdersController } from '@presentation/orders/controller/orders.control
     UserEventPhotosController,
     MercadoPagoController,
     OrdersController,
+    ProfileController,
   ],
 })
 export class PresentationModule {}

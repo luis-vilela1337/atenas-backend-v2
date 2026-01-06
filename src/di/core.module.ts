@@ -33,6 +33,7 @@ import { CreatePreferenceUseCase } from '@core/mercado-pago/create-preference/us
 import { FindOrdersUseCase } from '@core/orders/find-orders.usecase';
 import { FindOrderByIdUseCase } from '@core/orders/find-order-by-id.usecase';
 import { UpdateOrderStatusUseCase } from '@core/orders/update-order-status/usecase';
+import { UpdateProfileUseCase } from '@core/profile/update-profile.usecase';
 
 @Module({
   imports: [InfraModule],
@@ -78,6 +79,8 @@ import { UpdateOrderStatusUseCase } from '@core/orders/update-order-status/useca
     FindOrdersUseCase,
     FindOrderByIdUseCase,
     UpdateOrderStatusUseCase,
+    // profile
+    UpdateProfileUseCase,
   ],
   exports: [
     //user
@@ -121,6 +124,8 @@ import { UpdateOrderStatusUseCase } from '@core/orders/update-order-status/useca
     FindOrdersUseCase,
     FindOrderByIdUseCase,
     UpdateOrderStatusUseCase,
+    // profile
+    UpdateProfileUseCase,
   ],
 })
 export class CoreModule {}
