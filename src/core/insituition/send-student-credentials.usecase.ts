@@ -8,7 +8,6 @@ import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcryptjs';
 import { UserSQLRepository } from '@infrastructure/data/sql/repositories/user.repository';
 import { InstitutionSQLRepository } from '@infrastructure/data/sql/repositories/institution.repository';
-import { LoginHistoryRepository } from '@infrastructure/data/sql/repositories/login-history.repository';
 import { MailerSendService } from '@infrastructure/services/mailersend.service';
 import { PasswordResetCodeRepository } from '@infrastructure/data/sql/repositories/password-reset-code.repository';
 
@@ -31,7 +30,6 @@ export class SendStudentCredentialsUseCase {
   constructor(
     private readonly userRepository: UserSQLRepository,
     private readonly institutionRepository: InstitutionSQLRepository,
-    private readonly loginHistoryRepository: LoginHistoryRepository,
     private readonly mailerSendService: MailerSendService,
     private readonly passwordResetCodeRepository: PasswordResetCodeRepository,
     private readonly configService: ConfigService,
@@ -71,14 +69,7 @@ export class SendStudentCredentialsUseCase {
       };
     }
 
-    const studentIds = students.map((s) => s.id);
-    const loggedInUserIds =
-      await this.loginHistoryRepository.getUserIdsWithSuccessfulLogin(
-        studentIds,
-      );
-    const loggedInSet = new Set(loggedInUserIds);
-
-    const neverLoggedIn = students.filter((s) => !loggedInSet.has(s.id));
+    const neverLoggedIn = students.filter((s) => !s.lastLoginAt);
 
     const result: SendStudentCredentialsOutput = {
       totalStudents: students.length,

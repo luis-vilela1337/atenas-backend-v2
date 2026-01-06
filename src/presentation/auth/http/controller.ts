@@ -41,15 +41,8 @@ export class AuthControllerV2 {
   @ApiBody({ type: Object })
   @ApiResponse({ status: 200, type: AuthResponseDto })
   async login(@Request() req): Promise<AuthResponseDto> {
-    const ipAddress =
-      req.headers['x-forwarded-for']?.split(',')[0]?.trim() ||
-      req.connection?.remoteAddress ||
-      req.ip;
-    const userAgent = req.headers['user-agent'];
-
     const { accessToken, refreshToken, user } = await this.authService.login(
       req.user,
-      { ipAddress, userAgent },
     );
     return AuthResponseDto.adapterToResponse(accessToken, refreshToken, user);
   }

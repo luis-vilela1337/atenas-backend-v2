@@ -63,6 +63,9 @@ export class UserPayloadDto {
 
   @ApiProperty({ type: String, format: 'date-time' })
   createdAt: string;
+
+  @ApiProperty({ type: String, format: 'date-time', nullable: true })
+  lastLoginAt: string | null;
 }
 
 export class UserAdapterEntity {
@@ -107,6 +110,7 @@ export class UserAdapterEntity {
         ? this.parseBecaMeasures(user.becaMeasures)
         : null,
       createdAt: user.createdAt.toISOString(),
+      lastLoginAt: user.lastLoginAt ? user.lastLoginAt.toISOString() : null,
     };
   }
 

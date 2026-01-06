@@ -6,7 +6,6 @@ import * as bcrypt from 'bcryptjs';
 import { User } from '@infrastructure/data/sql/entities/user.entity';
 import { UserSQLRepository } from '@infrastructure/data/sql/repositories/user.repository';
 import { ImageStorageService } from '@infrastructure/services/image-storage.service';
-import { LoginHistoryRepository } from '@infrastructure/data/sql/repositories/login-history.repository';
 
 @Injectable()
 export class AuthService {
@@ -15,7 +14,6 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly imageStorageService: ImageStorageService,
-    private readonly loginHistoryRepository: LoginHistoryRepository,
   ) {}
 
   async validateUser(
@@ -43,10 +41,7 @@ export class AuthService {
     }
   }
 
-  async login(
-    user: Omit<User, 'passwordHash'>,
-    loginMetadata?: { ipAddress?: string; userAgent?: string },
-  ) {
+  async login(user: Omit<User, 'passwordHash'>) {
     const payload = {
       sub: user.id,
       email: user.email,
@@ -71,14 +66,8 @@ export class AuthService {
     const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
     await this.usersRepo.setCurrentRefreshToken(hashedRefreshToken, user.id);
 
-    // Track login in history
-    await this.loginHistoryRepository.create({
-      userId: user.id,
-      loginAt: new Date(),
-      ipAddress: loginMetadata?.ipAddress,
-      userAgent: loginMetadata?.userAgent,
-      success: true,
-    });
+    // Update last login timestamp
+    await this.usersRepo.updateUser(user.id, { lastLoginAt: new Date() });
 
     // Note: user already has presigned URL from validateUser
     return { accessToken, refreshToken, user };

@@ -113,4 +113,7 @@ export class User {
     nullable: true,
   })
   updatedAt?: Date;
+
+  @Column({ name: 'last_login_at', type: 'timestamp with time zone', nullable: true })
+  lastLoginAt?: Date;
 }
