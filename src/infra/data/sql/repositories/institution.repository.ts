@@ -88,7 +88,7 @@ export class InstitutionSQLRepository {
         return null;
       }
 
-      if (updateData.events?.length) {
+      if (updateData.events !== undefined && updateData.events.length > 0) {
         const existingEventIds = new Set(inst.events.map((e) => e.id));
         const providedEventIds = new Set(
           updateData.events.filter((e) => e.id).map((e) => e.id),
@@ -117,9 +117,8 @@ export class InstitutionSQLRepository {
           }
         });
         await qr.manager.save(toUpsert);
-      } else {
-        await qr.manager.softDelete(InstitutionEvent, { institution: inst });
       }
+      // Se events não foi enviado (undefined) ou é array vazio, não toca nos eventos existentes
 
       const { contractNumber, name, observations } = updateData;
       await qr.manager.update(Institution, id, {

@@ -31,13 +31,13 @@ export class Institution {
   updatedAt?: Date;
 
   @OneToMany(() => User, (user) => user.institution, {
-    cascade: ['insert', 'update', 'remove'],
+    cascade: ['insert', 'update'],
     lazy: false,
   })
   users!: User[];
 
   @OneToMany(() => InstitutionEvent, (event) => event.institution, {
-    cascade: ['insert', 'update', 'remove'],
+    cascade: ['insert', 'update'],
     lazy: false,
   })
   events: InstitutionEvent[];
