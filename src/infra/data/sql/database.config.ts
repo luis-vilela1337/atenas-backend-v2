@@ -15,6 +15,7 @@ import { AddCreditUsedToOrder1759747200000 } from '../migrations/1759747200000-A
 import { Generated1759959807948 } from '../migrations/1759959807948-generated';
 import { Generated1760917623803 } from '../migrations/1760917623803-generated';
 import { Generated1763735367287 } from '@infrastructure/data/migrations/1763735367287-generated';
+import { Generated1767712724467 } from '@infrastructure/data/migrations/1767712724467-generated';
 
 export const migrations = [
   Generated1747237005972,
@@ -30,6 +31,7 @@ export const migrations = [
   Generated1759959807948,
   Generated1760917623803,
   Generated1763735367287,
+  Generated1767712724467,
 ];
 
 const envVars = (cs: ConfigService) => ({

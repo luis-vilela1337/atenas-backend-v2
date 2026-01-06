@@ -14,6 +14,7 @@ import { CreateInstitutionApplication } from '@application/insitutiotion/create'
 import { FindByIdInstitutionApplication } from '@application/insitutiotion/find-by-id';
 import { UpdateInstitutionApplication } from '@application/insitutiotion/update';
 import { DeleteInstitutionApplication } from '@application/insitutiotion/delete';
+import { SendStudentCredentialsApplication } from '@application/insitutiotion/send-student-credentials';
 import { GeneratePresignedUrV2Application } from '@application/storage/presigned-url.application';
 import { CreateProductApplication } from '@application/products/create-product.application';
 import { FindAllProductsApplication } from '@application/products/find-all-products.application';
@@ -62,6 +63,7 @@ import { UpdateOrderStatusApplication } from '@application/orders/update-order-s
     FindByIdInstitutionApplication,
     UpdateInstitutionApplication,
     DeleteInstitutionApplication,
+    SendStudentCredentialsApplication,
     UpdateProductApplication,
     //products
     CreateProductApplication,
@@ -103,6 +105,7 @@ import { UpdateOrderStatusApplication } from '@application/orders/update-order-s
     FindByIdInstitutionApplication,
     UpdateInstitutionApplication,
     DeleteInstitutionApplication,
+    SendStudentCredentialsApplication,
     //products
     CreateProductApplication,
     FindAllProductsApplication,

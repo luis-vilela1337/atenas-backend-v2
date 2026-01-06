@@ -10,6 +10,7 @@ import { CreateInstituitionUseCase } from '@core/insituition/create.usecase';
 import { FindByIdInstituitionUseCase } from '@core/insituition/find-by-id.usecase';
 import { UpdateInstituitionUseCase } from '@core/insituition/update.usecase';
 import { DeleteInstituitionUseCase } from '@core/insituition/delete.usecase';
+import { SendStudentCredentialsUseCase } from '@core/insituition/send-student-credentials.usecase';
 import { DeleteUserByIDV2UseCase } from '@core/user/delete-user.usecase';
 import { CreateProductUseCase } from '@core/products/create/usecase';
 import { FindAllProductsUseCase } from '@core/products/find-all/usecase';
@@ -49,6 +50,7 @@ import { UpdateOrderStatusUseCase } from '@core/orders/update-order-status/useca
     UpdateInstituitionUseCase,
     DeleteInstituitionUseCase,
     CreateInstituitionUseCase,
+    SendStudentCredentialsUseCase,
     //products
     CreateProductUseCase,
     FindAllProductsUseCase,
@@ -91,6 +93,7 @@ import { UpdateOrderStatusUseCase } from '@core/orders/update-order-status/useca
     FindByIdInstituitionUseCase,
     UpdateInstituitionUseCase,
     DeleteInstituitionUseCase,
+    SendStudentCredentialsUseCase,
     //products
     CreateProductUseCase,
     FindAllProductsUseCase,

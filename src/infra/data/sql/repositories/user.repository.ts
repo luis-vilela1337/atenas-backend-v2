@@ -152,9 +152,9 @@ export class UserSQLRepository {
       const [contractNumber, identifier] = searchTerm.split('-', 2);
       queryBuilder.where(
         `(institution.contractNumber = :contractNumber AND user.identifier = :identifier)
-         OR institution.contractNumber ILIKE :search 
-         OR user.identifier ILIKE :search 
-         OR user.name ILIKE :search 
+         OR institution.contractNumber ILIKE :search
+         OR user.identifier ILIKE :search
+         OR user.name ILIKE :search
          OR user.email ILIKE :search
          OR CONCAT(institution.contractNumber, '-', user.identifier) ILIKE :search`,
         {
@@ -165,9 +165,9 @@ export class UserSQLRepository {
       );
     } else {
       queryBuilder.where(
-        `institution.contractNumber ILIKE :search 
-         OR user.identifier ILIKE :search 
-         OR user.name ILIKE :search 
+        `institution.contractNumber ILIKE :search
+         OR user.identifier ILIKE :search
+         OR user.name ILIKE :search
          OR user.email ILIKE :search
          OR CONCAT(institution.contractNumber, '-', user.identifier) ILIKE :search`,
         {
@@ -233,6 +233,20 @@ export class UserSQLRepository {
 
   async findClients(): Promise<User[]> {
     return await this.findByRole('client');
+  }
+
+  async findActiveClientsByInstitutionId(
+    institutionId: string,
+  ): Promise<User[]> {
+    return await this.user.find({
+      where: {
+        institution: { id: institutionId },
+        role: 'client',
+        status: 'active',
+      },
+      relations: ['institution'],
+      order: { name: 'ASC' },
+    });
   }
 
   private async hashRefreshToken(token: string): Promise<string> {
