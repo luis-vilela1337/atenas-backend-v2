@@ -50,12 +50,6 @@ export class SendStudentCredentialsUseCase {
       throw new ForbiddenException('Usuário não é administrador');
     }
 
-    if (admin.institution?.id !== input.institutionId) {
-      throw new ForbiddenException(
-        'Administrador não pertence a esta instituição',
-      );
-    }
-
     const students = await this.userRepository.findActiveClientsByInstitutionId(
       input.institutionId,
     );

@@ -127,10 +127,6 @@ export class InstitutionController {
     type: SendCredentialsResponseDto,
     description: 'Credenciais enviadas com sucesso',
   })
-  @ApiResponse({
-    status: 403,
-    description: 'Admin não pertence a esta instituição',
-  })
   @ApiResponse({ status: 404, description: 'Instituição não encontrada' })
   @HttpCode(HttpStatus.OK)
   async sendStudentCredentials(
