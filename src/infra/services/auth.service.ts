@@ -69,8 +69,17 @@ export class AuthService {
     // Update last login timestamp
     await this.usersRepo.updateUser(user.id, { lastLoginAt: new Date() });
 
+    const userContract =
+      user.institution?.contractNumber && user.identifier
+        ? `${user.institution.contractNumber}-${user.identifier}`
+        : null;
+
     // Note: user already has presigned URL from validateUser
-    return { accessToken, refreshToken, user };
+    return {
+      accessToken,
+      refreshToken,
+      user: { ...user, userContract },
+    };
   }
 
   async refresh(userId: string, refreshToken: string) {
