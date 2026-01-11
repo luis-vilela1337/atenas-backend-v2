@@ -31,6 +31,8 @@ export class InstitutionSQLRepository {
     page = 1,
     limit = 10,
     filters?: { contractNumber?: string },
+    sortBy?: string,
+    order: 'asc' | 'desc' = 'desc',
   ): Promise<{
     institutions: Institution[];
     total: number;
@@ -56,7 +58,20 @@ export class InstitutionSQLRepository {
       'institution.users',
     );
 
-    queryBuilder.orderBy('institution.updatedAt', 'DESC');
+    // Map camelCase fields to database column names
+    const columnMap: Record<string, string> = {
+      id: 'institution.id',
+      contractNumber: 'institution.contractNumber',
+      name: 'institution.name',
+      createdAt: 'institution.created_at',
+      updatedAt: 'institution.updated_at',
+    };
+
+    // Apply sorting
+    const sortColumn = sortBy ? columnMap[sortBy] : 'institution.updated_at';
+    const sortOrder = order.toUpperCase() as 'ASC' | 'DESC';
+
+    queryBuilder.orderBy(sortColumn, sortOrder);
 
     const [institutions, total] = await queryBuilder.getManyAndCount();
     const totalPages = Math.ceil(total / limit);

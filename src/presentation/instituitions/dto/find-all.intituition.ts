@@ -1,4 +1,4 @@
-import { IsOptional, IsInt, Min, Max, IsIn, IsString } from 'class-validator';
+import { IsOptional, IsInt, Min, Max, IsIn, IsString, MinLength, MaxLength } from 'class-validator';
 import { Type } from 'class-transformer';
 import { InstitutionResponseDto } from './find-by-id.insituition';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
@@ -26,11 +26,18 @@ export class ListInstituitionQueryDto {
   })
   @IsOptional()
   @IsString()
+  @MinLength(1)
+  @MaxLength(255)
   search?: string;
 
-  @ApiPropertyOptional({ description: 'Campo para ordenação', example: 'name' })
+  @ApiPropertyOptional({
+    description: 'Campo para ordenação',
+    example: 'name',
+    enum: ['id', 'contractNumber', 'name', 'createdAt', 'updatedAt'],
+  })
   @IsOptional()
   @IsString()
+  @IsIn(['id', 'contractNumber', 'name', 'createdAt', 'updatedAt'])
   sortBy?: string;
 
   @ApiPropertyOptional({
