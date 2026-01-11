@@ -57,7 +57,7 @@ export class ListUsersQueryDto {
   status?: 'active' | 'inactive';
 
   @ApiPropertyOptional({
-    description: 'Campo para ordenação (suporta campos aninhados como institution.name)',
+    description: 'Campo para ordenação',
     example: 'name',
     enum: [
       'name',
@@ -66,9 +66,7 @@ export class ListUsersQueryDto {
       'status',
       'createdAt',
       'updatedAt',
-      'institution.name',
-      'institution.contractNumber',
-      'institution.createdAt',
+      'lastLoginAt',
     ],
   })
   @IsOptional()
@@ -80,9 +78,7 @@ export class ListUsersQueryDto {
     'status',
     'createdAt',
     'updatedAt',
-    'institution.name',
-    'institution.contractNumber',
-    'institution.createdAt',
+    'lastLoginAt',
   ])
   sortBy?: string;
 

@@ -68,7 +68,7 @@ export class InstitutionSQLRepository {
     };
 
     // Apply sorting
-    const sortColumn = sortBy ? columnMap[sortBy] : 'institution.updated_at';
+    const sortColumn = (sortBy && columnMap[sortBy]) || 'institution.updated_at';
     const sortOrder = order.toUpperCase() as 'ASC' | 'DESC';
 
     queryBuilder.orderBy(sortColumn, sortOrder);
