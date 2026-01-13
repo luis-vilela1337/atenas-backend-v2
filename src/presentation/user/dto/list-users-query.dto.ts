@@ -67,6 +67,7 @@ export class ListUsersQueryDto {
       'createdAt',
       'updatedAt',
       'lastLoginAt',
+      'userContract',
     ],
   })
   @IsOptional()
@@ -79,6 +80,7 @@ export class ListUsersQueryDto {
     'createdAt',
     'updatedAt',
     'lastLoginAt',
+    'userContract',
   ])
   sortBy?: string;
 

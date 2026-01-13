@@ -154,6 +154,15 @@ export class FindAllUserUseCase {
   }
 
   private getNestedValue(obj: any, path: string): any {
+    if (path === 'userContract') {
+      const contractNumber = obj.institution?.contractNumber;
+      const identifier = obj.identifier;
+      if (contractNumber && identifier) {
+        return `${contractNumber}-${identifier}`;
+      }
+      return null;
+    }
+
     return path.split('.').reduce((current, prop) => {
       return current && current[prop] !== undefined ? current[prop] : null;
     }, obj);
