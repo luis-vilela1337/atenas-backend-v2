@@ -46,15 +46,10 @@ export class FindAllUserUseCase {
       page,
       limit,
       filters,
+      sortBy,
+      order as 'asc' | 'desc',
     );
 
-    if (sortBy && result.users.length > 0) {
-      result.users = this.sortUsers(
-        result.users,
-        sortBy,
-        order as 'asc' | 'desc',
-      );
-    }
     await Promise.all(
       result.users.map(async (user) => {
         if (user.profileImage) {

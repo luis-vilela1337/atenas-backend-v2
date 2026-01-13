@@ -44,13 +44,13 @@ export class UserSQLRepository {
       status?: UserStatus;
       institutionId?: string;
     },
+    sortBy?: string,
+    order: 'asc' | 'desc' = 'desc',
   ): Promise<{ users: User[]; total: number; totalPages: number }> {
     const skip = (page - 1) * limit;
     const queryBuilder = this.user
       .createQueryBuilder('user')
-      .leftJoinAndSelect('user.institution', 'institution')
-      .skip(skip)
-      .take(limit);
+      .leftJoinAndSelect('user.institution', 'institution');
 
     if (filters?.role) {
       queryBuilder.andWhere('user.role = :role', { role: filters.role });
@@ -68,7 +68,31 @@ export class UserSQLRepository {
       });
     }
 
-    queryBuilder.orderBy('user.updatedAt', 'DESC');
+    // Map sortBy to database columns
+    const columnMap: Record<string, string> = {
+      name: 'user.name',
+      email: 'user.email',
+      role: 'user.role',
+      status: 'user.status',
+      createdAt: 'user.createdAt',
+      updatedAt: 'user.updatedAt',
+      lastLoginAt: 'user.lastLoginAt',
+    };
+
+    const sortOrder = order.toUpperCase() as 'ASC' | 'DESC';
+
+    if (sortBy === 'userContract') {
+      // Sort by computed field: contractNumber-identifier
+      queryBuilder.orderBy(
+        "CONCAT(institution.contractNumber, '-', user.identifier)",
+        sortOrder,
+      );
+    } else {
+      const sortColumn = (sortBy && columnMap[sortBy]) || 'user.updatedAt';
+      queryBuilder.orderBy(sortColumn, sortOrder);
+    }
+
+    queryBuilder.skip(skip).take(limit);
 
     const [users, total] = await queryBuilder.getManyAndCount();
     const totalPages = Math.ceil(total / limit);
