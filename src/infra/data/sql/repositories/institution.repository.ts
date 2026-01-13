@@ -58,17 +58,17 @@ export class InstitutionSQLRepository {
       'institution.users',
     );
 
-    // Map camelCase fields to database column names
+    // Map sortBy fields to query builder property names (camelCase)
     const columnMap: Record<string, string> = {
       id: 'institution.id',
       contractNumber: 'institution.contractNumber',
       name: 'institution.name',
-      createdAt: 'institution.created_at',
-      updatedAt: 'institution.updated_at',
+      createdAt: 'institution.createdAt',
+      updatedAt: 'institution.updatedAt',
     };
 
     // Apply sorting
-    const sortColumn = (sortBy && columnMap[sortBy]) || 'institution.updated_at';
+    const sortColumn = (sortBy && columnMap[sortBy]) || 'institution.updatedAt';
     const sortOrder = order.toUpperCase() as 'ASC' | 'DESC';
 
     queryBuilder.orderBy(sortColumn, sortOrder);
