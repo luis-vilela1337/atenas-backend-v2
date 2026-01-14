@@ -26,6 +26,7 @@ import { MercadoPagoWebhookRepository } from '@infrastructure/data/sql/repositor
 import { OrderRepository } from '@infrastructure/data/sql/repositories/order.repository';
 import { MailerSendService } from '@infrastructure/services/mailersend.service';
 import { PasswordResetCodeRepository } from '@infrastructure/data/sql/repositories/password-reset-code.repository';
+import { CancelAbandonedOrdersJob } from '@infrastructure/jobs/cancel-abandoned-orders.job';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { PasswordResetCodeRepository } from '@infrastructure/data/sql/repositori
     MercadoPagoWebhookRepository,
     OrderRepository,
     PasswordResetCodeRepository,
+    CancelAbandonedOrdersJob,
     {
       provide: 'MercadoPagoRepositoryInterface',
       useClass: MercadoPagoService,

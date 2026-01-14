@@ -42,6 +42,7 @@ export class OrderRepository implements OrderRepositoryInterface {
         contractNumber: orderData.contractNumber,
         contractUniqueId: orderData.contractUniqueId,
         shippingAddress: orderData.shippingAddress,
+        creditUsed: orderData.creditUsed,
       });
 
       const savedOrder = await this.orderRepo.save(order);
@@ -404,6 +405,44 @@ export class OrderRepository implements OrderRepositoryInterface {
     }
   }
 
+  async markCreditRestored(orderId: string): Promise<void> {
+    this.logger.log(`Marking credit as restored for order ${orderId}`);
+
+    try {
+      await this.orderRepo.update(orderId, {
+        creditRestored: true,
+        updatedAt: new Date(),
+      });
+    } catch (error) {
+      this.logger.error(`Error marking credit as restored: ${error.message}`);
+      throw new Error(`Failed to mark credit as restored: ${error.message}`);
+    }
+  }
+
+  async findAbandonedOrders(hoursThreshold: number): Promise<OrderEntity[]> {
+    this.logger.log(
+      `Finding abandoned orders older than ${hoursThreshold} hours`,
+    );
+
+    try {
+      const thresholdDate = new Date();
+      thresholdDate.setHours(thresholdDate.getHours() - hoursThreshold);
+
+      const orders = await this.orderRepo
+        .createQueryBuilder('order')
+        .where('order.paymentStatus = :status', { status: OrderStatus.PENDING })
+        .andWhere('order.createdAt < :thresholdDate', { thresholdDate })
+        .andWhere('order.creditUsed > 0')
+        .andWhere('order.creditRestored = false')
+        .getMany();
+
+      return orders.map((order) => this.mapToEntity(order));
+    } catch (error) {
+      this.logger.error(`Error finding abandoned orders: ${error.message}`);
+      throw new Error(`Failed to find abandoned orders: ${error.message}`);
+    }
+  }
+
   private mapToEntity(order: Order): OrderEntity {
     return {
       id: order.id,
@@ -415,6 +454,8 @@ export class OrderRepository implements OrderRepositoryInterface {
       contractNumber: order.contractNumber,
       contractUniqueId: order.contractUniqueId,
       shippingAddress: order.shippingAddress,
+      creditUsed: order.creditUsed ? Number(order.creditUsed) : undefined,
+      creditRestored: order.creditRestored,
       items:
         order.items?.map((item) => ({
           id: item.id,

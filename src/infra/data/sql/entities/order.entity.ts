@@ -84,6 +84,9 @@ export class Order {
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   creditUsed?: number;
 
+  @Column({ type: 'boolean', default: false, name: 'credit_restored' })
+  creditRestored: boolean = false;
+
   @CreateDateColumn({ name: 'created_at', type: 'timestamp with time zone' })
   createdAt!: Date;
 

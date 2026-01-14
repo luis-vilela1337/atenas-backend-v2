@@ -12,4 +12,6 @@ export interface OrderRepositoryInterface {
     orderId: string,
     paymentGatewayId: string,
   ): Promise<void>;
+  markCreditRestored(orderId: string): Promise<void>;
+  findAbandonedOrders(hoursThreshold: number): Promise<Order[]>;
 }

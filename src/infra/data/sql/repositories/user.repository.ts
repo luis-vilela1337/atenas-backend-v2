@@ -286,4 +286,37 @@ export class UserSQLRepository {
   async updateUserCredit(userId: string, newValue: number): Promise<void> {
     await this.user.update(userId, { creditValue: newValue.toString() });
   }
+
+  async deductCreditAtomic(
+    userId: string,
+    amount: number,
+  ): Promise<{ success: boolean; previousCredit: number; newCredit: number }> {
+    const result = await this.user.manager.query(
+      `UPDATE users
+       SET "creditValue" = COALESCE("creditValue"::numeric, 0) - $1
+       WHERE id = $2 AND COALESCE("creditValue"::numeric, 0) >= $1
+       RETURNING COALESCE("creditValue"::numeric, 0) + $1 as previous_credit, COALESCE("creditValue"::numeric, 0) as new_credit`,
+      [amount, userId],
+    );
+
+    if (result.length === 0) {
+      const current = await this.findUserCreditByUserId(userId);
+      return { success: false, previousCredit: current, newCredit: current };
+    }
+
+    return {
+      success: true,
+      previousCredit: parseFloat(result[0].previous_credit),
+      newCredit: parseFloat(result[0].new_credit),
+    };
+  }
+
+  async addCredit(userId: string, amount: number): Promise<void> {
+    await this.user.manager.query(
+      `UPDATE users
+       SET "creditValue" = COALESCE("creditValue"::numeric, 0) + $1
+       WHERE id = $2`,
+      [amount, userId],
+    );
+  }
 }

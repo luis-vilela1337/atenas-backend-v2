@@ -177,20 +177,17 @@ export class ProcessWebhookUseCase {
       );
 
       if (orderStatus) {
-        // Restore credit if order is cancelled or rejected and credit was used
+        // Restore credit if order is cancelled or rejected and credit was used (and not already restored)
         if (
           (orderStatus === OrderStatus.CANCELLED ||
             orderStatus === OrderStatus.REJECTED) &&
           order.creditUsed &&
           order.creditUsed > 0 &&
+          !order.creditRestored &&
           this.userRepository
         ) {
-          const currentCredit =
-            await this.userRepository.findUserCreditByUserId(order.userId);
-          await this.userRepository.updateUserCredit(
-            order.userId,
-            currentCredit + order.creditUsed,
-          );
+          await this.userRepository.addCredit(order.userId, order.creditUsed);
+          await this.orderRepository!.markCreditRestored(order.id);
           console.log(
             `Restored ${order.creditUsed} credit to user ${order.userId}`,
           );
