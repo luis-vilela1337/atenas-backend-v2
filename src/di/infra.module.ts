@@ -100,6 +100,7 @@ import { CancelAbandonedOrdersJob } from '@infrastructure/jobs/cancel-abandoned-
     MercadoPagoWebhookRepository,
     OrderRepository,
     PasswordResetCodeRepository,
+    CancelAbandonedOrdersJob,
     'MercadoPagoRepositoryInterface',
     'WebhookRepositoryInterface',
     'OrderRepositoryInterface',
