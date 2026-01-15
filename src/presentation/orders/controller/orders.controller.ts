@@ -27,6 +27,10 @@ import { FindOrdersApplication } from '@application/orders/find-orders.applicati
 import { FindOrderByIdApplication } from '@application/orders/find-order-by-id.application';
 import { UpdateOrderStatusApplication } from '@application/orders/update-order-status.application';
 import {
+  CancelAbandonedOrdersJob,
+  CancelAbandonedOrdersResult,
+} from '@infrastructure/jobs/cancel-abandoned-orders.job';
+import {
   CreateOrderDto,
   CreateOrderResponseDto,
 } from '../dto/create-order.dto';
@@ -50,6 +54,7 @@ export class OrdersController {
     private readonly findOrdersApp: FindOrdersApplication,
     private readonly findOrderByIdApp: FindOrderByIdApplication,
     private readonly updateOrderStatusApp: UpdateOrderStatusApplication,
+    private readonly cancelAbandonedOrdersJob: CancelAbandonedOrdersJob,
   ) {}
 
   @Post()
@@ -196,5 +201,33 @@ export class OrdersController {
       status: dto.status,
       driveLink: dto.driveLink,
     });
+  }
+
+  @Post('admin/cancel-abandoned')
+  @ApiOperation({
+    summary: '[ADMIN/TEST] Executar job de cancelamento de pedidos abandonados',
+    description:
+      'Dispara manualmente o job que cancela pedidos PENDING com mais de X horas e restaura créditos. Use hours=0 para testar com todos os pedidos PENDING.',
+  })
+  @ApiQuery({
+    name: 'hours',
+    required: false,
+    type: Number,
+    description: 'Horas de threshold (padrão: 24). Use 0 para pegar todos os pedidos PENDING.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Job executado com sucesso',
+  })
+  @HttpCode(HttpStatus.OK)
+  async cancelAbandonedOrders(
+    @Query('hours') hours?: string,
+  ): Promise<CancelAbandonedOrdersResult & { executedAt: string }> {
+    const hoursThreshold = hours !== undefined ? parseInt(hours, 10) : 24;
+    const result = await this.cancelAbandonedOrdersJob.execute(hoursThreshold);
+    return {
+      ...result,
+      executedAt: new Date().toISOString(),
+    };
   }
 }

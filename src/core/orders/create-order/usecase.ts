@@ -69,18 +69,23 @@ export class CreateOrderUseCase {
         };
       }
 
-      // 5. Check user credit
+      // 5. Check user credit (using atomic operation to prevent race conditions)
       const userCredit = await this.userRepository.findUserCreditByUserId(
         input.userId,
       );
 
       // If credit covers the full amount
       if (userCredit >= totalAmount) {
-        // Deduct credit
-        await this.userRepository.updateUserCredit(
+        // Deduct credit atomically
+        const deductResult = await this.userRepository.deductCreditAtomic(
           input.userId,
-          userCredit - totalAmount,
+          totalAmount,
         );
+
+        if (!deductResult.success) {
+          // Race condition detected - credit was used by another request
+          throw new Error('Crédito insuficiente. Tente novamente.');
+        }
 
         const order = await this.createOrder(
           input,
@@ -94,7 +99,7 @@ export class CreateOrderUseCase {
           paymentMethod: 'CREDIT',
           contractNumber: order.contractNumber,
           creditUsed: totalAmount,
-          remainingCredit: userCredit - totalAmount,
+          remainingCredit: deductResult.newCredit,
         };
       }
 
@@ -102,9 +107,17 @@ export class CreateOrderUseCase {
       const creditToUse = userCredit > 0 ? userCredit : 0;
       const amountToPay = totalAmount - creditToUse;
 
-      // Deduct available credit if any
+      // Deduct available credit atomically if any
       if (creditToUse > 0) {
-        await this.userRepository.updateUserCredit(input.userId, 0);
+        const deductResult = await this.userRepository.deductCreditAtomic(
+          input.userId,
+          creditToUse,
+        );
+
+        if (!deductResult.success) {
+          // Race condition detected - credit was used by another request
+          throw new Error('Crédito insuficiente. Tente novamente.');
+        }
       }
 
       const order = await this.createOrder(

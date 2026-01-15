@@ -92,6 +92,7 @@ export interface Order {
   shippingAddress?: ShippingAddress;
   items: OrderItem[];
   creditUsed?: number;
+  creditRestored?: boolean;
   createdAt: Date;
   updatedAt?: Date;
 }
