@@ -84,7 +84,7 @@ export class UserSQLRepository {
     if (sortBy === 'userContract') {
       // Sort by computed field: contractNumber-identifier
       queryBuilder.orderBy(
-        `CONCAT("institution"."contractNumber", '-', "user"."identifier")`,
+        `CONCAT(institution."contractNumber", '-', "user"."identifier")`,
         sortOrder,
       );
     } else {
