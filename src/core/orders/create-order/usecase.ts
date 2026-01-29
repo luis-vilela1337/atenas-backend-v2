@@ -27,7 +27,7 @@ export class CreateOrderUseCase {
     private readonly userRepository: UserSQLRepository,
     private readonly institutionProductRepository: InstitutionProductSQLRepository,
     private readonly configService: ConfigService,
-  ) {}
+  ) { }
 
   async execute(input: CreateOrderInput): Promise<CreateOrderResult> {
     try {
@@ -70,19 +70,19 @@ export class CreateOrderUseCase {
       }
 
       // 5. Check user credit (using atomic operation to prevent race conditions)
-      const userCredit = await this.userRepository.findUserCreditByUserId(
+      const userCredit = await this.userRepository.getAvailableCredit(
         input.userId,
       );
 
       // If credit covers the full amount
       if (userCredit >= totalAmount) {
-        // Deduct credit atomically
-        const deductResult = await this.userRepository.deductCreditAtomic(
+        // Reserve credit atomically (blocks it for this order)
+        const reserveResult = await this.userRepository.reserveCredit(
           input.userId,
           totalAmount,
         );
 
-        if (!deductResult.success) {
+        if (!reserveResult.success) {
           // Race condition detected - credit was used by another request
           throw new Error('Crédito insuficiente. Tente novamente.');
         }
@@ -93,13 +93,20 @@ export class CreateOrderUseCase {
           OrderStatus.APPROVED,
           totalAmount, // creditUsed
         );
+
+        // Consume reserved credit (remove from reserved, already used)
+        await this.userRepository.consumeReservedCredit(
+          input.userId,
+          totalAmount,
+        );
+
         return {
           orderId: order.id,
           checkoutUrl: this.configService.get('BATATA_CHECKOUT_URL'),
           paymentMethod: 'CREDIT',
           contractNumber: order.contractNumber,
           creditUsed: totalAmount,
-          remainingCredit: deductResult.newCredit,
+          remainingCredit: reserveResult.availableCredit,
         };
       }
 
@@ -107,14 +114,14 @@ export class CreateOrderUseCase {
       const creditToUse = userCredit > 0 ? userCredit : 0;
       const amountToPay = totalAmount - creditToUse;
 
-      // Deduct available credit atomically if any
+      // Reserve available credit atomically if any (blocks it for this order)
       if (creditToUse > 0) {
-        const deductResult = await this.userRepository.deductCreditAtomic(
+        const reserveResult = await this.userRepository.reserveCredit(
           input.userId,
           creditToUse,
         );
 
-        if (!deductResult.success) {
+        if (!reserveResult.success) {
           // Race condition detected - credit was used by another request
           throw new Error('Crédito insuficiente. Tente novamente.');
         }
@@ -124,7 +131,7 @@ export class CreateOrderUseCase {
         input,
         totalAmount,
         OrderStatus.PENDING,
-        creditToUse, // creditUsed
+        creditToUse, // creditUsed (reserved, not consumed yet)
       );
 
       // Create Mercado Pago preference with remaining amount
@@ -255,9 +262,9 @@ export class CreateOrderUseCase {
         const unitPrice =
           amountToPay !== undefined
             ? new Decimal(item.itemPrice)
-                .times(paymentAmount)
-                .div(totalAmount)
-                .toNumber()
+              .times(paymentAmount)
+              .div(totalAmount)
+              .toNumber()
             : item.itemPrice;
 
         return {
@@ -278,15 +285,15 @@ export class CreateOrderUseCase {
         },
         address: input.shippingDetails
           ? {
-              street_name: input.shippingDetails.street,
-              street_number: input.shippingDetails.number,
-              zip_code: input.shippingDetails.zipCode,
-            }
+            street_name: input.shippingDetails.street,
+            street_number: input.shippingDetails.number,
+            zip_code: input.shippingDetails.zipCode,
+          }
           : {
-              street_name: 'N/A',
-              street_number: 'N/A',
-              zip_code: '00000-000',
-            },
+            street_name: 'N/A',
+            street_number: 'N/A',
+            zip_code: '00000-000',
+          },
       },
       externalReference: order.id, // Add order ID as external reference for webhook identification
     };
@@ -437,8 +444,7 @@ export class CreateOrderUseCase {
 
       if (priceDifference > 0.02) {
         throw new Error(
-          `Invalid price for product ${
-            item.productName
+          `Invalid price for product ${item.productName
           }. Expected: R$ ${expectedTotalPrice.toFixed(
             2,
           )}, Received: R$ ${receivedTotalPrice.toFixed(2)}`,

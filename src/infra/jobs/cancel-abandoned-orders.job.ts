@@ -21,14 +21,15 @@ export interface CancelAbandonedOrdersResult {
 @Injectable()
 export class CancelAbandonedOrdersJob {
   private readonly logger = new Logger(CancelAbandonedOrdersJob.name);
-  private readonly DEFAULT_HOURS_THRESHOLD = 24;
+  private readonly DEFAULT_HOURS_THRESHOLD = 2; // Reduzido de 24h para 2h
 
   constructor(
     private readonly orderRepository: OrderRepository,
     private readonly userRepository: UserSQLRepository,
-  ) {}
+  ) { }
 
-  @Cron(CronExpression.EVERY_HOUR)
+  // Roda a cada 30 minutos (antes era a cada hora)
+  @Cron('*/30 * * * *')
   async executeScheduled(): Promise<void> {
     await this.execute(this.DEFAULT_HOURS_THRESHOLD);
   }
@@ -69,12 +70,16 @@ export class CancelAbandonedOrdersJob {
           };
 
           if (order.creditUsed && order.creditUsed > 0 && !order.creditRestored) {
-            await this.userRepository.addCredit(order.userId, order.creditUsed);
+            // Release reserved credit back to available
+            await this.userRepository.releaseReservedCredit(
+              order.userId,
+              order.creditUsed,
+            );
             await this.orderRepository.markCreditRestored(order.id);
             detail.creditRestored = order.creditUsed;
             result.creditsRestored++;
             this.logger.log(
-              `Restored ${order.creditUsed} credit to user ${order.userId} for abandoned order ${order.id}`,
+              `Released ${order.creditUsed} reserved credit back to user ${order.userId} for abandoned order ${order.id}`,
             );
           }
 

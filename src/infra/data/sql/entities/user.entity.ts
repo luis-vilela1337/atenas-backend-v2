@@ -65,6 +65,9 @@ export class User {
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   creditValue?: string;
 
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  creditReserved?: string;
+
   @Column({ type: 'varchar', length: 255, nullable: true })
   profileImage?: string;
 

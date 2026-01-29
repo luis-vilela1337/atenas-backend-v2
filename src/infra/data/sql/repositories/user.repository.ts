@@ -9,7 +9,7 @@ export class UserSQLRepository {
   constructor(
     @InjectRepository(User)
     private readonly user: Repository<User>,
-  ) {}
+  ) { }
 
   async createUser(userData: Partial<User>): Promise<User> {
     const user = this.user.create(userData);
@@ -356,5 +356,96 @@ export class UserSQLRepository {
        WHERE id = $2`,
       [amount, userId],
     );
+  }
+
+  /**
+   * Reserva (bloqueia) crédito para um pedido pendente
+   * Move crédito de creditValue para creditReserved
+   */
+  async reserveCredit(
+    userId: string,
+    amount: number,
+  ): Promise<{ success: boolean; availableCredit: number; reservedCredit: number }> {
+    const result = await this.user.manager.query(
+      `UPDATE users
+       SET "creditValue" = COALESCE("creditValue"::numeric, 0) - $1,
+           "creditReserved" = COALESCE("creditReserved"::numeric, 0) + $1
+       WHERE id = $2 
+       AND COALESCE("creditValue"::numeric, 0) >= $1
+       RETURNING 
+         COALESCE("creditValue"::numeric, 0) as available_credit,
+         COALESCE("creditReserved"::numeric, 0) as reserved_credit`,
+      [amount, userId],
+    );
+
+    if (result.length === 0) {
+      const user = await this.user.findOne({
+        where: { id: userId },
+        select: ['creditValue', 'creditReserved'],
+      });
+      return {
+        success: false,
+        availableCredit: user?.creditValue ? parseFloat(user.creditValue) : 0,
+        reservedCredit: user?.creditReserved ? parseFloat(user.creditReserved) : 0,
+      };
+    }
+
+    return {
+      success: true,
+      availableCredit: parseFloat(result[0].available_credit),
+      reservedCredit: parseFloat(result[0].reserved_credit),
+    };
+  }
+
+  /**
+   * Libera crédito reservado de volta para disponível
+   * Usado quando pedido é cancelado/rejeitado/expirado
+   */
+  async releaseReservedCredit(userId: string, amount: number): Promise<void> {
+    await this.user.manager.query(
+      `UPDATE users
+       SET "creditValue" = COALESCE("creditValue"::numeric, 0) + $1,
+           "creditReserved" = COALESCE("creditReserved"::numeric, 0) - $1
+       WHERE id = $2
+       AND COALESCE("creditReserved"::numeric, 0) >= $1`,
+      [amount, userId],
+    );
+  }
+
+  /**
+   * Consome crédito reservado definitivamente
+   * Usado quando pedido é aprovado (remove do reservado sem devolver)
+   */
+  async consumeReservedCredit(userId: string, amount: number): Promise<void> {
+    await this.user.manager.query(
+      `UPDATE users
+       SET "creditReserved" = COALESCE("creditReserved"::numeric, 0) - $1
+       WHERE id = $2
+       AND COALESCE("creditReserved"::numeric, 0) >= $1`,
+      [amount, userId],
+    );
+  }
+
+  /**
+   * Retorna crédito disponível (livre para uso)
+   * Não inclui crédito reservado
+   */
+  async getAvailableCredit(userId: string): Promise<number> {
+    const user = await this.user.findOne({
+      where: { id: userId },
+      select: ['creditValue'],
+    });
+    return user?.creditValue ? parseFloat(user.creditValue) : 0;
+  }
+
+  /**
+   * Retorna crédito reservado (bloqueado em pedidos pendentes)
+   */
+  async getReservedCredit(userId: string): Promise<number> {
+    const user = await this.user.findOne({
+      where: { id: userId },
+      select: ['creditReserved'],
+    });
+    return user?.creditReserved ? parseFloat(user.creditReserved) : 0;
   }
 }

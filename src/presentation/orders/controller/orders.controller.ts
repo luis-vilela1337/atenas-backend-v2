@@ -55,7 +55,7 @@ export class OrdersController {
     private readonly findOrderByIdApp: FindOrderByIdApplication,
     private readonly updateOrderStatusApp: UpdateOrderStatusApplication,
     private readonly cancelAbandonedOrdersJob: CancelAbandonedOrdersJob,
-  ) {}
+  ) { }
 
   @Post()
   @ApiOperation({
@@ -201,6 +201,79 @@ export class OrdersController {
       status: dto.status,
       driveLink: dto.driveLink,
     });
+  }
+
+  @Put(':id/cancel')
+  @ApiOperation({
+    summary: '[ADMIN] Cancelar pedido pendente e liberar crédito reservado',
+    description:
+      'Permite cancelar manualmente um pedido PENDING e libera instantaneamente o crédito que estava reservado.',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'ID único do pedido',
+    type: 'string',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Pedido cancelado e crédito liberado com sucesso',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Pedido não pode ser cancelado (status inválido)',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Pedido não encontrado',
+  })
+  @HttpCode(HttpStatus.OK)
+  async cancelPendingOrder(
+    @Param('id') orderId: string,
+  ): Promise<{
+    message: string;
+    orderId: string;
+    creditReleased: number;
+    releasedAt: string;
+  }> {
+    // Buscar pedido
+    const order = await this.findOrderByIdApp.execute(orderId);
+
+    if (!order) {
+      throw new NotFoundException(`Order with ID ${orderId} not found`);
+    }
+
+    if (order.paymentStatus !== 'PENDING') {
+      throw new NotFoundException(
+        `Order ${orderId} cannot be cancelled (status: ${order.paymentStatus})`,
+      );
+    }
+
+    // Cancelar pedido
+    await this.updateOrderStatusApp.execute({
+      orderId,
+      status: 'CANCELLED' as any,
+    });
+
+    // Liberar crédito reservado se houver
+    let creditReleased = 0;
+    if (order.creditUsed && order.creditUsed > 0) {
+      const UserSQLRepository = require('@infrastructure/data/sql/repositories/user.repository').UserSQLRepository;
+      const OrderRepository = require('@infrastructure/data/sql/repositories/order.repository').OrderRepository;
+
+      const userRepo = this.findOrdersApp['userRepository'] || new UserSQLRepository();
+      const orderRepo = this.findOrdersApp['orderRepository'] || new OrderRepository();
+
+      await userRepo.releaseReservedCredit(order.userId, order.creditUsed);
+      await orderRepo.markCreditRestored(orderId);
+      creditReleased = order.creditUsed;
+    }
+
+    return {
+      message: 'Pedido cancelado com sucesso',
+      orderId,
+      creditReleased,
+      releasedAt: new Date().toISOString(),
+    };
   }
 
   @Post('admin/cancel-abandoned')

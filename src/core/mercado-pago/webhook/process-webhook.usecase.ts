@@ -25,7 +25,7 @@ export class ProcessWebhookUseCase {
     private readonly webhookRepository: WebhookRepositoryInterface,
     private readonly orderRepository?: OrderRepositoryInterface,
     private readonly userRepository?: UserSQLRepository,
-  ) {}
+  ) { }
 
   async execute(input: ProcessWebhookInput): Promise<WebhookProcessingResult> {
     try {
@@ -182,20 +182,44 @@ export class ProcessWebhookUseCase {
       );
 
       if (orderStatus) {
-        // Restore credit if order is cancelled or rejected and credit was used (and not already restored)
-        if (
-          (orderStatus === OrderStatus.CANCELLED ||
-            orderStatus === OrderStatus.REJECTED) &&
-          order.creditUsed &&
-          order.creditUsed > 0 &&
-          !order.creditRestored &&
-          this.userRepository
+        // Handle credit based on order status
+        if (orderStatus === OrderStatus.APPROVED) {
+          // Payment approved: consume the reserved credit (remove from reserved)
+          if (
+            order.creditUsed &&
+            order.creditUsed > 0 &&
+            !order.creditRestored &&
+            this.userRepository
+          ) {
+            await this.userRepository.consumeReservedCredit(
+              order.userId,
+              order.creditUsed,
+            );
+            await this.orderRepository!.markCreditRestored(order.id);
+            console.log(
+              `Consumed ${order.creditUsed} reserved credit for user ${order.userId}`,
+            );
+          }
+        } else if (
+          orderStatus === OrderStatus.CANCELLED ||
+          orderStatus === OrderStatus.REJECTED
         ) {
-          await this.userRepository.addCredit(order.userId, order.creditUsed);
-          await this.orderRepository!.markCreditRestored(order.id);
-          console.log(
-            `Restored ${order.creditUsed} credit to user ${order.userId}`,
-          );
+          // Payment cancelled/rejected: release reserved credit back to available
+          if (
+            order.creditUsed &&
+            order.creditUsed > 0 &&
+            !order.creditRestored &&
+            this.userRepository
+          ) {
+            await this.userRepository.releaseReservedCredit(
+              order.userId,
+              order.creditUsed,
+            );
+            await this.orderRepository!.markCreditRestored(order.id);
+            console.log(
+              `Released ${order.creditUsed} reserved credit back to user ${order.userId}`,
+            );
+          }
         }
 
         await this.orderRepository.updateOrderStatus(order.id, orderStatus);
