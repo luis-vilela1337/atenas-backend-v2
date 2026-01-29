@@ -28,7 +28,8 @@
     "migration:create": "pnpm run typeorm migration:create ./src/infra/data/migrations/migration",
     "migration:generate": "pnpm run typeorm migration:generate  -d ./src/infra/data/sql/database.config.ts ./src/infra/data/migrations/generated",
     "migration:down": "pnpm run typeorm migration:revert -d ./src/infra/data/sql/database.config.ts",
-    "migration:show": "pnpm run typeorm migration:show -d ./src/infra/data/sql/database.config.ts"
+    "migration:show": "pnpm run typeorm migration:show -d ./src/infra/data/sql/database.config.ts",
+    "seed": "ts-node -r tsconfig-paths/register ./src/infra/data/sql/seed.ts"
   },
   "dependencies": {
     "@google-cloud/storage": "^7.13.0",
