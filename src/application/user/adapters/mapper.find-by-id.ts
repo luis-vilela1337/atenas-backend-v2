@@ -28,6 +28,9 @@ export class UserPayloadDto {
   @ApiProperty({ format: 'uuid' })
   institutionId: string;
 
+  @ApiProperty()
+  userContract: string;
+
   @ApiProperty({ nullable: true })
   fatherName: string | null;
 
@@ -79,6 +82,7 @@ export class UserAdapterEntity {
       observations: user.observations || null,
       role: user.role,
       institutionId: user.institution.id,
+      userContract: `${user.institution.contractNumber}-${user.identifier}`,
       fatherName: user.fatherName || null,
       fatherPhone: user.fatherPhone || null,
       motherName: user.motherName || null,
