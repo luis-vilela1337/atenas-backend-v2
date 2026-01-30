@@ -83,6 +83,7 @@ export class UserSQLRepository {
 
     if (sortBy === 'userContract') {
       // Sort by computed field: contractNumber-identifier
+      // Note: Using proper alias.column syntax without extra quotes
       queryBuilder.orderBy(
         `CONCAT(institution.contractNumber, '-', user.identifier)`,
         sortOrder,
