@@ -64,6 +64,8 @@ describe('CreateOrderUseCase', () => {
       findOrdersByUserId: jest.fn(),
       findOrdersWithPagination: jest.fn(),
       updateOrderStatus: jest.fn(),
+      markCreditRestored: jest.fn(),
+      findAbandonedOrders: jest.fn(),
     };
 
     mercadoPagoRepository = {
@@ -369,20 +371,22 @@ describe('CreateOrderUseCase', () => {
       };
 
       // Mock institution product with correct price
-      institutionProductRepository.findByProductAndInstitution.mockResolvedValue({
-        id: 'inst-product-1',
-        flag: 'GENERIC',
-        details: {
-          isAvailableUnit: true,
-          events: [
-            {
-              id: 'event-1',
-              valorPhoto: 50, // Must match totalPrice (unit price)
-              valorPack: 500,
-            },
-          ],
-        },
-      } as any);
+      institutionProductRepository.findByProductAndInstitution.mockResolvedValue(
+        {
+          id: 'inst-product-1',
+          flag: 'GENERIC',
+          details: {
+            isAvailableUnit: true,
+            events: [
+              {
+                id: 'event-1',
+                valorPhoto: 50, // Must match totalPrice (unit price)
+                valorPack: 500,
+              },
+            ],
+          },
+        } as any,
+      );
 
       userRepository.findUserCreditByUserId.mockResolvedValue(0);
       orderRepository.createOrder.mockResolvedValue({
@@ -406,7 +410,7 @@ describe('CreateOrderUseCase', () => {
       });
 
       // WHEN
-      const result = await useCase.execute(multiQuantityInput);
+      await useCase.execute(multiQuantityInput);
 
       // THEN
       expect(orderRepository.createOrder).toHaveBeenCalledWith(

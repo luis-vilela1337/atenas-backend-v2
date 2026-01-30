@@ -85,7 +85,7 @@ export class Order {
   creditUsed?: number;
 
   @Column({ type: 'boolean', default: false, name: 'credit_restored' })
-  creditRestored: boolean = false;
+  creditRestored = false;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp with time zone' })
   createdAt!: Date;

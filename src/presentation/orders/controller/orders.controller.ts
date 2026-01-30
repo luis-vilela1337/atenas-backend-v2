@@ -9,6 +9,8 @@ import {
   HttpCode,
   HttpStatus,
   NotFoundException,
+  BadRequestException,
+  Inject,
   UseGuards,
   Request,
   SetMetadata,
@@ -30,6 +32,8 @@ import {
   CancelAbandonedOrdersJob,
   CancelAbandonedOrdersResult,
 } from '@infrastructure/jobs/cancel-abandoned-orders.job';
+import { UserSQLRepository } from '@infrastructure/data/sql/repositories/user.repository';
+import { OrderRepositoryInterface } from '@core/orders/repositories/order.repository.interface';
 import {
   CreateOrderDto,
   CreateOrderResponseDto,
@@ -55,7 +59,10 @@ export class OrdersController {
     private readonly findOrderByIdApp: FindOrderByIdApplication,
     private readonly updateOrderStatusApp: UpdateOrderStatusApplication,
     private readonly cancelAbandonedOrdersJob: CancelAbandonedOrdersJob,
-  ) { }
+    private readonly userRepository: UserSQLRepository,
+    @Inject('OrderRepositoryInterface')
+    private readonly orderRepository: OrderRepositoryInterface,
+  ) {}
 
   @Post()
   @ApiOperation({
@@ -84,7 +91,7 @@ export class OrdersController {
     @Body() dto: CreateOrderDto,
     @Request() req: any,
   ): Promise<CreateOrderResponseDto> {
-    const userId = req.user?.userId || req.user?.sub; // Obtido do JWT payload
+    const userId = req.user?.userId || req.user?.sub;
     if (!userId) {
       throw new NotFoundException('User ID not found in token');
     }
@@ -227,15 +234,12 @@ export class OrdersController {
     description: 'Pedido não encontrado',
   })
   @HttpCode(HttpStatus.OK)
-  async cancelPendingOrder(
-    @Param('id') orderId: string,
-  ): Promise<{
+  async cancelPendingOrder(@Param('id') orderId: string): Promise<{
     message: string;
     orderId: string;
     creditReleased: number;
     releasedAt: string;
   }> {
-    // Buscar pedido
     const order = await this.findOrderByIdApp.execute(orderId);
 
     if (!order) {
@@ -243,28 +247,23 @@ export class OrdersController {
     }
 
     if (order.paymentStatus !== 'PENDING') {
-      throw new NotFoundException(
+      throw new BadRequestException(
         `Order ${orderId} cannot be cancelled (status: ${order.paymentStatus})`,
       );
     }
 
-    // Cancelar pedido
     await this.updateOrderStatusApp.execute({
       orderId,
       status: 'CANCELLED' as any,
     });
 
-    // Liberar crédito reservado se houver
     let creditReleased = 0;
     if (order.creditUsed && order.creditUsed > 0) {
-      const UserSQLRepository = require('@infrastructure/data/sql/repositories/user.repository').UserSQLRepository;
-      const OrderRepository = require('@infrastructure/data/sql/repositories/order.repository').OrderRepository;
-
-      const userRepo = this.findOrdersApp['userRepository'] || new UserSQLRepository();
-      const orderRepo = this.findOrdersApp['orderRepository'] || new OrderRepository();
-
-      await userRepo.releaseReservedCredit(order.userId, order.creditUsed);
-      await orderRepo.markCreditRestored(orderId);
+      await this.orderRepository.markCreditRestored(orderId);
+      await this.userRepository.releaseReservedCredit(
+        order.userId,
+        order.creditUsed,
+      );
       creditReleased = order.creditUsed;
     }
 
@@ -286,7 +285,8 @@ export class OrdersController {
     name: 'hours',
     required: false,
     type: Number,
-    description: 'Horas de threshold (padrão: 24). Use 0 para pegar todos os pedidos PENDING.',
+    description:
+      'Horas de threshold (padrão: 24). Use 0 para pegar todos os pedidos PENDING.',
   })
   @ApiResponse({
     status: 200,

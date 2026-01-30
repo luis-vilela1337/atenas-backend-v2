@@ -178,7 +178,8 @@ export class CartItemDto {
   productType!: 'GENERIC' | 'DIGITAL_FILES' | 'ALBUM';
 
   @ApiProperty({
-    description: 'Preço unitário do item (será multiplicado pela quantidade para calcular o total)',
+    description:
+      'Preço unitário do item (será multiplicado pela quantidade para calcular o total)',
     example: 29.99,
     minimum: 0.0,
   })

@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import {
   WebhookNotification,
   PaymentStatus,
@@ -21,11 +22,13 @@ export interface ProcessWebhookInput {
 }
 
 export class ProcessWebhookUseCase {
+  private readonly logger = new Logger(ProcessWebhookUseCase.name);
+
   constructor(
     private readonly webhookRepository: WebhookRepositoryInterface,
-    private readonly orderRepository?: OrderRepositoryInterface,
-    private readonly userRepository?: UserSQLRepository,
-  ) { }
+    private readonly orderRepository: OrderRepositoryInterface,
+    private readonly userRepository: UserSQLRepository,
+  ) {}
 
   async execute(input: ProcessWebhookInput): Promise<WebhookProcessingResult> {
     try {
@@ -69,7 +72,6 @@ export class ProcessWebhookUseCase {
         processedAt: new Date(),
       });
 
-      // Update order status if order repository is available and payment was processed
       if (
         this.orderRepository &&
         paymentStatus &&
@@ -148,17 +150,15 @@ export class ProcessWebhookUseCase {
 
   private async updateOrderStatus(paymentStatus: PaymentStatus): Promise<void> {
     try {
-      // Extract order ID from external reference (assuming format: orderId)
       const orderId = paymentStatus.externalReference;
 
       if (!orderId) {
-        console.warn('No external reference found in payment status');
+        this.logger.warn('No external reference found in payment status');
         return;
       }
 
-      // Find order by payment gateway ID (preference ID) first
       if (!this.orderRepository) {
-        console.warn('Order repository not available');
+        this.logger.warn('Order repository not available');
         return;
       }
 
@@ -166,37 +166,32 @@ export class ProcessWebhookUseCase {
         paymentStatus.paymentId,
       );
 
-      // If not found by payment gateway ID, try by order ID directly
       if (!order) {
         order = await this.orderRepository.findOrderById(orderId);
       }
 
       if (!order) {
-        console.warn(`Order not found for external reference: ${orderId}`);
+        this.logger.warn(`Order not found for external reference: ${orderId}`);
         return;
       }
 
-      // Map Mercado Pago status to our order status
       const orderStatus = this.mapPaymentStatusToOrderStatus(
         paymentStatus.status,
       );
 
       if (orderStatus) {
-        // Handle credit based on order status
         if (orderStatus === OrderStatus.APPROVED) {
-          // Payment approved: consume the reserved credit (remove from reserved)
           if (
             order.creditUsed &&
             order.creditUsed > 0 &&
-            !order.creditRestored &&
-            this.userRepository
+            !order.creditRestored
           ) {
+            await this.orderRepository.markCreditRestored(order.id);
             await this.userRepository.consumeReservedCredit(
               order.userId,
               order.creditUsed,
             );
-            await this.orderRepository!.markCreditRestored(order.id);
-            console.log(
+            this.logger.log(
               `Consumed ${order.creditUsed} reserved credit for user ${order.userId}`,
             );
           }
@@ -204,30 +199,28 @@ export class ProcessWebhookUseCase {
           orderStatus === OrderStatus.CANCELLED ||
           orderStatus === OrderStatus.REJECTED
         ) {
-          // Payment cancelled/rejected: release reserved credit back to available
           if (
             order.creditUsed &&
             order.creditUsed > 0 &&
-            !order.creditRestored &&
-            this.userRepository
+            !order.creditRestored
           ) {
+            await this.orderRepository.markCreditRestored(order.id);
             await this.userRepository.releaseReservedCredit(
               order.userId,
               order.creditUsed,
             );
-            await this.orderRepository!.markCreditRestored(order.id);
-            console.log(
+            this.logger.log(
               `Released ${order.creditUsed} reserved credit back to user ${order.userId}`,
             );
           }
         }
 
         await this.orderRepository.updateOrderStatus(order.id, orderStatus);
-        console.log(`Order ${order.id} status updated to: ${orderStatus}`);
+        this.logger.log(`Order ${order.id} status updated to: ${orderStatus}`);
       }
-    } catch (error) {
-      console.error('Error updating order status:', error.message);
-      // Don't throw error to avoid breaking webhook processing
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      this.logger.error(`Error updating order status: ${message}`);
     }
   }
 

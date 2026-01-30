@@ -1,73 +1,99 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Atenas Backend V2
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+API backend do sistema Atenas, construido com NestJS + TypeORM + PostgreSQL.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Pre-requisitos
 
-## Description
+- Docker e Docker Compose
+- Node.js 18+
+- pnpm
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Setup com Docker (recomendado)
 
-## Installation
+### 1. Configurar variaveis de ambiente
 
 ```bash
-$ npm install
+cp .env.example .env
 ```
 
-## Running the app
+Edite o `.env` com suas configuracoes (banco, Mercado Pago, etc).
+
+### 2. Subir os containers
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+docker-compose -f docker-compose.dev.yaml up --build
 ```
 
-## Test
+Isso inicia automaticamente:
+- **app** (porta 3001) — roda migrations, seed e `start:dev`
+- **db** — PostgreSQL 16.4 (porta 5432)
+- **adminer** — interface web para o banco (porta 8080)
+
+O entrypoint do container executa na ordem:
+1. `pnpm run migration:run` — aplica migrations pendentes
+2. `pnpm run seed` — popula o banco com dados iniciais
+3. `pnpm run start:dev` — inicia a aplicacao em modo watch
+
+### 3. Acessar
+
+| Servico  | URL                          |
+|----------|------------------------------|
+| API      | http://localhost:3001        |
+| Adminer  | http://localhost:8080        |
+| Debug    | localhost:9229               |
+
+## Setup sem Docker
+
+### 1. Instalar dependencias
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+pnpm install
 ```
 
-## Support
+### 2. Rodar migrations
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+pnpm run migration:run
+```
 
-## Stay in touch
+### 3. Rodar seed
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```bash
+pnpm run seed
+```
 
-## License
+O seed cria dados iniciais para desenvolvimento:
+- 1 instituicao de exemplo
+- 1 admin (`admin@atenas.com` / `senha123`)
+- 1 cliente com R$ 500 de credito (`cliente@exemplo.com` / `senha123`)
+- 3 produtos (ALBUM, GENERIC, DIGITAL_FILES)
+- 2 eventos vinculados a instituicao
+- Produtos vinculados a instituicao com precos configurados
 
-Nest is [MIT licensed](LICENSE).
+O seed so executa em ambientes `development`, `staging` ou `test`.
+
+### 4. Iniciar a aplicacao
+
+```bash
+pnpm run start:dev
+```
+
+## Scripts uteis
+
+| Comando                      | Descricao                                    |
+|------------------------------|----------------------------------------------|
+| `pnpm run start:dev`        | Inicia em modo watch                          |
+| `pnpm run start:prod`       | Inicia em modo producao                       |
+| `pnpm run build`            | Compila o projeto                             |
+| `pnpm run migration:run`    | Executa migrations pendentes                  |
+| `pnpm run migration:revert` | Reverte ultima migration                      |
+| `pnpm run seed`             | Popula banco com dados iniciais               |
+| `pnpm run test`             | Roda testes unitarios                         |
+| `pnpm run test:e2e`         | Roda testes e2e                               |
+| `pnpm run test:cov`         | Roda testes com cobertura                     |
+
+## Testes
+
+```bash
+pnpm run test
+```

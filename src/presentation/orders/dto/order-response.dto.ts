@@ -99,7 +99,10 @@ export class OrderDto {
   @ApiProperty({ type: ShippingAddressDto })
   shippingAddress: ShippingAddressDto;
 
-  @ApiProperty({ required: false, description: 'Crédito usado/reservado neste pedido' })
+  @ApiProperty({
+    required: false,
+    description: 'Crédito usado/reservado neste pedido',
+  })
   creditUsed?: number;
 
   @ApiProperty()

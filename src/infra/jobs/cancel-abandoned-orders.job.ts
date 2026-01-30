@@ -21,15 +21,14 @@ export interface CancelAbandonedOrdersResult {
 @Injectable()
 export class CancelAbandonedOrdersJob {
   private readonly logger = new Logger(CancelAbandonedOrdersJob.name);
-  private readonly DEFAULT_HOURS_THRESHOLD = 2; // Reduzido de 24h para 2h
+  private readonly DEFAULT_HOURS_THRESHOLD = 24;
 
   constructor(
     private readonly orderRepository: OrderRepository,
     private readonly userRepository: UserSQLRepository,
-  ) { }
+  ) {}
 
-  // Roda a cada 30 minutos (antes era a cada hora)
-  @Cron('*/30 * * * *')
+  @Cron(CronExpression.EVERY_HOUR)
   async executeScheduled(): Promise<void> {
     await this.execute(this.DEFAULT_HOURS_THRESHOLD);
   }
@@ -50,8 +49,9 @@ export class CancelAbandonedOrdersJob {
     };
 
     try {
-      const abandonedOrders =
-        await this.orderRepository.findAbandonedOrders(hoursThreshold);
+      const abandonedOrders = await this.orderRepository.findAbandonedOrders(
+        hoursThreshold,
+      );
 
       result.totalFound = abandonedOrders.length;
       this.logger.log(`Found ${abandonedOrders.length} abandoned orders`);
@@ -69,13 +69,16 @@ export class CancelAbandonedOrdersJob {
             status: 'cancelled',
           };
 
-          if (order.creditUsed && order.creditUsed > 0 && !order.creditRestored) {
-            // Release reserved credit back to available
+          if (
+            order.creditUsed &&
+            order.creditUsed > 0 &&
+            !order.creditRestored
+          ) {
+            await this.orderRepository.markCreditRestored(order.id);
             await this.userRepository.releaseReservedCredit(
               order.userId,
               order.creditUsed,
             );
-            await this.orderRepository.markCreditRestored(order.id);
             detail.creditRestored = order.creditUsed;
             result.creditsRestored++;
             this.logger.log(
