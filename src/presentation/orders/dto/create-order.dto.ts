@@ -255,4 +255,39 @@ export class CreateOrderResponseDto {
   })
   @IsString()
   mercadoPagoCheckoutUrl!: string;
+
+  @ApiProperty({
+    description: 'Método de pagamento utilizado',
+    enum: ['MERCADO_PAGO', 'CREDIT', 'FREE'],
+    example: 'CREDIT',
+  })
+  @IsString()
+  paymentMethod!: 'MERCADO_PAGO' | 'CREDIT' | 'FREE';
+
+  @ApiProperty({
+    description: 'Número do contrato',
+    example: '2602-001',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  contractNumber?: string;
+
+  @ApiProperty({
+    description: 'Crédito utilizado neste pedido',
+    example: 150.0,
+    required: false,
+  })
+  @IsNumber()
+  @IsOptional()
+  creditUsed?: number;
+
+  @ApiProperty({
+    description: 'Crédito restante após o pedido',
+    example: 350.0,
+    required: false,
+  })
+  @IsNumber()
+  @IsOptional()
+  remainingCredit?: number;
 }

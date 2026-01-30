@@ -55,6 +55,10 @@ export class OrderAdapter {
     return {
       orderId: result.orderId,
       mercadoPagoCheckoutUrl: result.checkoutUrl,
+      paymentMethod: result.paymentMethod,
+      contractNumber: result.contractNumber,
+      creditUsed: result.creditUsed,
+      remainingCredit: result.remainingCredit,
     };
   }
 
