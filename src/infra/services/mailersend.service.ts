@@ -621,6 +621,7 @@ export class MailerSendService {
         <body>
           <div class="container">
             <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
+              <img src="https://i.imgur.com/EDC81qk.png" alt="Atenas Formaturas" style="max-width: 200px; height: auto; margin-bottom: 15px;" />
               <h1>Bem-vindo(a) ao Atenas Formaturas!</h1>
             </div>
             <div class="content">
@@ -719,6 +720,7 @@ export class MailerSendService {
         <body>
           <div class="container">
             <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
+              <img src="https://i.imgur.com/EDC81qk.png" alt="Atenas Formaturas" style="max-width: 200px; height: auto; margin-bottom: 15px;" />
               <h1>Redefinição de Senha</h1>
             </div>
             <div class="content">
@@ -828,6 +830,7 @@ export class MailerSendService {
         <body>
           <div class="container">
             <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
+              <img src="https://i.imgur.com/EDC81qk.png" alt="Atenas Formaturas" style="max-width: 200px; height: auto; margin-bottom: 15px;" />
               <h1>Código de Verificação</h1>
             </div>
             <div class="content">
@@ -943,6 +946,7 @@ export class MailerSendService {
         <body>
           <div class="container">
             <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
+              <img src="https://i.imgur.com/EDC81qk.png" alt="Atenas Formaturas" style="max-width: 200px; height: auto; margin-bottom: 15px;" />
               <h1>🎉 Pedido Concluído!</h1>
             </div>
             <div class="content">
@@ -1064,6 +1068,7 @@ export class MailerSendService {
         <body>
           <div class="container">
             <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
+              <img src="https://i.imgur.com/EDC81qk.png" alt="Atenas Formaturas" style="max-width: 200px; height: auto; margin-bottom: 15px;" />
               <h1>🎉 Pedido Concluído!</h1>
             </div>
             <div class="content">
@@ -1212,6 +1217,7 @@ export class MailerSendService {
         <body>
           <div class="container">
             <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
+              <img src="https://i.imgur.com/EDC81qk.png" alt="Atenas Formaturas" style="max-width: 200px; height: auto; margin-bottom: 15px;" />
               <h1>Suas Credenciais de Acesso</h1>
             </div>
             <div class="content">
