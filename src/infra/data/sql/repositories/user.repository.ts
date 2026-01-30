@@ -83,11 +83,13 @@ export class UserSQLRepository {
 
     if (sortBy === 'userContract') {
       // Sort by computed field: contractNumber-identifier
-      // Note: Using proper alias.column syntax without extra quotes
-      queryBuilder.orderBy(
-        `CONCAT(institution.contractNumber, '-', user.identifier)`,
-        sortOrder,
-      );
+      // Using addSelect to create an alias that we can safely order by
+      queryBuilder
+        .addSelect(
+          "CONCAT(COALESCE(institution.contractNumber, ''), '-', COALESCE(user.identifier, ''))",
+          'userContractSort',
+        )
+        .orderBy('userContractSort', sortOrder);
     } else {
       const sortColumn = (sortBy && columnMap[sortBy]) || 'user.updatedAt';
       queryBuilder.orderBy(sortColumn, sortOrder);
