@@ -83,11 +83,12 @@ export class UserSQLRepository {
 
     if (sortBy === 'userContract') {
       // Sort by computed field: contractNumber-identifier
-      // Use raw SQL with actual table column names to avoid TypeORM parsing issues
-      queryBuilder.orderBy(
-        `CONCAT("institution"."contractNumber", '-', "user"."identifier")`,
-        sortOrder,
+      // Add computed field as a select and use raw ORDER BY to avoid TypeORM alias parsing
+      queryBuilder.addSelect(
+        `CONCAT(institution.contractNumber, '-', user.identifier)`,
+        'user_contract_sort',
       );
+      queryBuilder.orderBy('user_contract_sort', sortOrder);
     } else {
       const sortColumn = (sortBy && columnMap[sortBy]) || 'user.updatedAt';
       queryBuilder.orderBy(sortColumn, sortOrder);
