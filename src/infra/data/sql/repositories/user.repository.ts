@@ -83,8 +83,9 @@ export class UserSQLRepository {
 
     if (sortBy === 'userContract') {
       // Sort by computed field: contractNumber-identifier
+      // Use raw SQL with actual table column names to avoid TypeORM parsing issues
       queryBuilder.orderBy(
-        `CONCAT(institution.contractNumber, '-', user.identifier)`,
+        `CONCAT("institution"."contractNumber", '-', "user"."identifier")`,
         sortOrder,
       );
     } else {
