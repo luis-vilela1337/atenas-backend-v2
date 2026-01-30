@@ -337,15 +337,17 @@ export class UserSQLRepository {
       [amount, userId],
     );
 
-    if (result.length === 0) {
+    const rows = Array.isArray(result[0]) ? result[0] : result;
+
+    if (rows.length === 0) {
       const current = await this.findUserCreditByUserId(userId);
       return { success: false, previousCredit: current, newCredit: current };
     }
 
     return {
       success: true,
-      previousCredit: parseFloat(result[0].previous_credit),
-      newCredit: parseFloat(result[0].new_credit),
+      previousCredit: parseFloat(rows[0].previous_credit),
+      newCredit: parseFloat(rows[0].new_credit),
     };
   }
 
@@ -374,15 +376,17 @@ export class UserSQLRepository {
       `UPDATE users
        SET "creditValue" = COALESCE("creditValue"::numeric, 0) - $1,
            "creditReserved" = COALESCE("creditReserved"::numeric, 0) + $1
-       WHERE id = $2 
+       WHERE id = $2
        AND COALESCE("creditValue"::numeric, 0) >= $1
-       RETURNING 
+       RETURNING
          COALESCE("creditValue"::numeric, 0) as available_credit,
          COALESCE("creditReserved"::numeric, 0) as reserved_credit`,
       [amount, userId],
     );
 
-    if (result.length === 0) {
+    const rows = Array.isArray(result[0]) ? result[0] : result;
+
+    if (rows.length === 0) {
       const user = await this.user.findOne({
         where: { id: userId },
         select: ['creditValue', 'creditReserved'],
@@ -398,8 +402,8 @@ export class UserSQLRepository {
 
     return {
       success: true,
-      availableCredit: parseFloat(result[0].available_credit),
-      reservedCredit: parseFloat(result[0].reserved_credit),
+      availableCredit: parseFloat(rows[0].available_credit),
+      reservedCredit: parseFloat(rows[0].reserved_credit),
     };
   }
 
