@@ -5,7 +5,9 @@ import { Injectable } from '@nestjs/common';
 export class DeleteEventApplication {
   constructor(private readonly deleteEventUseCase: DeleteEventUseCase) {}
 
-  async execute(eventId: string): Promise<{ success: boolean; message: string }> {
+  async execute(
+    eventId: string,
+  ): Promise<{ success: boolean; message: string }> {
     await this.deleteEventUseCase.execute(eventId);
     return { success: true, message: 'Evento excluído com sucesso' };
   }

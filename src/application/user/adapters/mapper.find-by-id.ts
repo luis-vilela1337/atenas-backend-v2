@@ -50,6 +50,9 @@ export class UserPayloadDto {
   creditValue: number | null;
 
   @ApiProperty({ nullable: true })
+  creditReserved: number | null;
+
+  @ApiProperty({ nullable: true })
   profileImage: string | null;
 
   @ApiProperty()
@@ -89,6 +92,9 @@ export class UserAdapterEntity {
       motherPhone: user.motherPhone || null,
       driveLink: user.driveLink || null,
       creditValue: user.creditValue ? parseFloat(user.creditValue) : null,
+      creditReserved: user.creditReserved
+        ? parseFloat(user.creditReserved)
+        : null,
       profileImage: user.profileImage || null,
       status: user.status,
       address:

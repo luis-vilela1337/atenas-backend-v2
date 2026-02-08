@@ -175,15 +175,17 @@ export class OrderAdapter {
       paymentStatus: order.paymentStatus,
       paymentGatewayId: order.paymentGatewayId,
       contractNumber: order.contractNumber,
-      shippingAddress: {
-        zipCode: order.shippingAddress.zipCode,
-        street: order.shippingAddress.street,
-        number: order.shippingAddress.number,
-        complement: order.shippingAddress.complement,
-        neighborhood: order.shippingAddress.neighborhood,
-        city: order.shippingAddress.city,
-        state: order.shippingAddress.state,
-      },
+      shippingAddress: order.shippingAddress
+        ? {
+            zipCode: order.shippingAddress.zipCode,
+            street: order.shippingAddress.street,
+            number: order.shippingAddress.number,
+            complement: order.shippingAddress.complement,
+            neighborhood: order.shippingAddress.neighborhood,
+            city: order.shippingAddress.city,
+            state: order.shippingAddress.state,
+          }
+        : undefined,
       createdAt: order.createdAt.toISOString(),
       updatedAt:
         order.updatedAt?.toISOString() || order.createdAt.toISOString(),
