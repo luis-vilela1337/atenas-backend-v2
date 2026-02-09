@@ -175,6 +175,7 @@ export class OrderAdapter {
       paymentStatus: order.paymentStatus,
       paymentGatewayId: order.paymentGatewayId,
       contractNumber: order.contractNumber,
+      creditUsed: order.creditUsed,
       shippingAddress: order.shippingAddress
         ? {
             zipCode: order.shippingAddress.zipCode,
