@@ -194,7 +194,6 @@ describe('UpdateInstitutionProductUseCase', () => {
         };
         const genericUpdateInput = {
           details: {
-            isAvailableUnit: true,
             events: [
               {
                 id: 'ada18814-fdfd-4cc0-86cb-ad20bd0b23b1',

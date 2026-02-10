@@ -7,6 +7,7 @@ import {
   ShippingAddress,
   OrderStatus,
 } from '../entities/order.entity';
+import { BadRequestException, HttpException } from '@nestjs/common';
 import { OrderRepositoryInterface } from '../repositories/order.repository.interface';
 import { MercadoPagoRepositoryInterface } from '../../mercado-pago/repositories/mercado-pago.repository.interface';
 import { PaymentPreference } from '../../mercado-pago/entities/payment-preference.entity';
@@ -137,7 +138,10 @@ export class CreateOrderUseCase {
         remainingCredit: 0,
       };
     } catch (error) {
-      throw new Error(`Failed to create order: ${error.message}`);
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new BadRequestException(`Failed to create order: ${error.message}`);
     }
   }
 
@@ -291,7 +295,7 @@ export class CreateOrderUseCase {
           (details.events && details.events.length > 0) ||
           (details.albumPhotos && details.albumPhotos.length > 0)
         ) {
-          throw new Error(
+          throw new BadRequestException(
             'When isFullPackage is true, no other selections (photos, events, albumPhotos) should be present',
           );
         }
@@ -302,7 +306,7 @@ export class CreateOrderUseCase {
           details.albumPhotos && details.albumPhotos.length > 0;
 
         if (!hasPhotos && !hasEvents && !hasAlbumPhotos) {
-          throw new Error(
+          throw new BadRequestException(
             'At least one selection type (photos, events, albumPhotos) is required when isFullPackage is false',
           );
         }
@@ -319,7 +323,7 @@ export class CreateOrderUseCase {
     );
 
     if (requiresShipping && !shippingDetails) {
-      throw new Error(
+      throw new BadRequestException(
         'Shipping address is required for physical products (GENERIC or ALBUM)',
       );
     }
@@ -376,7 +380,7 @@ export class CreateOrderUseCase {
         );
 
       if (!institutionProduct) {
-        throw new Error(
+        throw new BadRequestException(
           `Product ${item.productId} not found for institution ${institutionId}`,
         );
       }
@@ -401,7 +405,7 @@ export class CreateOrderUseCase {
         .toNumber();
 
       if (priceDifference > 0.02) {
-        throw new Error(
+        throw new BadRequestException(
           `Invalid price for product ${
             item.productName
           }. Expected: R$ ${expectedTotalPrice.toFixed(
@@ -418,7 +422,7 @@ export class CreateOrderUseCase {
     selectionDetails: any,
   ): number {
     if (!details) {
-      throw new Error('Product details not found');
+      throw new BadRequestException('Product details not found');
     }
 
     switch (productType) {
@@ -438,7 +442,9 @@ export class CreateOrderUseCase {
           selectionDetails,
         );
       default:
-        throw new Error(`Unsupported product type: ${productType}`);
+        throw new BadRequestException(
+          `Unsupported product type: ${productType}`,
+        );
     }
   }
 
@@ -449,7 +455,7 @@ export class CreateOrderUseCase {
     const photoCount = selectionDetails.albumPhotos?.length || 0;
 
     if (photoCount < details.minPhoto || photoCount > details.maxPhoto) {
-      throw new Error(
+      throw new BadRequestException(
         `Album photo count must be between ${details.minPhoto} and ${details.maxPhoto}`,
       );
     }
@@ -466,12 +472,6 @@ export class CreateOrderUseCase {
     let totalPrice = new Decimal(0);
 
     if (selectionDetails.photos && selectionDetails.photos.length > 0) {
-      if (!details.isAvailableUnit) {
-        throw new Error(
-          'Individual photo purchase not available for this product',
-        );
-      }
-
       for (const photo of selectionDetails.photos) {
         const event = details.events.find((e) => e.id === photo.eventId);
         if (
@@ -479,7 +479,7 @@ export class CreateOrderUseCase {
           event.valorPhoto === undefined ||
           event.valorPhoto === null
         ) {
-          throw new Error(
+          throw new BadRequestException(
             `Event ${photo.eventId} not found or has no unit price`,
           );
         }
@@ -491,12 +491,14 @@ export class CreateOrderUseCase {
       for (const selectedEvent of selectionDetails.events) {
         const event = details.events.find((e) => e.id === selectedEvent.id);
         if (!event) {
-          throw new Error(`Event ${selectedEvent.id} not found`);
+          throw new BadRequestException(`Event ${selectedEvent.id} not found`);
         }
 
         if (selectedEvent.isPackage) {
           if (event.valorPack === undefined || event.valorPack === null) {
-            throw new Error(`Event ${selectedEvent.id} has no package price`);
+            throw new BadRequestException(
+              `Event ${selectedEvent.id} has no package price`,
+            );
           }
           totalPrice = totalPrice.plus(event.valorPack);
         }
@@ -512,7 +514,7 @@ export class CreateOrderUseCase {
   ): number {
     if (selectionDetails.isFullPackage) {
       if (!details.valorPackTotal) {
-        throw new Error('Full package price not configured');
+        throw new BadRequestException('Full package price not configured');
       }
       return details.valorPackTotal;
     }
@@ -520,8 +522,10 @@ export class CreateOrderUseCase {
     let totalPrice = new Decimal(0);
 
     if (selectionDetails.photos && selectionDetails.photos.length > 0) {
-      if (!details.isAvailableUnit) {
-        throw new Error('Individual photo purchase not available');
+      if (details.isAvailableUnit === false) {
+        throw new BadRequestException(
+          'Individual photo purchase not available',
+        );
       }
 
       for (const photo of selectionDetails.photos) {
@@ -531,7 +535,7 @@ export class CreateOrderUseCase {
           event.valorPhoto === undefined ||
           event.valorPhoto === null
         ) {
-          throw new Error(
+          throw new BadRequestException(
             `Event ${photo.eventId} not found or has no unit price`,
           );
         }
@@ -543,12 +547,14 @@ export class CreateOrderUseCase {
       for (const selectedEvent of selectionDetails.events) {
         const event = details.events?.find((e) => e.id === selectedEvent.id);
         if (!event) {
-          throw new Error(`Event ${selectedEvent.id} not found`);
+          throw new BadRequestException(`Event ${selectedEvent.id} not found`);
         }
 
         if (selectedEvent.isPackage) {
           if (event.valorPack === undefined || event.valorPack === null) {
-            throw new Error(`Event ${selectedEvent.id} has no package price`);
+            throw new BadRequestException(
+              `Event ${selectedEvent.id} has no package price`,
+            );
           }
           totalPrice = totalPrice.plus(event.valorPack);
         }

@@ -236,7 +236,6 @@ async function seed() {
         product: createdProducts[1],
         flag: 'GENERIC',
         details: {
-          isAvailableUnit: true,
           events: [
             {
               id: createdEvents[0].id,

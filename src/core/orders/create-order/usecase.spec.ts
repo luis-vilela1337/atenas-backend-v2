@@ -75,6 +75,8 @@ describe('CreateOrderUseCase', () => {
     userRepository = {
       findUserCreditByUserId: jest.fn(),
       updateUserCredit: jest.fn(),
+      deductCreditAtomic: jest.fn(),
+      reserveCredit: jest.fn(),
       findById: jest.fn(),
       updateUser: jest.fn(),
     } as any;
@@ -117,7 +119,6 @@ describe('CreateOrderUseCase', () => {
       id: 'inst-product-1',
       flag: 'GENERIC',
       details: {
-        isAvailableUnit: true,
         events: [
           {
             id: 'event-1',
@@ -145,7 +146,6 @@ describe('CreateOrderUseCase', () => {
           id: 'inst-product-1',
           flag: 'GENERIC',
           details: {
-            isAvailableUnit: true,
             events: [
               {
                 id: 'event-1',
@@ -191,6 +191,11 @@ describe('CreateOrderUseCase', () => {
       const userCredit = 150;
 
       userRepository.findUserCreditByUserId.mockResolvedValue(userCredit);
+      userRepository.deductCreditAtomic.mockResolvedValue({
+        success: true,
+        previousCredit: 150,
+        newCredit: 50,
+      });
       configService.get.mockReturnValue('https://seudominio.com/success');
       orderRepository.createOrder.mockResolvedValue(mockOrder);
 
@@ -209,9 +214,9 @@ describe('CreateOrderUseCase', () => {
       expect(userRepository.findUserCreditByUserId).toHaveBeenCalledWith(
         'user-123',
       );
-      expect(userRepository.updateUserCredit).toHaveBeenCalledWith(
+      expect(userRepository.deductCreditAtomic).toHaveBeenCalledWith(
         'user-123',
-        50,
+        100,
       );
       expect(orderRepository.createOrder).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -227,6 +232,11 @@ describe('CreateOrderUseCase', () => {
       const userCredit = 100;
 
       userRepository.findUserCreditByUserId.mockResolvedValue(userCredit);
+      userRepository.deductCreditAtomic.mockResolvedValue({
+        success: true,
+        previousCredit: 100,
+        newCredit: 0,
+      });
       configService.get.mockReturnValue('https://seudominio.com/success');
       orderRepository.createOrder.mockResolvedValue(mockOrder);
 
@@ -242,9 +252,9 @@ describe('CreateOrderUseCase', () => {
         creditUsed: 100,
         remainingCredit: 0,
       });
-      expect(userRepository.updateUserCredit).toHaveBeenCalledWith(
+      expect(userRepository.deductCreditAtomic).toHaveBeenCalledWith(
         'user-123',
-        0,
+        100,
       );
     });
   });
@@ -255,6 +265,11 @@ describe('CreateOrderUseCase', () => {
       const userCredit = 50;
 
       userRepository.findUserCreditByUserId.mockResolvedValue(userCredit);
+      userRepository.reserveCredit.mockResolvedValue({
+        success: true,
+        availableCredit: 0,
+        reservedCredit: 50,
+      });
       orderRepository.createOrder.mockResolvedValue({
         ...mockOrder,
         paymentStatus: OrderStatus.PENDING,
@@ -279,10 +294,10 @@ describe('CreateOrderUseCase', () => {
       expect(userRepository.findUserCreditByUserId).toHaveBeenCalledWith(
         'user-123',
       );
-      // Should deduct partial credit (50) before using Mercado Pago
-      expect(userRepository.updateUserCredit).toHaveBeenCalledWith(
+      // Should reserve partial credit (50) before using Mercado Pago
+      expect(userRepository.reserveCredit).toHaveBeenCalledWith(
         'user-123',
-        0,
+        50,
       );
       expect(orderRepository.createOrder).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -376,7 +391,6 @@ describe('CreateOrderUseCase', () => {
           id: 'inst-product-1',
           flag: 'GENERIC',
           details: {
-            isAvailableUnit: true,
             events: [
               {
                 id: 'event-1',
@@ -473,7 +487,6 @@ describe('CreateOrderUseCase', () => {
               id: 'inst-product-1',
               flag: 'GENERIC',
               details: {
-                isAvailableUnit: true,
                 events: [
                   {
                     id: 'event-1',
@@ -488,7 +501,6 @@ describe('CreateOrderUseCase', () => {
             id: 'inst-product-2',
             flag: 'GENERIC',
             details: {
-              isAvailableUnit: true,
               events: [
                 {
                   id: 'event-1',

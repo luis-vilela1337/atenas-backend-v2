@@ -109,7 +109,6 @@ describe('CreateOrderApplication - Integration Tests', () => {
         id: 'inst-product-1',
         flag: 'GENERIC',
         details: {
-          isAvailableUnit: true,
           events: [
             {
               id: 'event-1',
