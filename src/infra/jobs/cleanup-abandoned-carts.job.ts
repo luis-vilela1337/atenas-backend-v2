@@ -1,13 +1,16 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Inject } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { CartSQLRepository } from '../data/sql/repositories/cart.repository';
+import { CartRepositoryInterface } from '@core/cart/repositories/cart.repository.interface';
 
 @Injectable()
 export class CleanupAbandonedCartsJob {
   private readonly logger = new Logger(CleanupAbandonedCartsJob.name);
   private readonly DAYS_THRESHOLD = 7;
 
-  constructor(private readonly cartRepository: CartSQLRepository) {}
+  constructor(
+    @Inject('CartRepositoryInterface')
+    private readonly cartRepository: CartRepositoryInterface,
+  ) {}
 
   @Cron(CronExpression.EVERY_DAY_AT_3AM)
   async executeScheduled(): Promise<void> {

@@ -1,9 +1,9 @@
 import { CleanupAbandonedCartsJob } from './cleanup-abandoned-carts.job';
-import { CartSQLRepository } from '../data/sql/repositories/cart.repository';
+import { CartRepositoryInterface } from '@core/cart/repositories/cart.repository.interface';
 
 describe('CleanupAbandonedCartsJob', () => {
   let job: CleanupAbandonedCartsJob;
-  let cartRepository: jest.Mocked<CartSQLRepository>;
+  let cartRepository: jest.Mocked<CartRepositoryInterface>;
 
   beforeEach(() => {
     cartRepository = {
