@@ -8,6 +8,7 @@ import { WebhookRepositoryInterface } from '../repositories/webhook.repository.i
 import { OrderRepositoryInterface } from '../../orders/repositories/order.repository.interface';
 import { OrderStatus } from '../../orders/entities/order.entity';
 import { UserSQLRepository } from '../../../infra/data/sql/repositories/user.repository';
+import { CartRepositoryInterface } from '../../cart/repositories/cart.repository.interface';
 
 export interface ProcessWebhookInput {
   id: string;
@@ -28,6 +29,7 @@ export class ProcessWebhookUseCase {
     private readonly webhookRepository: WebhookRepositoryInterface,
     private readonly orderRepository: OrderRepositoryInterface,
     private readonly userRepository: UserSQLRepository,
+    private readonly cartRepository?: CartRepositoryInterface,
   ) {}
 
   async execute(input: ProcessWebhookInput): Promise<WebhookProcessingResult> {
@@ -217,6 +219,10 @@ export class ProcessWebhookUseCase {
 
         await this.orderRepository.updateOrderStatus(order.id, orderStatus);
         this.logger.log(`Order ${order.id} status updated to: ${orderStatus}`);
+
+        if (orderStatus === OrderStatus.APPROVED) {
+          await this.clearCartSafe(order.userId);
+        }
       }
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
@@ -240,5 +246,19 @@ export class ProcessWebhookUseCase {
     };
 
     return statusMap[paymentStatus] || null;
+  }
+
+  private async clearCartSafe(userId: string): Promise<void> {
+    try {
+      if (this.cartRepository) {
+        await this.cartRepository.clearByUserId(userId);
+        this.logger.log(
+          `Cart cleared for user ${userId} after payment approval`,
+        );
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      this.logger.warn(`Failed to clear cart for user ${userId}: ${message}`);
+    }
   }
 }

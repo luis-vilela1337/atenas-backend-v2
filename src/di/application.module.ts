@@ -40,6 +40,9 @@ import { FindOrdersApplication } from '@application/orders/find-orders.applicati
 import { FindOrderByIdApplication } from '@application/orders/find-order-by-id.application';
 import { UpdateOrderStatusApplication } from '@application/orders/update-order-status.application';
 import { UpdateProfileApplication } from '@application/profile/update-profile.application';
+import { GetCartApplication } from '@application/cart/get-cart.application';
+import { UpdateCartApplication } from '@application/cart/update-cart.application';
+import { ClearCartApplication } from '@application/cart/clear-cart.application';
 
 @Module({
   imports: [
@@ -94,6 +97,10 @@ import { UpdateProfileApplication } from '@application/profile/update-profile.ap
     UpdateOrderStatusApplication,
     // profile
     UpdateProfileApplication,
+    // cart
+    GetCartApplication,
+    UpdateCartApplication,
+    ClearCartApplication,
   ],
   exports: [
     //user
@@ -141,6 +148,10 @@ import { UpdateProfileApplication } from '@application/profile/update-profile.ap
     UpdateOrderStatusApplication,
     // profile
     UpdateProfileApplication,
+    // cart
+    GetCartApplication,
+    UpdateCartApplication,
+    ClearCartApplication,
   ],
 })
 export class ApplicationModule {}

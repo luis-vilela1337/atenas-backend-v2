@@ -13,6 +13,7 @@ import { MercadoPagoRepositoryInterface } from '../../mercado-pago/repositories/
 import { PaymentPreference } from '../../mercado-pago/entities/payment-preference.entity';
 import { UserSQLRepository } from '../../../infra/data/sql/repositories/user.repository';
 import { InstitutionProductSQLRepository } from '../../../infra/data/sql/repositories/institution-product.repostitoy';
+import { CartRepositoryInterface } from '../../cart/repositories/cart.repository.interface';
 import {
   AlbumDetails,
   GenericDetails,
@@ -28,6 +29,7 @@ export class CreateOrderUseCase {
     private readonly userRepository: UserSQLRepository,
     private readonly institutionProductRepository: InstitutionProductSQLRepository,
     private readonly configService: ConfigService,
+    private readonly cartRepository?: CartRepositoryInterface,
   ) {}
 
   async execute(input: CreateOrderInput): Promise<CreateOrderResult> {
@@ -54,6 +56,7 @@ export class CreateOrderUseCase {
           totalAmount,
           OrderStatus.APPROVED,
         );
+        await this.clearCartSafe(input.userId);
         return {
           orderId: order.id,
           checkoutUrl: this.configService.get('BATATA_CHECKOUT_URL'),
@@ -84,6 +87,8 @@ export class CreateOrderUseCase {
         );
 
         await this.orderRepository.markCreditRestored(order.id);
+
+        await this.clearCartSafe(input.userId);
 
         return {
           orderId: order.id,
@@ -562,5 +567,15 @@ export class CreateOrderUseCase {
     }
 
     return totalPrice.toNumber();
+  }
+
+  private async clearCartSafe(userId: string): Promise<void> {
+    try {
+      if (this.cartRepository) {
+        await this.cartRepository.clearByUserId(userId);
+      }
+    } catch (error) {
+      // Cart clearing should never block order creation
+    }
   }
 }

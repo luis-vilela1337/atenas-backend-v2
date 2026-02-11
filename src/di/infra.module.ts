@@ -27,6 +27,8 @@ import { OrderRepository } from '@infrastructure/data/sql/repositories/order.rep
 import { MailerSendService } from '@infrastructure/services/mailersend.service';
 import { PasswordResetCodeRepository } from '@infrastructure/data/sql/repositories/password-reset-code.repository';
 import { CancelAbandonedOrdersJob } from '@infrastructure/jobs/cancel-abandoned-orders.job';
+import { CartSQLRepository } from '@infrastructure/data/sql/repositories/cart.repository';
+import { CleanupAbandonedCartsJob } from '@infrastructure/jobs/cleanup-abandoned-carts.job';
 
 @Module({
   imports: [
@@ -61,6 +63,7 @@ import { CancelAbandonedOrdersJob } from '@infrastructure/jobs/cancel-abandoned-
     OrderRepository,
     PasswordResetCodeRepository,
     CancelAbandonedOrdersJob,
+    CleanupAbandonedCartsJob,
     {
       provide: 'MercadoPagoRepositoryInterface',
       useClass: MercadoPagoService,
@@ -72,6 +75,10 @@ import { CancelAbandonedOrdersJob } from '@infrastructure/jobs/cancel-abandoned-
     {
       provide: 'OrderRepositoryInterface',
       useClass: OrderRepository,
+    },
+    {
+      provide: 'CartRepositoryInterface',
+      useClass: CartSQLRepository,
     },
     // Strategies
     JwtCustomStrategy,
@@ -101,9 +108,11 @@ import { CancelAbandonedOrdersJob } from '@infrastructure/jobs/cancel-abandoned-
     OrderRepository,
     PasswordResetCodeRepository,
     CancelAbandonedOrdersJob,
+    CleanupAbandonedCartsJob,
     'MercadoPagoRepositoryInterface',
     'WebhookRepositoryInterface',
     'OrderRepositoryInterface',
+    'CartRepositoryInterface',
     // Strategies
     JwtCustomStrategy,
     JwtRefreshStrategy,

@@ -18,6 +18,7 @@ import { Generated1763735367287 } from '@infrastructure/data/migrations/17637353
 import { AddLastLoginAt1767712724467 } from '@infrastructure/data/migrations/1767712724467-AddLastLoginAt';
 import { AddCreditRestoredToOrder1736848800000 } from '@infrastructure/data/migrations/1736848800000-AddCreditRestoredToOrder';
 import { AddCreditReservedToUser1737050000000 } from '@infrastructure/data/migrations/1737050000000-AddCreditReservedToUser';
+import { CreateCartTable1770872400000 } from '../migrations/1770872400000-CreateCartTable';
 
 export const migrations = [
   Generated1747237005972,
@@ -36,6 +37,7 @@ export const migrations = [
   AddLastLoginAt1767712724467,
   AddCreditRestoredToOrder1736848800000,
   AddCreditReservedToUser1737050000000,
+  CreateCartTable1770872400000,
 ];
 
 const envVars = (cs: ConfigService) => ({

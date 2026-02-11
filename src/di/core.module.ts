@@ -35,6 +35,9 @@ import { FindOrdersUseCase } from '@core/orders/find-orders.usecase';
 import { FindOrderByIdUseCase } from '@core/orders/find-order-by-id.usecase';
 import { UpdateOrderStatusUseCase } from '@core/orders/update-order-status/usecase';
 import { UpdateProfileUseCase } from '@core/profile/update-profile.usecase';
+import { GetCartUseCase } from '@core/cart/get-cart.usecase';
+import { UpdateCartUseCase } from '@core/cart/update-cart.usecase';
+import { ClearCartUseCase } from '@core/cart/clear-cart.usecase';
 
 @Module({
   imports: [InfraModule],
@@ -83,6 +86,10 @@ import { UpdateProfileUseCase } from '@core/profile/update-profile.usecase';
     UpdateOrderStatusUseCase,
     // profile
     UpdateProfileUseCase,
+    // cart
+    GetCartUseCase,
+    UpdateCartUseCase,
+    ClearCartUseCase,
   ],
   exports: [
     //user
@@ -129,6 +136,10 @@ import { UpdateProfileUseCase } from '@core/profile/update-profile.usecase';
     UpdateOrderStatusUseCase,
     // profile
     UpdateProfileUseCase,
+    // cart
+    GetCartUseCase,
+    UpdateCartUseCase,
+    ClearCartUseCase,
   ],
 })
 export class CoreModule {}
