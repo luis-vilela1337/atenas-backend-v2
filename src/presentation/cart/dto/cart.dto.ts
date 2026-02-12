@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class UpdateCartDto {
   @ApiProperty({
@@ -8,6 +9,7 @@ export class UpdateCartDto {
     example: [],
   })
   @IsArray()
+  @Transform(({ value }) => value, { toClassOnly: true })
   items: any[];
 }
 
