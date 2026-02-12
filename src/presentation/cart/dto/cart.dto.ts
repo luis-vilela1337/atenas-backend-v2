@@ -9,7 +9,7 @@ export class UpdateCartDto {
     example: [],
   })
   @IsArray()
-  @Transform(({ value }) => value, { toClassOnly: true })
+  @Transform(({ obj }) => obj.items, { toClassOnly: true })
   items: any[];
 }
 
