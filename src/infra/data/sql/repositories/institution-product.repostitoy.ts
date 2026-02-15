@@ -242,6 +242,26 @@ export class InstitutionProductSQLRepository {
     return await this.populateEventNames(products);
   }
 
+  async removeEventFromDetails(eventId: string): Promise<void> {
+    await this.dataSource.query(
+      `UPDATE institution_products
+       SET details = jsonb_set(
+         details,
+         '{events}',
+         COALESCE(
+           (SELECT jsonb_agg(elem)
+            FROM jsonb_array_elements(details->'events') elem
+            WHERE elem->>'id' != $1),
+           '[]'::jsonb
+         )
+       )
+       WHERE details IS NOT NULL
+         AND details ? 'events'
+         AND details->'events' @> $2::jsonb`,
+      [eventId, JSON.stringify([{ id: eventId }])],
+    );
+  }
+
   async findByProductId(productId: string): Promise<InstitutionProduct[]> {
     const products = await this.institutionProduct.find({
       where: { product: { id: productId } },
