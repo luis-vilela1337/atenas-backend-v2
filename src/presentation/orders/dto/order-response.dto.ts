@@ -96,6 +96,13 @@ export class OrderDto {
   @ApiProperty({ required: false })
   contractNumber?: string;
 
+  @ApiProperty({
+    required: false,
+    description:
+      'URL de checkout do Mercado Pago (disponível apenas para pedidos PENDING com pagamento via MP)',
+  })
+  checkoutUrl?: string;
+
   @ApiProperty({ type: ShippingAddressDto })
   shippingAddress: ShippingAddressDto;
 

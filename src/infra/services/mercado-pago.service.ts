@@ -37,6 +37,17 @@ export class MercadoPagoService implements MercadoPagoRepositoryInterface {
     this.preference = new Preference(this.client);
   }
 
+  async getPreferenceCheckoutUrl(
+    preferenceId: string,
+  ): Promise<string | null> {
+    try {
+      const response = await this.preference.get({ preferenceId });
+      return response.init_point || null;
+    } catch {
+      return null;
+    }
+  }
+
   async createPreference(
     paymentPreference: PaymentPreference,
   ): Promise<PaymentPreferenceResult> {

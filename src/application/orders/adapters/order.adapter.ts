@@ -124,6 +124,7 @@ export class OrderAdapter {
   static async toOrderDto(
     order: Order,
     imageStorageService: ImageStorageService,
+    checkoutUrl?: string,
   ): Promise<OrderDto> {
     // Debug log
     console.log('[OrderAdapter] Processing order:', {
@@ -175,6 +176,7 @@ export class OrderAdapter {
       paymentStatus: order.paymentStatus,
       paymentGatewayId: order.paymentGatewayId,
       contractNumber: order.contractNumber,
+      checkoutUrl,
       creditUsed: order.creditUsed,
       shippingAddress: order.shippingAddress
         ? {
