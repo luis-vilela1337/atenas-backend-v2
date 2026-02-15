@@ -28,6 +28,7 @@ import { CreateOrderApplication } from '@application/orders/create-order.applica
 import { FindOrdersApplication } from '@application/orders/find-orders.application';
 import { FindOrderByIdApplication } from '@application/orders/find-order-by-id.application';
 import { UpdateOrderStatusApplication } from '@application/orders/update-order-status.application';
+import { CancelOrderByClientApplication } from '@application/orders/cancel-order-by-client.application';
 import {
   CancelAbandonedOrdersJob,
   CancelAbandonedOrdersResult,
@@ -58,6 +59,7 @@ export class OrdersController {
     private readonly findOrdersApp: FindOrdersApplication,
     private readonly findOrderByIdApp: FindOrderByIdApplication,
     private readonly updateOrderStatusApp: UpdateOrderStatusApplication,
+    private readonly cancelOrderByClientApp: CancelOrderByClientApplication,
     private readonly cancelAbandonedOrdersJob: CancelAbandonedOrdersJob,
     private readonly userRepository: UserSQLRepository,
     @Inject('OrderRepositoryInterface')
@@ -208,6 +210,66 @@ export class OrdersController {
       status: dto.status,
       driveLink: dto.driveLink,
     });
+  }
+
+  @Put(':id/cancel-by-client')
+  @ApiOperation({
+    summary: 'Cancelar pedido pendente pelo próprio cliente (com validação de propriedade e estorno atômico)',
+    description:
+      'Cancela um pedido PENDING do próprio usuário autenticado. O status é alterado para CANCELLED e o crédito reservado é devolvido em uma única transação atômica.',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'ID único do pedido',
+    type: 'string',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Pedido cancelado e crédito restaurado com sucesso',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Pedido não pode ser cancelado (status inválido)',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Pedido não encontrado ou não pertence ao usuário',
+  })
+  @HttpCode(HttpStatus.OK)
+  async cancelOrderByClient(
+    @Param('id') orderId: string,
+    @Request() req: any,
+  ): Promise<{
+    message: string;
+    orderId: string;
+    creditReleased: number;
+    newAvailableCredit: number;
+    cancelledAt: string;
+  }> {
+    const userId = req.user?.userId || req.user?.sub;
+    if (!userId) {
+      throw new NotFoundException('User ID not found in token');
+    }
+
+    try {
+      const result = await this.cancelOrderByClientApp.execute({
+        orderId,
+        userId,
+      });
+
+      return {
+        message: 'Pedido cancelado com sucesso',
+        orderId,
+        creditReleased: result.creditReleased,
+        newAvailableCredit: result.newAvailableCredit,
+        cancelledAt: new Date().toISOString(),
+      };
+    } catch (error) {
+      if (error.message?.includes('não encontrado') || error.message?.includes('não pertence')) {
+        throw new NotFoundException(error.message);
+      }
+      throw new BadRequestException(error.message);
+    }
   }
 
   @Put(':id/cancel')

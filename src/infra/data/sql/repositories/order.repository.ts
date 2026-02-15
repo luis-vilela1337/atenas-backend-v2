@@ -1,7 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { OrderRepositoryInterface } from '@core/orders/repositories/order.repository.interface';
+import { DataSource, Repository } from 'typeorm';
+import {
+  OrderRepositoryInterface,
+  CancelOrderResult,
+} from '@core/orders/repositories/order.repository.interface';
 import {
   Order as OrderEntity,
   OrderStatus,
@@ -26,6 +29,7 @@ export class OrderRepository implements OrderRepositoryInterface {
     private readonly orderItemRepo: Repository<OrderItem>,
     @InjectRepository(OrderItemDetail)
     private readonly orderItemDetailRepo: Repository<OrderItemDetail>,
+    private readonly dataSource: DataSource,
   ) {}
 
   async createOrder(orderData: OrderEntity): Promise<OrderEntity> {
@@ -442,6 +446,80 @@ export class OrderRepository implements OrderRepositoryInterface {
     } catch (error) {
       this.logger.error(`Error finding abandoned orders: ${error.message}`);
       throw new Error(`Failed to find abandoned orders: ${error.message}`);
+    }
+  }
+
+  async cancelOrderAtomically(
+    orderId: string,
+    userId: string,
+  ): Promise<CancelOrderResult> {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      // 1. Lock the order row and validate ownership + status
+      const [order] = await queryRunner.query(
+        `SELECT id, "userId", "paymentStatus", "creditUsed", "credit_restored"
+         FROM orders
+         WHERE id = $1 AND "userId" = $2
+         FOR UPDATE`,
+        [orderId, userId],
+      );
+
+      if (!order) {
+        throw new Error(`Pedido não encontrado ou não pertence ao usuário`);
+      }
+
+      if (order.paymentStatus !== OrderStatus.PENDING) {
+        throw new Error(
+          `Pedido não pode ser cancelado (status: ${order.paymentStatus})`,
+        );
+      }
+
+      // 2. Update order status to CANCELLED atomically
+      await queryRunner.query(
+        `UPDATE orders
+         SET "paymentStatus" = $1, "credit_restored" = true, "updated_at" = NOW()
+         WHERE id = $2`,
+        [OrderStatus.CANCELLED, orderId],
+      );
+
+      // 3. Restore credit if applicable
+      const creditUsed = order.creditUsed ? parseFloat(order.creditUsed) : 0;
+      let newAvailableCredit = 0;
+
+      if (creditUsed > 0 && !order.credit_restored) {
+        const [result] = await queryRunner.query(
+          `UPDATE users
+           SET "creditValue" = COALESCE("creditValue"::numeric, 0) + $1,
+               "creditReserved" = COALESCE("creditReserved"::numeric, 0) - $1
+           WHERE id = $2
+           RETURNING COALESCE("creditValue"::numeric, 0) as new_credit`,
+          [creditUsed, userId],
+        );
+        newAvailableCredit = parseFloat(result?.new_credit || '0');
+      }
+
+      await queryRunner.commitTransaction();
+
+      this.logger.log(
+        `Order ${orderId} cancelled atomically. Credit released: ${creditUsed}`,
+      );
+
+      return {
+        success: true,
+        creditReleased: creditUsed,
+        newAvailableCredit,
+      };
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      this.logger.error(
+        `Error cancelling order atomically: ${error.message}`,
+      );
+      throw error;
+    } finally {
+      await queryRunner.release();
     }
   }
 

@@ -39,6 +39,7 @@ import { CreateOrderApplication } from '@application/orders/create-order.applica
 import { FindOrdersApplication } from '@application/orders/find-orders.application';
 import { FindOrderByIdApplication } from '@application/orders/find-order-by-id.application';
 import { UpdateOrderStatusApplication } from '@application/orders/update-order-status.application';
+import { CancelOrderByClientApplication } from '@application/orders/cancel-order-by-client.application';
 import { UpdateProfileApplication } from '@application/profile/update-profile.application';
 import { GetCartApplication } from '@application/cart/get-cart.application';
 import { UpdateCartApplication } from '@application/cart/update-cart.application';
@@ -95,6 +96,7 @@ import { ClearCartApplication } from '@application/cart/clear-cart.application';
     FindOrdersApplication,
     FindOrderByIdApplication,
     UpdateOrderStatusApplication,
+    CancelOrderByClientApplication,
     // profile
     UpdateProfileApplication,
     // cart
@@ -146,6 +148,7 @@ import { ClearCartApplication } from '@application/cart/clear-cart.application';
     FindOrdersApplication,
     FindOrderByIdApplication,
     UpdateOrderStatusApplication,
+    CancelOrderByClientApplication,
     // profile
     UpdateProfileApplication,
     // cart
