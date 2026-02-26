@@ -168,32 +168,35 @@ export class InstitutionProductSQLRepository {
             );
 
             // Update events: resolve correct InstitutionEvent ID and name
-            const updatedEvents = details.events.map((event) => {
-              // If stored ID matches a current institution event, use it
-              const matchedById = institutionEventById.get(event.id);
-              if (matchedById) {
-                return {
-                  ...event,
-                  id: matchedById.id,
-                  name: matchedById.name,
-                };
-              }
-
-              // Fallback: match by name stored in JSONB
-              if (event.name) {
-                const matchedByName = institutionEventByName.get(event.name);
-                if (matchedByName) {
+            // Events that no longer exist (soft-deleted) are filtered out
+            const updatedEvents = details.events
+              .map((event) => {
+                // If stored ID matches a current institution event, use it
+                const matchedById = institutionEventById.get(event.id);
+                if (matchedById) {
                   return {
                     ...event,
-                    id: matchedByName.id,
-                    name: matchedByName.name,
+                    id: matchedById.id,
+                    name: matchedById.name,
                   };
                 }
-              }
 
-              // No match found, keep original
-              return event;
-            });
+                // Fallback: match by name stored in JSONB
+                if (event.name) {
+                  const matchedByName = institutionEventByName.get(event.name);
+                  if (matchedByName) {
+                    return {
+                      ...event,
+                      id: matchedByName.id,
+                      name: matchedByName.name,
+                    };
+                  }
+                }
+
+                // No match found — event was deleted, exclude it
+                return null;
+              })
+              .filter((event) => event !== null);
 
             // Return the product with updated details
             return {
@@ -277,7 +280,8 @@ export class InstitutionProductSQLRepository {
             WHERE elem->>'id' != $1),
            '[]'::jsonb
          )
-       )
+       ),
+       updated_at = NOW()
        WHERE details IS NOT NULL
          AND details ? 'events'
          AND details->'events' @> $2::jsonb`,
