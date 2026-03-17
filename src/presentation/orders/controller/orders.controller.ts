@@ -53,6 +53,8 @@ import {
 } from '../dto/update-fulfillment-status.dto';
 import { OrderAdapter } from '@application/orders/adapters/order.adapter';
 import { JwtCustomAuthGuard } from '@presentation/auth/guards/jwt-auth.guard';
+import { Roles } from '@presentation/auth/roles/roles.decorator';
+import { RolesGuard } from '@presentation/auth/guards/roles.guard';
 
 @ApiTags('orders')
 @Controller('v1/orders')
@@ -175,6 +177,8 @@ export class OrdersController {
   }
 
   @Put(':id/status')
+  @UseGuards(RolesGuard)
+  @Roles('admin')
   @ApiOperation({
     summary: 'Atualizar status do pedido',
     description: 'Atualiza o status de um pedido específico pelo seu ID',
@@ -219,6 +223,8 @@ export class OrdersController {
   }
 
   @Put(':orderId/items/:itemId/fulfillment-status')
+  @UseGuards(RolesGuard)
+  @Roles('admin')
   @ApiOperation({
     summary: 'Atualizar status de fulfillment de um item do pedido',
     description:
@@ -262,11 +268,18 @@ export class OrdersController {
     @Param('itemId') itemId: string,
     @Body() dto: UpdateFulfillmentStatusDto,
   ): Promise<UpdateFulfillmentStatusResponseDto> {
-    return await this.updateItemFulfillmentStatusApp.execute({
-      orderId,
-      orderItemId: itemId,
-      fulfillmentStatus: dto.fulfillmentStatus,
-    });
+    try {
+      return await this.updateItemFulfillmentStatusApp.execute({
+        orderId,
+        orderItemId: itemId,
+        fulfillmentStatus: dto.fulfillmentStatus,
+      });
+    } catch (error) {
+      if (error.message?.includes('not found')) {
+        throw new NotFoundException(error.message);
+      }
+      throw new BadRequestException(error.message);
+    }
   }
 
   @Put(':id/cancel-by-client')
