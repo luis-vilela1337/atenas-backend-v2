@@ -162,6 +162,7 @@ export class OrderAdapter {
           productType: item.productType,
           itemPrice: item.itemPrice,
           quantity: item.quantity,
+          fulfillmentStatus: item.fulfillmentStatus,
           createdAt: order.createdAt.toISOString(),
           details,
         };

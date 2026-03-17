@@ -93,6 +93,7 @@ export class OrderRepository implements OrderRepositoryInterface {
           productType: savedItem.productType,
           itemPrice: savedItem.itemPrice,
           quantity: savedItem.quantity,
+          fulfillmentStatus: savedItem.fulfillmentStatus,
           details: createdDetails,
         });
       }
@@ -319,6 +320,28 @@ export class OrderRepository implements OrderRepositoryInterface {
     }
   }
 
+  async updateItemFulfillmentStatus(
+    itemId: string,
+    fulfillmentStatus: string,
+  ): Promise<void> {
+    this.logger.log(
+      `Updating order item ${itemId} fulfillment status to: ${fulfillmentStatus}`,
+    );
+
+    try {
+      await this.orderItemRepo.update(itemId, {
+        fulfillmentStatus: fulfillmentStatus as any,
+      });
+    } catch (error) {
+      this.logger.error(
+        `Error updating item fulfillment status: ${error.message}`,
+      );
+      throw new Error(
+        `Failed to update item fulfillment status: ${error.message}`,
+      );
+    }
+  }
+
   async updateOrderPaymentGatewayId(
     orderId: string,
     paymentGatewayId: string,
@@ -514,9 +537,7 @@ export class OrderRepository implements OrderRepositoryInterface {
       };
     } catch (error) {
       await queryRunner.rollbackTransaction();
-      this.logger.error(
-        `Error cancelling order atomically: ${error.message}`,
-      );
+      this.logger.error(`Error cancelling order atomically: ${error.message}`);
       throw error;
     } finally {
       await queryRunner.release();
@@ -544,6 +565,7 @@ export class OrderRepository implements OrderRepositoryInterface {
           productType: item.productType,
           itemPrice: Number(item.itemPrice),
           quantity: item.quantity,
+          fulfillmentStatus: item.fulfillmentStatus,
           details:
             item.details?.map((detail) => ({
               id: detail.id,

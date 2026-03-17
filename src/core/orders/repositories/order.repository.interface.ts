@@ -24,4 +24,8 @@ export interface OrderRepositoryInterface {
     orderId: string,
     userId: string,
   ): Promise<CancelOrderResult>;
+  updateItemFulfillmentStatus(
+    itemId: string,
+    fulfillmentStatus: string,
+  ): Promise<void>;
 }

@@ -34,6 +34,7 @@ import { CreatePreferenceUseCase } from '@core/mercado-pago/create-preference/us
 import { FindOrdersUseCase } from '@core/orders/find-orders.usecase';
 import { FindOrderByIdUseCase } from '@core/orders/find-order-by-id.usecase';
 import { UpdateOrderStatusUseCase } from '@core/orders/update-order-status/usecase';
+import { UpdateItemFulfillmentStatusUseCase } from '@core/orders/update-item-fulfillment-status/usecase';
 import { CancelOrderByClientUseCase } from '@core/orders/cancel-order-by-client/usecase';
 import { UpdateProfileUseCase } from '@core/profile/update-profile.usecase';
 import { GetCartUseCase } from '@core/cart/get-cart.usecase';
@@ -85,6 +86,7 @@ import { ClearCartUseCase } from '@core/cart/clear-cart.usecase';
     FindOrdersUseCase,
     FindOrderByIdUseCase,
     UpdateOrderStatusUseCase,
+    UpdateItemFulfillmentStatusUseCase,
     CancelOrderByClientUseCase,
     // profile
     UpdateProfileUseCase,
@@ -136,6 +138,7 @@ import { ClearCartUseCase } from '@core/cart/clear-cart.usecase';
     FindOrdersUseCase,
     FindOrderByIdUseCase,
     UpdateOrderStatusUseCase,
+    UpdateItemFulfillmentStatusUseCase,
     CancelOrderByClientUseCase,
     // profile
     UpdateProfileUseCase,

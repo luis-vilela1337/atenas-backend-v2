@@ -6,6 +6,7 @@ import {
   CartItem,
   ShippingAddress,
   OrderStatus,
+  FulfillmentStatus,
 } from '../entities/order.entity';
 import { BadRequestException, HttpException } from '@nestjs/common';
 import { OrderRepositoryInterface } from '../repositories/order.repository.interface';
@@ -174,6 +175,7 @@ export class CreateOrderUseCase {
         productType: item.productType,
         itemPrice: item.totalPrice,
         quantity: item.quantity,
+        fulfillmentStatus: FulfillmentStatus.ORDER_RECEIVED,
         details: this.createOrderItemDetails(item.selectionDetails),
       })),
     };

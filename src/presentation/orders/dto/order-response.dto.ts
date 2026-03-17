@@ -1,5 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { OrderStatus } from '@core/orders/entities/order.entity';
+import {
+  OrderStatus,
+  FulfillmentStatus,
+} from '@core/orders/entities/order.entity';
 
 export class ShippingAddressDto {
   @ApiProperty()
@@ -64,6 +67,9 @@ export class OrderItemDto {
 
   @ApiProperty()
   quantity: number;
+
+  @ApiProperty({ enum: FulfillmentStatus })
+  fulfillmentStatus: FulfillmentStatus;
 
   @ApiProperty()
   createdAt: string;

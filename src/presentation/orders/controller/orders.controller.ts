@@ -28,6 +28,7 @@ import { CreateOrderApplication } from '@application/orders/create-order.applica
 import { FindOrdersApplication } from '@application/orders/find-orders.application';
 import { FindOrderByIdApplication } from '@application/orders/find-order-by-id.application';
 import { UpdateOrderStatusApplication } from '@application/orders/update-order-status.application';
+import { UpdateItemFulfillmentStatusApplication } from '@application/orders/update-item-fulfillment-status.application';
 import { CancelOrderByClientApplication } from '@application/orders/cancel-order-by-client.application';
 import {
   CancelAbandonedOrdersJob,
@@ -46,6 +47,10 @@ import {
   UpdateOrderStatusDto,
   UpdateOrderStatusResponseDto,
 } from '../dto/update-order-status.dto';
+import {
+  UpdateFulfillmentStatusDto,
+  UpdateFulfillmentStatusResponseDto,
+} from '../dto/update-fulfillment-status.dto';
 import { OrderAdapter } from '@application/orders/adapters/order.adapter';
 import { JwtCustomAuthGuard } from '@presentation/auth/guards/jwt-auth.guard';
 
@@ -59,6 +64,7 @@ export class OrdersController {
     private readonly findOrdersApp: FindOrdersApplication,
     private readonly findOrderByIdApp: FindOrderByIdApplication,
     private readonly updateOrderStatusApp: UpdateOrderStatusApplication,
+    private readonly updateItemFulfillmentStatusApp: UpdateItemFulfillmentStatusApplication,
     private readonly cancelOrderByClientApp: CancelOrderByClientApplication,
     private readonly cancelAbandonedOrdersJob: CancelAbandonedOrdersJob,
     private readonly userRepository: UserSQLRepository,
@@ -212,9 +218,61 @@ export class OrdersController {
     });
   }
 
+  @Put(':orderId/items/:itemId/fulfillment-status')
+  @ApiOperation({
+    summary: 'Atualizar status de fulfillment de um item do pedido',
+    description:
+      'Atualiza o status de fulfillment para cada item com base no tipo de produto',
+  })
+  @ApiParam({
+    name: 'orderId',
+    description: 'ID único do pedido',
+    type: 'string',
+  })
+  @ApiParam({
+    name: 'itemId',
+    description: 'ID único do item do pedido',
+    type: 'string',
+  })
+  @ApiBody({ type: UpdateFulfillmentStatusDto })
+  @ApiResponse({
+    status: 200,
+    type: UpdateFulfillmentStatusResponseDto,
+    description: 'Status de fulfillment atualizado com sucesso',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Dados inválidos ou transição de status inválida',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Pedido ou Item não encontrado',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Token de autenticação inválido ou ausente',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Erro interno do servidor',
+  })
+  @HttpCode(HttpStatus.OK)
+  async updateItemFulfillmentStatus(
+    @Param('orderId') orderId: string,
+    @Param('itemId') itemId: string,
+    @Body() dto: UpdateFulfillmentStatusDto,
+  ): Promise<UpdateFulfillmentStatusResponseDto> {
+    return await this.updateItemFulfillmentStatusApp.execute({
+      orderId,
+      orderItemId: itemId,
+      fulfillmentStatus: dto.fulfillmentStatus,
+    });
+  }
+
   @Put(':id/cancel-by-client')
   @ApiOperation({
-    summary: 'Cancelar pedido pendente pelo próprio cliente (com validação de propriedade e estorno atômico)',
+    summary:
+      'Cancelar pedido pendente pelo próprio cliente (com validação de propriedade e estorno atômico)',
     description:
       'Cancela um pedido PENDING do próprio usuário autenticado. O status é alterado para CANCELLED e o crédito reservado é devolvido em uma única transação atômica.',
   })
@@ -265,7 +323,10 @@ export class OrdersController {
         cancelledAt: new Date().toISOString(),
       };
     } catch (error) {
-      if (error.message?.includes('não encontrado') || error.message?.includes('não pertence')) {
+      if (
+        error.message?.includes('não encontrado') ||
+        error.message?.includes('não pertence')
+      ) {
         throw new NotFoundException(error.message);
       }
       throw new BadRequestException(error.message);
