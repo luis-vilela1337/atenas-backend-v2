@@ -4,6 +4,8 @@ import { CreateOrderUseCase } from '@core/orders/create-order/usecase';
 import { OrderRepositoryInterface } from '@core/orders/repositories/order.repository.interface';
 import { MercadoPagoRepositoryInterface } from '@core/mercado-pago/repositories/mercado-pago.repository.interface';
 import { UserSQLRepository } from '../../infra/data/sql/repositories/user.repository';
+import { InstitutionProductSQLRepository } from '../../infra/data/sql/repositories/institution-product.repostitoy';
+import { CartRepositoryInterface } from '@core/cart/repositories/cart.repository.interface';
 import {
   CreateOrderInput,
   CreateOrderResult,
@@ -20,13 +22,18 @@ export class CreateOrderApplication {
     @Inject('MercadoPagoRepositoryInterface')
     private readonly mercadoPagoRepository: MercadoPagoRepositoryInterface,
     private readonly userRepository: UserSQLRepository,
+    private readonly institutionProductRepository: InstitutionProductSQLRepository,
     private readonly configService: ConfigService,
+    @Inject('CartRepositoryInterface')
+    private readonly cartRepository: CartRepositoryInterface,
   ) {
     this.createOrderUseCase = new CreateOrderUseCase(
       orderRepository,
       mercadoPagoRepository,
       userRepository,
+      institutionProductRepository,
       configService,
+      cartRepository,
     );
   }
 

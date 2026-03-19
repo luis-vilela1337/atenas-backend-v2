@@ -43,6 +43,10 @@ export class InstitutionEventSQLRepository {
     await this.repository.delete(id);
   }
 
+  async softDelete(id: string): Promise<void> {
+    await this.repository.softDelete(id);
+  }
+
   async findByIds(ids: string[]): Promise<InstitutionEvent[]> {
     if (ids.length === 0) return [];
 

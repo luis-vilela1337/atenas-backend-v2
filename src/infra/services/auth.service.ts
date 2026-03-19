@@ -23,6 +23,7 @@ export class AuthService {
     try {
       const user = await this.usersRepo.findByEmail(email);
       if (user && (await bcrypt.compare(password, user.passwordHash))) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { passwordHash: _, ...safe } = user;
 
         if (safe.profileImage) {
@@ -65,8 +66,20 @@ export class AuthService {
     const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
     await this.usersRepo.setCurrentRefreshToken(hashedRefreshToken, user.id);
 
+    // Update last login timestamp
+    await this.usersRepo.updateUser(user.id, { lastLoginAt: new Date() });
+
+    const userContract =
+      user.institution?.contractNumber && user.identifier
+        ? `${user.institution.contractNumber}-${user.identifier}`
+        : null;
+
     // Note: user already has presigned URL from validateUser
-    return { accessToken, refreshToken, user };
+    return {
+      accessToken,
+      refreshToken,
+      user: { ...user, userContract },
+    };
   }
 
   async refresh(userId: string, refreshToken: string) {
@@ -95,8 +108,8 @@ export class AuthService {
     });
 
     const {
-      passwordHash: _,
-      currentHashedRefreshToken: __,
+      passwordHash, // eslint-disable-line @typescript-eslint/no-unused-vars
+      currentHashedRefreshToken, // eslint-disable-line @typescript-eslint/no-unused-vars
       ...safeUser
     } = user;
 

@@ -11,8 +11,14 @@ export class FindAllInstituitionUseCase {
     total: number;
     totalPages: number;
   }> {
-    return await this.institutionSQL.findAllPaginated(input.page, input.limit, {
-      contractNumber: input.search,
-    });
+    return await this.institutionSQL.findAllPaginated(
+      input.page,
+      input.limit,
+      {
+        contractNumber: input.search,
+      },
+      input.sortBy,
+      input.order,
+    );
   }
 }

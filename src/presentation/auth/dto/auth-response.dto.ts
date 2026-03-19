@@ -18,6 +18,15 @@ export class AuthUserDto {
 
   @ApiProperty({ type: Number, nullable: true })
   creditValue: number | null;
+
+  @ApiProperty({ type: Number, nullable: true })
+  creditReserved: number | null;
+
+  @ApiProperty({ nullable: true })
+  lastLoginAt: Date | null;
+
+  @ApiProperty({ nullable: true })
+  userContract: string | null;
 }
 
 export class AuthResponseDto {
@@ -43,6 +52,9 @@ export class AuthResponseDto {
       role: string;
       profileImage?: string | null;
       creditValue?: string | null;
+      creditReserved?: string | null;
+      lastLoginAt?: Date | null;
+      userContract?: string | null;
     },
   ): AuthResponseDto {
     return {
@@ -55,6 +67,11 @@ export class AuthResponseDto {
         role: user.role,
         profileImage: user.profileImage || null,
         creditValue: user.creditValue ? parseFloat(user.creditValue) : null,
+        creditReserved: user.creditReserved
+          ? parseFloat(user.creditReserved)
+          : null,
+        lastLoginAt: user.lastLoginAt || null,
+        userContract: user.userContract || null,
       },
     };
   }

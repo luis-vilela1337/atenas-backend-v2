@@ -14,6 +14,12 @@ import { AddUserAddressFields1757600000000 } from '../migrations/1757600000000-A
 import { AddCreditUsedToOrder1759747200000 } from '../migrations/1759747200000-AddCreditUsedToOrder';
 import { Generated1759959807948 } from '../migrations/1759959807948-generated';
 import { Generated1760917623803 } from '../migrations/1760917623803-generated';
+import { Generated1763735367287 } from '@infrastructure/data/migrations/1763735367287-generated';
+import { AddLastLoginAt1767712724467 } from '@infrastructure/data/migrations/1767712724467-AddLastLoginAt';
+import { AddCreditRestoredToOrder1736848800000 } from '@infrastructure/data/migrations/1736848800000-AddCreditRestoredToOrder';
+import { AddCreditReservedToUser1737050000000 } from '@infrastructure/data/migrations/1737050000000-AddCreditReservedToUser';
+import { CreateCartTable1770872400000 } from '../migrations/1770872400000-CreateCartTable';
+import { AddFulfillmentStatusToOrderItems1774072800000 } from '@infrastructure/data/migrations/1774072800000-AddFulfillmentStatusToOrderItems';
 
 export const migrations = [
   Generated1747237005972,
@@ -28,6 +34,12 @@ export const migrations = [
   AddCreditUsedToOrder1759747200000,
   Generated1759959807948,
   Generated1760917623803,
+  Generated1763735367287,
+  AddLastLoginAt1767712724467,
+  AddCreditRestoredToOrder1736848800000,
+  AddCreditReservedToUser1737050000000,
+  CreateCartTable1770872400000,
+  AddFulfillmentStatusToOrderItems1774072800000,
 ];
 
 const envVars = (cs: ConfigService) => ({

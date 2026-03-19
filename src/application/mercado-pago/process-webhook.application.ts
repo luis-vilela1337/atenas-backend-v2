@@ -13,6 +13,7 @@ import { OrderRepositoryInterface } from '@core/orders/repositories/order.reposi
 import { MercadoPagoWebhookDto } from '@presentation/mercado-pago/dto/webhook.dto';
 import { WebhookProcessingResult } from '@core/mercado-pago/entities/webhook-notification.entity';
 import { UserSQLRepository } from '../../infra/data/sql/repositories/user.repository';
+import { CartRepositoryInterface } from '@core/cart/repositories/cart.repository.interface';
 
 export interface ProcessWebhookApplicationInput {
   webhookData: MercadoPagoWebhookDto;
@@ -35,11 +36,14 @@ export class ProcessWebhookApplication {
     private readonly orderRepository: OrderRepositoryInterface,
     private readonly userRepository: UserSQLRepository,
     private readonly configService: ConfigService,
+    @Inject('CartRepositoryInterface')
+    private readonly cartRepository: CartRepositoryInterface,
   ) {
     this.processWebhookUseCase = new ProcessWebhookUseCase(
       webhookRepository,
       orderRepository,
       userRepository,
+      cartRepository,
     );
     this.validateSignatureUseCase = new ValidateSignatureUseCase();
   }

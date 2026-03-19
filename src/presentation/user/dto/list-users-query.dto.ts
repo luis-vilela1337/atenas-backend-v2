@@ -6,6 +6,8 @@ import {
   IsUUID,
   IsIn,
   IsString,
+  MinLength,
+  MaxLength,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
@@ -29,6 +31,8 @@ export class ListUsersQueryDto {
   @ApiPropertyOptional({ description: 'Texto para busca', example: 'joao' })
   @IsOptional()
   @IsString()
+  @MinLength(1)
+  @MaxLength(255)
   search?: string;
 
   @ApiPropertyOptional({ description: 'ID da instituição', example: 'uuid' })
@@ -52,9 +56,32 @@ export class ListUsersQueryDto {
   @IsIn(['active', 'inactive'])
   status?: 'active' | 'inactive';
 
-  @ApiPropertyOptional({ description: 'Campo para ordenação', example: 'name' })
+  @ApiPropertyOptional({
+    description: 'Campo para ordenação',
+    example: 'name',
+    enum: [
+      'name',
+      'email',
+      'role',
+      'status',
+      'createdAt',
+      'updatedAt',
+      'lastLoginAt',
+      'userContract',
+    ],
+  })
   @IsOptional()
   @IsString()
+  @IsIn([
+    'name',
+    'email',
+    'role',
+    'status',
+    'createdAt',
+    'updatedAt',
+    'lastLoginAt',
+    'userContract',
+  ])
   sortBy?: string;
 
   @ApiPropertyOptional({

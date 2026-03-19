@@ -55,6 +55,10 @@ export class OrderAdapter {
     return {
       orderId: result.orderId,
       mercadoPagoCheckoutUrl: result.checkoutUrl,
+      paymentMethod: result.paymentMethod,
+      contractNumber: result.contractNumber,
+      creditUsed: result.creditUsed,
+      remainingCredit: result.remainingCredit,
     };
   }
 
@@ -64,6 +68,7 @@ export class OrderAdapter {
       productName: item.productName,
       productType: item.productType,
       totalPrice: item.totalPrice,
+      quantity: item.quantity,
       selectionDetails: this.toSelectionDetails(item.selectionDetails),
     };
   }
@@ -119,6 +124,7 @@ export class OrderAdapter {
   static async toOrderDto(
     order: Order,
     imageStorageService: ImageStorageService,
+    checkoutUrl?: string,
   ): Promise<OrderDto> {
     // Debug log
     console.log('[OrderAdapter] Processing order:', {
@@ -155,6 +161,8 @@ export class OrderAdapter {
           productName: item.productName,
           productType: item.productType,
           itemPrice: item.itemPrice,
+          quantity: item.quantity,
+          fulfillmentStatus: item.fulfillmentStatus,
           createdAt: order.createdAt.toISOString(),
           details,
         };
@@ -169,15 +177,19 @@ export class OrderAdapter {
       paymentStatus: order.paymentStatus,
       paymentGatewayId: order.paymentGatewayId,
       contractNumber: order.contractNumber,
-      shippingAddress: {
-        zipCode: order.shippingAddress.zipCode,
-        street: order.shippingAddress.street,
-        number: order.shippingAddress.number,
-        complement: order.shippingAddress.complement,
-        neighborhood: order.shippingAddress.neighborhood,
-        city: order.shippingAddress.city,
-        state: order.shippingAddress.state,
-      },
+      checkoutUrl,
+      creditUsed: order.creditUsed,
+      shippingAddress: order.shippingAddress
+        ? {
+            zipCode: order.shippingAddress.zipCode,
+            street: order.shippingAddress.street,
+            number: order.shippingAddress.number,
+            complement: order.shippingAddress.complement,
+            neighborhood: order.shippingAddress.neighborhood,
+            city: order.shippingAddress.city,
+            state: order.shippingAddress.state,
+          }
+        : undefined,
       createdAt: order.createdAt.toISOString(),
       updatedAt:
         order.updatedAt?.toISOString() || order.createdAt.toISOString(),

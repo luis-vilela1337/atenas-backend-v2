@@ -44,13 +44,13 @@ export class UserSQLRepository {
       status?: UserStatus;
       institutionId?: string;
     },
+    sortBy?: string,
+    order: 'asc' | 'desc' = 'desc',
   ): Promise<{ users: User[]; total: number; totalPages: number }> {
     const skip = (page - 1) * limit;
     const queryBuilder = this.user
       .createQueryBuilder('user')
-      .leftJoinAndSelect('user.institution', 'institution')
-      .skip(skip)
-      .take(limit);
+      .leftJoinAndSelect('user.institution', 'institution');
 
     if (filters?.role) {
       queryBuilder.andWhere('user.role = :role', { role: filters.role });
@@ -68,7 +68,33 @@ export class UserSQLRepository {
       });
     }
 
-    queryBuilder.orderBy('user.updatedAt', 'DESC');
+    // Map sortBy to database columns
+    const columnMap: Record<string, string> = {
+      name: 'user.name',
+      email: 'user.email',
+      role: 'user.role',
+      status: 'user.status',
+      createdAt: 'user.createdAt',
+      updatedAt: 'user.updatedAt',
+      lastLoginAt: 'user.lastLoginAt',
+    };
+
+    const sortOrder = order.toUpperCase() as 'ASC' | 'DESC';
+
+    if (sortBy === 'userContract') {
+      // Sort by computed field: contractNumber-identifier
+      // Add computed field as a select and use raw ORDER BY to avoid TypeORM alias parsing
+      queryBuilder.addSelect(
+        `CONCAT(institution.contractNumber, '-', user.identifier)`,
+        'user_contract_sort',
+      );
+      queryBuilder.orderBy('user_contract_sort', sortOrder);
+    } else {
+      const sortColumn = (sortBy && columnMap[sortBy]) || 'user.updatedAt';
+      queryBuilder.orderBy(sortColumn, sortOrder);
+    }
+
+    queryBuilder.skip(skip).take(limit);
 
     const [users, total] = await queryBuilder.getManyAndCount();
     const totalPages = Math.ceil(total / limit);
@@ -152,9 +178,9 @@ export class UserSQLRepository {
       const [contractNumber, identifier] = searchTerm.split('-', 2);
       queryBuilder.where(
         `(institution.contractNumber = :contractNumber AND user.identifier = :identifier)
-         OR institution.contractNumber ILIKE :search 
-         OR user.identifier ILIKE :search 
-         OR user.name ILIKE :search 
+         OR institution.contractNumber ILIKE :search
+         OR user.identifier ILIKE :search
+         OR user.name ILIKE :search
          OR user.email ILIKE :search
          OR CONCAT(institution.contractNumber, '-', user.identifier) ILIKE :search`,
         {
@@ -165,9 +191,9 @@ export class UserSQLRepository {
       );
     } else {
       queryBuilder.where(
-        `institution.contractNumber ILIKE :search 
-         OR user.identifier ILIKE :search 
-         OR user.name ILIKE :search 
+        `institution.contractNumber ILIKE :search
+         OR user.identifier ILIKE :search
+         OR user.name ILIKE :search
          OR user.email ILIKE :search
          OR CONCAT(institution.contractNumber, '-', user.identifier) ILIKE :search`,
         {
@@ -235,6 +261,20 @@ export class UserSQLRepository {
     return await this.findByRole('client');
   }
 
+  async findActiveClientsByInstitutionId(
+    institutionId: string,
+  ): Promise<User[]> {
+    return await this.user.find({
+      where: {
+        institution: { id: institutionId },
+        role: 'client',
+        status: 'active',
+      },
+      relations: ['institution'],
+      order: { name: 'ASC' },
+    });
+  }
+
   private async hashRefreshToken(token: string): Promise<string> {
     const salt = await bcrypt.genSalt();
     return bcrypt.hash(token, salt);
@@ -285,5 +325,116 @@ export class UserSQLRepository {
 
   async updateUserCredit(userId: string, newValue: number): Promise<void> {
     await this.user.update(userId, { creditValue: newValue.toString() });
+  }
+
+  async deductCreditAtomic(
+    userId: string,
+    amount: number,
+  ): Promise<{ success: boolean; previousCredit: number; newCredit: number }> {
+    const result = await this.user.manager.query(
+      `UPDATE users
+       SET "creditValue" = COALESCE("creditValue"::numeric, 0) - $1
+       WHERE id = $2 AND COALESCE("creditValue"::numeric, 0) >= $1
+       RETURNING COALESCE("creditValue"::numeric, 0) + $1 as previous_credit, COALESCE("creditValue"::numeric, 0) as new_credit`,
+      [amount, userId],
+    );
+
+    const rows = Array.isArray(result[0]) ? result[0] : result;
+
+    if (rows.length === 0) {
+      const current = await this.findUserCreditByUserId(userId);
+      return { success: false, previousCredit: current, newCredit: current };
+    }
+
+    return {
+      success: true,
+      previousCredit: parseFloat(rows[0].previous_credit),
+      newCredit: parseFloat(rows[0].new_credit),
+    };
+  }
+
+  async addCredit(userId: string, amount: number): Promise<void> {
+    await this.user.manager.query(
+      `UPDATE users
+       SET "creditValue" = COALESCE("creditValue"::numeric, 0) + $1
+       WHERE id = $2`,
+      [amount, userId],
+    );
+  }
+
+  /**
+   * Reserva (bloqueia) crédito para um pedido pendente
+   * Move crédito de creditValue para creditReserved
+   */
+  async reserveCredit(
+    userId: string,
+    amount: number,
+  ): Promise<{
+    success: boolean;
+    availableCredit: number;
+    reservedCredit: number;
+  }> {
+    const result = await this.user.manager.query(
+      `UPDATE users
+       SET "creditValue" = COALESCE("creditValue"::numeric, 0) - $1,
+           "creditReserved" = COALESCE("creditReserved"::numeric, 0) + $1
+       WHERE id = $2
+       AND COALESCE("creditValue"::numeric, 0) >= $1
+       RETURNING
+         COALESCE("creditValue"::numeric, 0) as available_credit,
+         COALESCE("creditReserved"::numeric, 0) as reserved_credit`,
+      [amount, userId],
+    );
+
+    const rows = Array.isArray(result[0]) ? result[0] : result;
+
+    if (rows.length === 0) {
+      const user = await this.user.findOne({
+        where: { id: userId },
+        select: ['creditValue', 'creditReserved'],
+      });
+      return {
+        success: false,
+        availableCredit: user?.creditValue ? parseFloat(user.creditValue) : 0,
+        reservedCredit: user?.creditReserved
+          ? parseFloat(user.creditReserved)
+          : 0,
+      };
+    }
+
+    return {
+      success: true,
+      availableCredit: parseFloat(rows[0].available_credit),
+      reservedCredit: parseFloat(rows[0].reserved_credit),
+    };
+  }
+
+  /**
+   * Libera crédito reservado de volta para disponível
+   * Usado quando pedido é cancelado/rejeitado/expirado
+   */
+  async releaseReservedCredit(userId: string, amount: number): Promise<void> {
+    await this.user.manager.query(
+      `UPDATE users
+       SET "creditValue" = COALESCE("creditValue"::numeric, 0) + $1,
+           "creditReserved" = COALESCE("creditReserved"::numeric, 0) - $1
+       WHERE id = $2
+       AND COALESCE("creditReserved"::numeric, 0) >= $1`,
+      [amount, userId],
+    );
+  }
+
+  /**
+   * Consome crédito reservado definitivamente
+   * Usado quando pedido é aprovado (remove do reservado sem devolver)
+   */
+  async consumeReservedCredit(userId: string, amount: number): Promise<void> {
+    await this.user.manager.query(
+      `UPDATE users
+       SET "creditReserved" = COALESCE("creditReserved"::numeric, 0) - $1
+       WHERE id = $2
+       AND COALESCE("creditReserved"::numeric, 0) >= $1`,
+      [amount, userId],
+    );
   }
 }

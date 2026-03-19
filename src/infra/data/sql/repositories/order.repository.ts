@@ -1,7 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { OrderRepositoryInterface } from '@core/orders/repositories/order.repository.interface';
+import { DataSource, Repository } from 'typeorm';
+import {
+  OrderRepositoryInterface,
+  CancelOrderResult,
+} from '@core/orders/repositories/order.repository.interface';
 import {
   Order as OrderEntity,
   OrderStatus,
@@ -26,6 +29,7 @@ export class OrderRepository implements OrderRepositoryInterface {
     private readonly orderItemRepo: Repository<OrderItem>,
     @InjectRepository(OrderItemDetail)
     private readonly orderItemDetailRepo: Repository<OrderItemDetail>,
+    private readonly dataSource: DataSource,
   ) {}
 
   async createOrder(orderData: OrderEntity): Promise<OrderEntity> {
@@ -42,6 +46,7 @@ export class OrderRepository implements OrderRepositoryInterface {
         contractNumber: orderData.contractNumber,
         contractUniqueId: orderData.contractUniqueId,
         shippingAddress: orderData.shippingAddress,
+        creditUsed: orderData.creditUsed,
       });
 
       const savedOrder = await this.orderRepo.save(order);
@@ -56,6 +61,7 @@ export class OrderRepository implements OrderRepositoryInterface {
           productName: itemData.productName,
           productType: itemData.productType,
           itemPrice: itemData.itemPrice,
+          quantity: itemData.quantity,
         });
 
         const savedItem = await this.orderItemRepo.save(orderItem);
@@ -86,6 +92,8 @@ export class OrderRepository implements OrderRepositoryInterface {
           productName: savedItem.productName,
           productType: savedItem.productType,
           itemPrice: savedItem.itemPrice,
+          quantity: savedItem.quantity,
+          fulfillmentStatus: savedItem.fulfillmentStatus,
           details: createdDetails,
         });
       }
@@ -312,6 +320,28 @@ export class OrderRepository implements OrderRepositoryInterface {
     }
   }
 
+  async updateItemFulfillmentStatus(
+    itemId: string,
+    fulfillmentStatus: string,
+  ): Promise<void> {
+    this.logger.log(
+      `Updating order item ${itemId} fulfillment status to: ${fulfillmentStatus}`,
+    );
+
+    try {
+      await this.orderItemRepo.update(itemId, {
+        fulfillmentStatus: fulfillmentStatus as any,
+      });
+    } catch (error) {
+      this.logger.error(
+        `Error updating item fulfillment status: ${error.message}`,
+      );
+      throw new Error(
+        `Failed to update item fulfillment status: ${error.message}`,
+      );
+    }
+  }
+
   async updateOrderPaymentGatewayId(
     orderId: string,
     paymentGatewayId: string,
@@ -404,6 +434,116 @@ export class OrderRepository implements OrderRepositoryInterface {
     }
   }
 
+  async markCreditRestored(orderId: string): Promise<void> {
+    this.logger.log(`Marking credit as restored for order ${orderId}`);
+
+    try {
+      await this.orderRepo.update(orderId, {
+        creditRestored: true,
+        updatedAt: new Date(),
+      });
+    } catch (error) {
+      this.logger.error(`Error marking credit as restored: ${error.message}`);
+      throw new Error(`Failed to mark credit as restored: ${error.message}`);
+    }
+  }
+
+  async findAbandonedOrders(hoursThreshold: number): Promise<OrderEntity[]> {
+    this.logger.log(
+      `Finding abandoned orders older than ${hoursThreshold} hours`,
+    );
+
+    try {
+      const thresholdDate = new Date();
+      thresholdDate.setHours(thresholdDate.getHours() - hoursThreshold);
+
+      const orders = await this.orderRepo
+        .createQueryBuilder('order')
+        .where('order.paymentStatus = :status', { status: OrderStatus.PENDING })
+        .andWhere('order.createdAt < :thresholdDate', { thresholdDate })
+        .andWhere('order.creditUsed > 0')
+        .andWhere('order.creditRestored = false')
+        .getMany();
+
+      return orders.map((order) => this.mapToEntity(order));
+    } catch (error) {
+      this.logger.error(`Error finding abandoned orders: ${error.message}`);
+      throw new Error(`Failed to find abandoned orders: ${error.message}`);
+    }
+  }
+
+  async cancelOrderAtomically(
+    orderId: string,
+    userId: string,
+  ): Promise<CancelOrderResult> {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      // 1. Lock the order row and validate ownership + status
+      const [order] = await queryRunner.query(
+        `SELECT id, "userId", "paymentStatus", "creditUsed", "credit_restored"
+         FROM orders
+         WHERE id = $1 AND "userId" = $2
+         FOR UPDATE`,
+        [orderId, userId],
+      );
+
+      if (!order) {
+        throw new Error(`Pedido não encontrado ou não pertence ao usuário`);
+      }
+
+      if (order.paymentStatus !== OrderStatus.PENDING) {
+        throw new Error(
+          `Pedido não pode ser cancelado (status: ${order.paymentStatus})`,
+        );
+      }
+
+      // 2. Update order status to CANCELLED atomically
+      await queryRunner.query(
+        `UPDATE orders
+         SET "paymentStatus" = $1, "credit_restored" = true, "updated_at" = NOW()
+         WHERE id = $2`,
+        [OrderStatus.CANCELLED, orderId],
+      );
+
+      // 3. Restore credit if applicable
+      const creditUsed = order.creditUsed ? parseFloat(order.creditUsed) : 0;
+      let newAvailableCredit = 0;
+
+      if (creditUsed > 0 && !order.credit_restored) {
+        const [result] = await queryRunner.query(
+          `UPDATE users
+           SET "creditValue" = COALESCE("creditValue"::numeric, 0) + $1,
+               "creditReserved" = COALESCE("creditReserved"::numeric, 0) - $1
+           WHERE id = $2
+           RETURNING COALESCE("creditValue"::numeric, 0) as new_credit`,
+          [creditUsed, userId],
+        );
+        newAvailableCredit = parseFloat(result?.new_credit || '0');
+      }
+
+      await queryRunner.commitTransaction();
+
+      this.logger.log(
+        `Order ${orderId} cancelled atomically. Credit released: ${creditUsed}`,
+      );
+
+      return {
+        success: true,
+        creditReleased: creditUsed,
+        newAvailableCredit,
+      };
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      this.logger.error(`Error cancelling order atomically: ${error.message}`);
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
   private mapToEntity(order: Order): OrderEntity {
     return {
       id: order.id,
@@ -415,6 +555,8 @@ export class OrderRepository implements OrderRepositoryInterface {
       contractNumber: order.contractNumber,
       contractUniqueId: order.contractUniqueId,
       shippingAddress: order.shippingAddress,
+      creditUsed: order.creditUsed ? Number(order.creditUsed) : undefined,
+      creditRestored: order.creditRestored,
       items:
         order.items?.map((item) => ({
           id: item.id,
@@ -422,6 +564,8 @@ export class OrderRepository implements OrderRepositoryInterface {
           productName: item.productName,
           productType: item.productType,
           itemPrice: Number(item.itemPrice),
+          quantity: item.quantity,
+          fulfillmentStatus: item.fulfillmentStatus,
           details:
             item.details?.map((detail) => ({
               id: detail.id,

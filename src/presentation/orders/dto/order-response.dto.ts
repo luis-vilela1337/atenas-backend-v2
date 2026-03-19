@@ -1,5 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { OrderStatus } from '@core/orders/entities/order.entity';
+import {
+  OrderStatus,
+  FulfillmentStatus,
+} from '@core/orders/entities/order.entity';
 
 export class ShippingAddressDto {
   @ApiProperty()
@@ -63,6 +66,12 @@ export class OrderItemDto {
   itemPrice: number;
 
   @ApiProperty()
+  quantity: number;
+
+  @ApiProperty({ enum: FulfillmentStatus })
+  fulfillmentStatus: FulfillmentStatus;
+
+  @ApiProperty()
   createdAt: string;
 
   @ApiProperty({ type: [OrderItemDetailsDto] })
@@ -93,8 +102,21 @@ export class OrderDto {
   @ApiProperty({ required: false })
   contractNumber?: string;
 
+  @ApiProperty({
+    required: false,
+    description:
+      'URL de checkout do Mercado Pago (disponível apenas para pedidos PENDING com pagamento via MP)',
+  })
+  checkoutUrl?: string;
+
   @ApiProperty({ type: ShippingAddressDto })
   shippingAddress: ShippingAddressDto;
+
+  @ApiProperty({
+    required: false,
+    description: 'Crédito usado/reservado neste pedido',
+  })
+  creditUsed?: number;
 
   @ApiProperty()
   createdAt: string;

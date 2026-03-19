@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import {
   WebhookNotification,
   PaymentStatus,
@@ -7,6 +8,7 @@ import { WebhookRepositoryInterface } from '../repositories/webhook.repository.i
 import { OrderRepositoryInterface } from '../../orders/repositories/order.repository.interface';
 import { OrderStatus } from '../../orders/entities/order.entity';
 import { UserSQLRepository } from '../../../infra/data/sql/repositories/user.repository';
+import { CartRepositoryInterface } from '../../cart/repositories/cart.repository.interface';
 
 export interface ProcessWebhookInput {
   id: string;
@@ -21,10 +23,13 @@ export interface ProcessWebhookInput {
 }
 
 export class ProcessWebhookUseCase {
+  private readonly logger = new Logger(ProcessWebhookUseCase.name);
+
   constructor(
     private readonly webhookRepository: WebhookRepositoryInterface,
-    private readonly orderRepository?: OrderRepositoryInterface,
-    private readonly userRepository?: UserSQLRepository,
+    private readonly orderRepository: OrderRepositoryInterface,
+    private readonly userRepository: UserSQLRepository,
+    private readonly cartRepository?: CartRepositoryInterface,
   ) {}
 
   async execute(input: ProcessWebhookInput): Promise<WebhookProcessingResult> {
@@ -69,7 +74,6 @@ export class ProcessWebhookUseCase {
         processedAt: new Date(),
       });
 
-      // Update order status if order repository is available and payment was processed
       if (
         this.orderRepository &&
         paymentStatus &&
@@ -148,60 +152,81 @@ export class ProcessWebhookUseCase {
 
   private async updateOrderStatus(paymentStatus: PaymentStatus): Promise<void> {
     try {
-      // Extract order ID from external reference (assuming format: orderId)
       const orderId = paymentStatus.externalReference;
 
       if (!orderId) {
-        console.warn('No external reference found in payment status');
+        this.logger.warn('No external reference found in payment status');
         return;
       }
 
-      // Find order by payment gateway ID (preference ID) first
-      let order = await this.orderRepository!.findOrderByPaymentGatewayId(
+      if (!this.orderRepository) {
+        this.logger.warn('Order repository not available');
+        return;
+      }
+
+      let order = await this.orderRepository.findOrderByPaymentGatewayId(
         paymentStatus.paymentId,
       );
 
-      // If not found by payment gateway ID, try by order ID directly
       if (!order) {
-        order = await this.orderRepository!.findOrderById(orderId);
+        order = await this.orderRepository.findOrderById(orderId);
       }
 
       if (!order) {
-        console.warn(`Order not found for external reference: ${orderId}`);
+        this.logger.warn(`Order not found for external reference: ${orderId}`);
         return;
       }
 
-      // Map Mercado Pago status to our order status
       const orderStatus = this.mapPaymentStatusToOrderStatus(
         paymentStatus.status,
       );
 
       if (orderStatus) {
-        // Restore credit if order is cancelled or rejected and credit was used
-        if (
-          (orderStatus === OrderStatus.CANCELLED ||
-            orderStatus === OrderStatus.REJECTED) &&
-          order.creditUsed &&
-          order.creditUsed > 0 &&
-          this.userRepository
+        if (orderStatus === OrderStatus.APPROVED) {
+          if (
+            order.creditUsed &&
+            order.creditUsed > 0 &&
+            !order.creditRestored
+          ) {
+            await this.orderRepository.markCreditRestored(order.id);
+            await this.userRepository.consumeReservedCredit(
+              order.userId,
+              order.creditUsed,
+            );
+            this.logger.log(
+              `Consumed ${order.creditUsed} reserved credit for user ${order.userId}`,
+            );
+          }
+        } else if (
+          orderStatus === OrderStatus.CANCELLED ||
+          orderStatus === OrderStatus.REJECTED
         ) {
-          const currentCredit =
-            await this.userRepository.findUserCreditByUserId(order.userId);
-          await this.userRepository.updateUserCredit(
-            order.userId,
-            currentCredit + order.creditUsed,
-          );
-          console.log(
-            `Restored ${order.creditUsed} credit to user ${order.userId}`,
-          );
+          if (
+            order.creditUsed &&
+            order.creditUsed > 0 &&
+            !order.creditRestored
+          ) {
+            await this.orderRepository.markCreditRestored(order.id);
+            await this.userRepository.releaseReservedCredit(
+              order.userId,
+              order.creditUsed,
+            );
+            this.logger.log(
+              `Released ${order.creditUsed} reserved credit back to user ${order.userId}`,
+            );
+          }
         }
 
-        await this.orderRepository!.updateOrderStatus(order.id, orderStatus);
-        console.log(`Order ${order.id} status updated to: ${orderStatus}`);
+        await this.orderRepository.updateOrderStatus(order.id, orderStatus);
+        this.logger.log(`Order ${order.id} status updated to: ${orderStatus}`);
+
+        if (orderStatus === OrderStatus.APPROVED) {
+          await this.clearCartSafe(order.userId);
+        }
       }
-    } catch (error) {
-      console.error('Error updating order status:', error.message);
-      // Don't throw error to avoid breaking webhook processing
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      this.logger.error(`Error updating order status: ${message}`);
     }
   }
 
@@ -221,5 +246,19 @@ export class ProcessWebhookUseCase {
     };
 
     return statusMap[paymentStatus] || null;
+  }
+
+  private async clearCartSafe(userId: string): Promise<void> {
+    try {
+      if (this.cartRepository) {
+        await this.cartRepository.clearByUserId(userId);
+        this.logger.log(
+          `Cart cleared for user ${userId} after payment approval`,
+        );
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      this.logger.warn(`Failed to clear cart for user ${userId}: ${message}`);
+    }
   }
 }

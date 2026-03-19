@@ -9,6 +9,7 @@ import {
   IsString,
   IsUUID,
   IsBoolean,
+  IsInt,
   ValidateNested,
   Min,
   ValidateIf,
@@ -177,13 +178,24 @@ export class CartItemDto {
   productType!: 'GENERIC' | 'DIGITAL_FILES' | 'ALBUM';
 
   @ApiProperty({
-    description: 'Preço total do item',
+    description:
+      'Preço unitário do item (será multiplicado pela quantidade para calcular o total)',
     example: 29.99,
     minimum: 0.0,
   })
   @IsNumber()
   @Min(0.0)
   totalPrice!: number;
+
+  @ApiProperty({
+    description: 'Quantidade do item',
+    example: 1,
+    minimum: 1,
+  })
+  @IsInt()
+  @Min(1)
+  @IsNotEmpty()
+  quantity!: number;
 
   @ApiProperty({
     description: 'Detalhes da seleção do item',
@@ -243,4 +255,39 @@ export class CreateOrderResponseDto {
   })
   @IsString()
   mercadoPagoCheckoutUrl!: string;
+
+  @ApiProperty({
+    description: 'Método de pagamento utilizado',
+    enum: ['MERCADO_PAGO', 'CREDIT', 'FREE'],
+    example: 'CREDIT',
+  })
+  @IsString()
+  paymentMethod!: 'MERCADO_PAGO' | 'CREDIT' | 'FREE';
+
+  @ApiProperty({
+    description: 'Número do contrato',
+    example: '2602-001',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  contractNumber?: string;
+
+  @ApiProperty({
+    description: 'Crédito utilizado neste pedido',
+    example: 150.0,
+    required: false,
+  })
+  @IsNumber()
+  @IsOptional()
+  creditUsed?: number;
+
+  @ApiProperty({
+    description: 'Crédito restante após o pedido',
+    example: 350.0,
+    required: false,
+  })
+  @IsNumber()
+  @IsOptional()
+  remainingCredit?: number;
 }

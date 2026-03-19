@@ -39,6 +39,7 @@ export class UserMapper {
       becaMeasures: user.becaMeasures
         ? this.parseBecaMeasures(user.becaMeasures)
         : undefined,
+      lastLoginAt: user.lastLoginAt,
     };
   }
 

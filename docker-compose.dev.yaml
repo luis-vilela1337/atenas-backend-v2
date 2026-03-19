@@ -14,7 +14,7 @@ services:
       - /usr/src/app/node_modules
       - ~/.ssh:/root/.ssh:ro
     ports:
-      - '3000:3000'
+      - '3001:3001'
       - '9229:9229' # Debug port
     environment:
       - NODE_ENV=development
@@ -24,12 +24,12 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    command: pnpm run start:dev
+    command: ["bash", "./scripts/docker-entrypoint.dev.sh"]
     networks:
       - atenas-network
 
   db:
-    image: postgres:14-alpine
+    image: postgres:16.4
     container_name: atenas-postgres-dev
     restart: unless-stopped
     environment:

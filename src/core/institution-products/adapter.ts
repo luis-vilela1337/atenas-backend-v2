@@ -21,7 +21,6 @@ export interface RawEventConfiguration {
 }
 
 export interface RawGenericDetails {
-  isAvailableUnit?: boolean;
   events: RawEventConfiguration[];
 }
 

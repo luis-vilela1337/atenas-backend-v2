@@ -445,6 +445,61 @@ export class MailerSendService {
   }
 
   /**
+   * Envia email com credenciais de acesso para alunos
+   */
+  async sendStudentCredentialsEmail(
+    to: EmailRecipient,
+    credentials: {
+      email: string;
+      temporaryPassword: string;
+      loginUrl: string;
+    },
+  ): Promise<EmailSendResponse> {
+    const templateId = this.configService.get<string>(
+      'MAILERSEND_STUDENT_CREDENTIALS_TEMPLATE_ID',
+    );
+
+    if (templateId) {
+      return this.sendTemplateEmail({
+        from: {
+          email: this.defaultFromEmail,
+          name: this.defaultFromName,
+        },
+        to: [to],
+        templateId: templateId,
+        variables: [
+          {
+            email: to.email,
+            substitutions: {
+              name: to.name || 'Aluno(a)',
+              user_email: credentials.email,
+              temporary_password: credentials.temporaryPassword,
+              login_url: credentials.loginUrl,
+            },
+          },
+        ],
+        tags: ['student-credentials', 'onboarding'],
+      });
+    }
+
+    return this.sendEmail({
+      from: {
+        email: this.defaultFromEmail,
+        name: this.defaultFromName,
+      },
+      to: [to],
+      subject: 'Suas Credenciais de Acesso - Atenas Formaturas',
+      html: this.getStudentCredentialsEmailHtml(
+        to.name || 'Aluno(a)',
+        credentials.email,
+        credentials.temporaryPassword,
+        credentials.loginUrl,
+      ),
+      tags: ['student-credentials', 'onboarding'],
+    });
+  }
+
+  /**
    * Helper methods
    */
   private formatShippingAddress(address: {
@@ -566,6 +621,7 @@ export class MailerSendService {
         <body>
           <div class="container">
             <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
+              <img src="https://i.imgur.com/uHBNEzZ.png" alt="Atenas Formaturas" style="max-width: 200px; height: auto; margin-bottom: 15px;" />
               <h1>Bem-vindo(a) ao Atenas Formaturas!</h1>
             </div>
             <div class="content">
@@ -664,6 +720,7 @@ export class MailerSendService {
         <body>
           <div class="container">
             <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
+              <img src="https://i.imgur.com/uHBNEzZ.png" alt="Atenas Formaturas" style="max-width: 200px; height: auto; margin-bottom: 15px;" />
               <h1>Redefinição de Senha</h1>
             </div>
             <div class="content">
@@ -773,6 +830,7 @@ export class MailerSendService {
         <body>
           <div class="container">
             <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
+              <img src="https://i.imgur.com/uHBNEzZ.png" alt="Atenas Formaturas" style="max-width: 200px; height: auto; margin-bottom: 15px;" />
               <h1>Código de Verificação</h1>
             </div>
             <div class="content">
@@ -888,6 +946,7 @@ export class MailerSendService {
         <body>
           <div class="container">
             <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
+              <img src="https://i.imgur.com/uHBNEzZ.png" alt="Atenas Formaturas" style="max-width: 200px; height: auto; margin-bottom: 15px;" />
               <h1>🎉 Pedido Concluído!</h1>
             </div>
             <div class="content">
@@ -1009,6 +1068,7 @@ export class MailerSendService {
         <body>
           <div class="container">
             <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
+              <img src="https://i.imgur.com/uHBNEzZ.png" alt="Atenas Formaturas" style="max-width: 200px; height: auto; margin-bottom: 15px;" />
               <h1>🎉 Pedido Concluído!</h1>
             </div>
             <div class="content">
@@ -1027,6 +1087,164 @@ export class MailerSendService {
                 </p>
                 <p style="font-size: 12px; margin-top: 10px;">Nossa equipe está à disposição para ajudá-lo com qualquer necessidade.</p>
               <p>Agradecemos pela confiança e estamos ansiosos para que você receba suas lembranças especiais!</p>
+            </div>
+            <div class="footer">
+              <p>&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `;
+  }
+
+  private getStudentCredentialsEmailHtml(
+    name: string,
+    email: string,
+    temporaryPassword: string,
+    loginUrl: string,
+  ): string {
+    return `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="color-scheme" content="light only">
+          <meta name="supported-color-schemes" content="light">
+          <style>
+            :root {
+              color-scheme: light only !important;
+              supported-color-schemes: light !important;
+            }
+
+            /* Garantir que cores específicas não sejam invertidas */
+            body, table, td, div {
+              color-scheme: light only !important;
+            }
+
+            body {
+              font-family: Arial, sans-serif;
+              line-height: 1.6;
+              color: #000000 !important;
+              background-color: #ffffff !important;
+            }
+            .container {
+              max-width: 600px;
+              margin: 0 auto;
+              padding: 20px;
+              background-color: #ffffff !important;
+            }
+            .header {
+              background: linear-gradient(#F7E70B, #F7E70B) !important;
+              background-color: #F7E70B !important;
+              color: #000000 !important;
+              padding: 20px;
+              text-align: center;
+            }
+            .content {
+              padding: 20px;
+              background: #f9f9f9 !important;
+              color: #000000 !important;
+            }
+            .credentials-box {
+              background: linear-gradient(#F7E70B, #F7E70B) !important;
+              background-color: #F7E70B !important;
+              border: 2px solid #F7E70B !important;
+              border-radius: 8px;
+              padding: 20px;
+              margin: 20px 0;
+              text-align: center;
+            }
+            .credential-item {
+              margin: 10px 0;
+              padding: 10px;
+              background: #ffffff !important;
+              border-radius: 4px;
+            }
+            .credential-label {
+              font-size: 12px;
+              color: #666666 !important;
+              margin-bottom: 5px;
+            }
+            .credential-value {
+              font-size: 16px;
+              font-weight: bold;
+              color: #000000 !important;
+              font-family: 'Courier New', monospace;
+            }
+            .button {
+              display: inline-block;
+              padding: 12px 24px;
+              background: linear-gradient(#F7E70B, #F7E70B) !important;
+              background-color: #F7E70B !important;
+              color: #000000 !important;
+              text-decoration: none;
+              border-radius: 4px;
+              margin: 20px 0;
+              font-weight: 600;
+            }
+            .button:hover {
+              background: linear-gradient(#fef08a, #fef08a) !important;
+              background-color: #fef08a !important;
+            }
+            .security-note {
+              background: #fefce8 !important;
+              border-left: 4px solid #F7E70B !important;
+              padding: 15px;
+              margin: 20px 0;
+              font-size: 14px;
+            }
+            .footer {
+              padding: 20px;
+              text-align: center;
+              font-size: 12px;
+              color: #000000 !important;
+            }
+            p, h1, h2, h3, strong { color: #000000 !important; }
+
+            /* Media Query como Backup */
+            @media (prefers-color-scheme: dark) {
+              .header,
+              .credentials-box,
+              .button,
+              [style*="background-color: #F7E70B"],
+              [style*="background: linear-gradient(#F7E70B, #F7E70B)"] {
+                background: linear-gradient(#F7E70B, #F7E70B) !important;
+                background-color: #F7E70B !important;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
+              <img src="https://i.imgur.com/uHBNEzZ.png" alt="Atenas Formaturas" style="max-width: 200px; height: auto; margin-bottom: 15px;" />
+              <h1>Suas Credenciais de Acesso</h1>
+            </div>
+            <div class="content">
+              <p>Olá ${name},</p>
+              <p>Suas credenciais de acesso foram criadas. Utilize os dados abaixo para acessar sua conta:</p>
+
+              <div class="credentials-box" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">
+                <div class="credential-item">
+                  <div class="credential-label">Email de Acesso</div>
+                  <div class="credential-value">${email}</div>
+                </div>
+                <div class="credential-item">
+                  <div class="credential-label">Senha Temporária</div>
+                  <div class="credential-value">${temporaryPassword}</div>
+                </div>
+              </div>
+
+              <p style="text-align: center;">
+                <a href="${loginUrl}" class="button" style="background: linear-gradient(#F7E70B, #F7E70B); background-color: #F7E70B;">Acessar Minha Conta</a>
+              </p>
+
+              <div class="security-note">
+                <p><strong>🔒 Dica de Segurança:</strong></p>
+                <p>Recomendamos que você altere sua senha após o primeiro acesso para garantir a segurança da sua conta.</p>
+              </div>
+
+              <p>Caso tenha alguma dúvida ou precise de suporte, entre em contato conosco pelo telefone <strong>(35) 3425-1899</strong>.</p>
             </div>
             <div class="footer">
               <p>&copy; ${new Date().getFullYear()} Atenas Formaturas. Todos os direitos reservados.</p>

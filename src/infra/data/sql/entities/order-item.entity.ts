@@ -12,6 +12,7 @@ import { randomUUID } from 'crypto';
 import { Order } from './order.entity';
 import { Product } from './products.entity';
 import { OrderItemDetail } from './order-item-detail.entity';
+import { FulfillmentStatus } from '@core/orders/entities/order.entity';
 
 export type ProductType = 'GENERIC' | 'DIGITAL_FILES' | 'ALBUM';
 
@@ -52,6 +53,17 @@ export class OrderItem {
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   itemPrice!: number;
+
+  @Column({ type: 'integer', nullable: true })
+  quantity!: number;
+
+  @Column({
+    type: 'varchar',
+    name: 'fulfillment_status',
+    default: FulfillmentStatus.ORDER_RECEIVED,
+  })
+  @Index('idx_order_item_fulfillment_status')
+  fulfillmentStatus!: FulfillmentStatus;
 
   @OneToMany(() => OrderItemDetail, (detail) => detail.orderItem, {
     cascade: true,

@@ -14,6 +14,8 @@ import { CreateInstitutionApplication } from '@application/insitutiotion/create'
 import { FindByIdInstitutionApplication } from '@application/insitutiotion/find-by-id';
 import { UpdateInstitutionApplication } from '@application/insitutiotion/update';
 import { DeleteInstitutionApplication } from '@application/insitutiotion/delete';
+import { DeleteEventApplication } from '@application/insitutiotion/delete-event';
+import { SendStudentCredentialsApplication } from '@application/insitutiotion/send-student-credentials';
 import { GeneratePresignedUrV2Application } from '@application/storage/presigned-url.application';
 import { CreateProductApplication } from '@application/products/create-product.application';
 import { FindAllProductsApplication } from '@application/products/find-all-products.application';
@@ -37,6 +39,12 @@ import { CreateOrderApplication } from '@application/orders/create-order.applica
 import { FindOrdersApplication } from '@application/orders/find-orders.application';
 import { FindOrderByIdApplication } from '@application/orders/find-order-by-id.application';
 import { UpdateOrderStatusApplication } from '@application/orders/update-order-status.application';
+import { UpdateItemFulfillmentStatusApplication } from '@application/orders/update-item-fulfillment-status.application';
+import { CancelOrderByClientApplication } from '@application/orders/cancel-order-by-client.application';
+import { UpdateProfileApplication } from '@application/profile/update-profile.application';
+import { GetCartApplication } from '@application/cart/get-cart.application';
+import { UpdateCartApplication } from '@application/cart/update-cart.application';
+import { ClearCartApplication } from '@application/cart/clear-cart.application';
 
 @Module({
   imports: [
@@ -62,6 +70,8 @@ import { UpdateOrderStatusApplication } from '@application/orders/update-order-s
     FindByIdInstitutionApplication,
     UpdateInstitutionApplication,
     DeleteInstitutionApplication,
+    DeleteEventApplication,
+    SendStudentCredentialsApplication,
     UpdateProductApplication,
     //products
     CreateProductApplication,
@@ -87,6 +97,14 @@ import { UpdateOrderStatusApplication } from '@application/orders/update-order-s
     FindOrdersApplication,
     FindOrderByIdApplication,
     UpdateOrderStatusApplication,
+    UpdateItemFulfillmentStatusApplication,
+    CancelOrderByClientApplication,
+    // profile
+    UpdateProfileApplication,
+    // cart
+    GetCartApplication,
+    UpdateCartApplication,
+    ClearCartApplication,
   ],
   exports: [
     //user
@@ -103,6 +121,8 @@ import { UpdateOrderStatusApplication } from '@application/orders/update-order-s
     FindByIdInstitutionApplication,
     UpdateInstitutionApplication,
     DeleteInstitutionApplication,
+    DeleteEventApplication,
+    SendStudentCredentialsApplication,
     //products
     CreateProductApplication,
     FindAllProductsApplication,
@@ -130,6 +150,14 @@ import { UpdateOrderStatusApplication } from '@application/orders/update-order-s
     FindOrdersApplication,
     FindOrderByIdApplication,
     UpdateOrderStatusApplication,
+    UpdateItemFulfillmentStatusApplication,
+    CancelOrderByClientApplication,
+    // profile
+    UpdateProfileApplication,
+    // cart
+    GetCartApplication,
+    UpdateCartApplication,
+    ClearCartApplication,
   ],
 })
 export class ApplicationModule {}

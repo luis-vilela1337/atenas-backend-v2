@@ -153,24 +153,50 @@ export class InstitutionProductSQLRepository {
             | DigitalFilesDetails;
 
           if (details && details.events && details.events.length > 0) {
-            // Get all event IDs from the details
-            const eventIds = details.events.map((event) => event.id);
+            // Fetch current events for this product's institution
+            const institutionEvents =
+              await this.institutionEventRepository.findByInstitution(
+                product.institution.id,
+              );
 
-            // Fetch event names from the database
-            const events = await this.institutionEventRepository.findByIds(
-              eventIds,
+            // Build lookup maps from current institution events
+            const institutionEventById = new Map(
+              institutionEvents.map((e) => [e.id, e]),
+            );
+            const institutionEventByName = new Map(
+              institutionEvents.map((e) => [e.name, e]),
             );
 
-            // Create a map for quick lookup
-            const eventNameMap = new Map(
-              events.map((event) => [event.id, event.name]),
-            );
+            // Update events: resolve correct InstitutionEvent ID and name
+            // Events that no longer exist (soft-deleted) are filtered out
+            const updatedEvents = details.events
+              .map((event) => {
+                // If stored ID matches a current institution event, use it
+                const matchedById = institutionEventById.get(event.id);
+                if (matchedById) {
+                  return {
+                    ...event,
+                    id: matchedById.id,
+                    name: matchedById.name,
+                  };
+                }
 
-            // Update the events with names
-            const updatedEvents = details.events.map((event) => ({
-              ...event,
-              name: eventNameMap.get(event.id) || undefined,
-            }));
+                // Fallback: match by name stored in JSONB
+                if (event.name) {
+                  const matchedByName = institutionEventByName.get(event.name);
+                  if (matchedByName) {
+                    return {
+                      ...event,
+                      id: matchedByName.id,
+                      name: matchedByName.name,
+                    };
+                  }
+                }
+
+                // No match found — event was deleted, exclude it
+                return null;
+              })
+              .filter((event) => event !== null);
 
             // Return the product with updated details
             return {
@@ -240,6 +266,27 @@ export class InstitutionProductSQLRepository {
     });
 
     return await this.populateEventNames(products);
+  }
+
+  async removeEventFromDetails(eventId: string): Promise<void> {
+    await this.dataSource.query(
+      `UPDATE institution_products
+       SET details = jsonb_set(
+         details,
+         '{events}',
+         COALESCE(
+           (SELECT jsonb_agg(elem)
+            FROM jsonb_array_elements(details->'events') elem
+            WHERE elem->>'id' != $1),
+           '[]'::jsonb
+         )
+       ),
+       updated_at = NOW()
+       WHERE details IS NOT NULL
+         AND details ? 'events'
+         AND details->'events' @> $2::jsonb`,
+      [eventId, JSON.stringify([{ id: eventId }])],
+    );
   }
 
   async findByProductId(productId: string): Promise<InstitutionProduct[]> {

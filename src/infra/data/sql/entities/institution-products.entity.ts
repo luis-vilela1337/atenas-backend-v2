@@ -29,7 +29,6 @@ export interface EventConfiguration {
 }
 
 export interface GenericDetails {
-  isAvailableUnit?: boolean;
   events: EventConfiguration[];
 }
 

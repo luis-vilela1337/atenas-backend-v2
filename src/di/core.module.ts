@@ -10,6 +10,8 @@ import { CreateInstituitionUseCase } from '@core/insituition/create.usecase';
 import { FindByIdInstituitionUseCase } from '@core/insituition/find-by-id.usecase';
 import { UpdateInstituitionUseCase } from '@core/insituition/update.usecase';
 import { DeleteInstituitionUseCase } from '@core/insituition/delete.usecase';
+import { DeleteEventUseCase } from '@core/insituition/delete-event.usecase';
+import { SendStudentCredentialsUseCase } from '@core/insituition/send-student-credentials.usecase';
 import { DeleteUserByIDV2UseCase } from '@core/user/delete-user.usecase';
 import { CreateProductUseCase } from '@core/products/create/usecase';
 import { FindAllProductsUseCase } from '@core/products/find-all/usecase';
@@ -32,6 +34,12 @@ import { CreatePreferenceUseCase } from '@core/mercado-pago/create-preference/us
 import { FindOrdersUseCase } from '@core/orders/find-orders.usecase';
 import { FindOrderByIdUseCase } from '@core/orders/find-order-by-id.usecase';
 import { UpdateOrderStatusUseCase } from '@core/orders/update-order-status/usecase';
+import { UpdateItemFulfillmentStatusUseCase } from '@core/orders/update-item-fulfillment-status/usecase';
+import { CancelOrderByClientUseCase } from '@core/orders/cancel-order-by-client/usecase';
+import { UpdateProfileUseCase } from '@core/profile/update-profile.usecase';
+import { GetCartUseCase } from '@core/cart/get-cart.usecase';
+import { UpdateCartUseCase } from '@core/cart/update-cart.usecase';
+import { ClearCartUseCase } from '@core/cart/clear-cart.usecase';
 
 @Module({
   imports: [InfraModule],
@@ -48,7 +56,9 @@ import { UpdateOrderStatusUseCase } from '@core/orders/update-order-status/useca
     FindByIdInstituitionUseCase,
     UpdateInstituitionUseCase,
     DeleteInstituitionUseCase,
+    DeleteEventUseCase,
     CreateInstituitionUseCase,
+    SendStudentCredentialsUseCase,
     //products
     CreateProductUseCase,
     FindAllProductsUseCase,
@@ -76,6 +86,14 @@ import { UpdateOrderStatusUseCase } from '@core/orders/update-order-status/useca
     FindOrdersUseCase,
     FindOrderByIdUseCase,
     UpdateOrderStatusUseCase,
+    UpdateItemFulfillmentStatusUseCase,
+    CancelOrderByClientUseCase,
+    // profile
+    UpdateProfileUseCase,
+    // cart
+    GetCartUseCase,
+    UpdateCartUseCase,
+    ClearCartUseCase,
   ],
   exports: [
     //user
@@ -91,6 +109,8 @@ import { UpdateOrderStatusUseCase } from '@core/orders/update-order-status/useca
     FindByIdInstituitionUseCase,
     UpdateInstituitionUseCase,
     DeleteInstituitionUseCase,
+    DeleteEventUseCase,
+    SendStudentCredentialsUseCase,
     //products
     CreateProductUseCase,
     FindAllProductsUseCase,
@@ -118,6 +138,14 @@ import { UpdateOrderStatusUseCase } from '@core/orders/update-order-status/useca
     FindOrdersUseCase,
     FindOrderByIdUseCase,
     UpdateOrderStatusUseCase,
+    UpdateItemFulfillmentStatusUseCase,
+    CancelOrderByClientUseCase,
+    // profile
+    UpdateProfileUseCase,
+    // cart
+    GetCartUseCase,
+    UpdateCartUseCase,
+    ClearCartUseCase,
   ],
 })
 export class CoreModule {}

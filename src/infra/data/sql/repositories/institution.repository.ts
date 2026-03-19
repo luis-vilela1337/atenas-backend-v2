@@ -31,6 +31,8 @@ export class InstitutionSQLRepository {
     page = 1,
     limit = 10,
     filters?: { contractNumber?: string },
+    sortBy?: string,
+    order: 'asc' | 'desc' = 'desc',
   ): Promise<{
     institutions: Institution[];
     total: number;
@@ -56,7 +58,20 @@ export class InstitutionSQLRepository {
       'institution.users',
     );
 
-    queryBuilder.orderBy('institution.updatedAt', 'DESC');
+    // Map sortBy fields to query builder property names (camelCase)
+    const columnMap: Record<string, string> = {
+      id: 'institution.id',
+      contractNumber: 'institution.contractNumber',
+      name: 'institution.name',
+      createdAt: 'institution.createdAt',
+      updatedAt: 'institution.updatedAt',
+    };
+
+    // Apply sorting
+    const sortColumn = (sortBy && columnMap[sortBy]) || 'institution.updatedAt';
+    const sortOrder = order.toUpperCase() as 'ASC' | 'DESC';
+
+    queryBuilder.orderBy(sortColumn, sortOrder);
 
     const [institutions, total] = await queryBuilder.getManyAndCount();
     const totalPages = Math.ceil(total / limit);
@@ -88,26 +103,19 @@ export class InstitutionSQLRepository {
         return null;
       }
 
-      if (updateData.events?.length) {
-        const existingEventIds = new Set(inst.events.map((e) => e.id));
-        const providedEventIds = new Set(
-          updateData.events.filter((e) => e.id).map((e) => e.id),
-        );
-
-        const eventsToDelete = inst.events.filter(
-          (e) => !providedEventIds.has(e.id),
-        );
-        if (eventsToDelete.length > 0) {
-          await qr.manager.softDelete(
-            InstitutionEvent,
-            eventsToDelete.map((e) => e.id),
-          );
-        }
+      if (updateData.events !== undefined && updateData.events.length > 0) {
+        const existingEventsMap = new Map(inst.events.map((e) => [e.id, e]));
 
         const toUpsert = updateData.events.map((dto) => {
-          if (dto.id && existingEventIds.has(dto.id)) {
-            const ev = inst.events.find((e) => e.id === dto.id);
+          if (dto.id && existingEventsMap.has(dto.id)) {
+            const ev = existingEventsMap.get(dto.id);
             ev.name = dto.name;
+            return ev;
+          } else if (dto.id) {
+            const ev = new InstitutionEvent();
+            ev.id = dto.id;
+            ev.name = dto.name;
+            ev.institution = inst as Institution;
             return ev;
           } else {
             const ev = new InstitutionEvent();
@@ -117,8 +125,6 @@ export class InstitutionSQLRepository {
           }
         });
         await qr.manager.save(toUpsert);
-      } else {
-        await qr.manager.softDelete(InstitutionEvent, { institution: inst });
       }
 
       const { contractNumber, name, observations } = updateData;

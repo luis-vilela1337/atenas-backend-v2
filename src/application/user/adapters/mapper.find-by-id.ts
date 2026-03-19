@@ -28,6 +28,9 @@ export class UserPayloadDto {
   @ApiProperty({ format: 'uuid' })
   institutionId: string;
 
+  @ApiProperty()
+  userContract: string;
+
   @ApiProperty({ nullable: true })
   fatherName: string | null;
 
@@ -47,6 +50,9 @@ export class UserPayloadDto {
   creditValue: number | null;
 
   @ApiProperty({ nullable: true })
+  creditReserved: number | null;
+
+  @ApiProperty({ nullable: true })
   profileImage: string | null;
 
   @ApiProperty()
@@ -63,6 +69,9 @@ export class UserPayloadDto {
 
   @ApiProperty({ type: String, format: 'date-time' })
   createdAt: string;
+
+  @ApiProperty({ type: String, format: 'date-time', nullable: true })
+  lastLoginAt: string | null;
 }
 
 export class UserAdapterEntity {
@@ -76,12 +85,16 @@ export class UserAdapterEntity {
       observations: user.observations || null,
       role: user.role,
       institutionId: user.institution.id,
+      userContract: `${user.institution.contractNumber}-${user.identifier}`,
       fatherName: user.fatherName || null,
       fatherPhone: user.fatherPhone || null,
       motherName: user.motherName || null,
       motherPhone: user.motherPhone || null,
       driveLink: user.driveLink || null,
       creditValue: user.creditValue ? parseFloat(user.creditValue) : null,
+      creditReserved: user.creditReserved
+        ? parseFloat(user.creditReserved)
+        : null,
       profileImage: user.profileImage || null,
       status: user.status,
       address:
@@ -107,6 +120,7 @@ export class UserAdapterEntity {
         ? this.parseBecaMeasures(user.becaMeasures)
         : null,
       createdAt: user.createdAt.toISOString(),
+      lastLoginAt: user.lastLoginAt ? user.lastLoginAt.toISOString() : null,
     };
   }
 

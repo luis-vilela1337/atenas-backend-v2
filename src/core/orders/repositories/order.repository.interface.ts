@@ -1,6 +1,12 @@
 import { Order, OrderStatus } from '../entities/order.entity';
 import { FindOrdersInput, FindOrdersResult } from '../dto/find-orders.dto';
 
+export interface CancelOrderResult {
+  success: boolean;
+  creditReleased: number;
+  newAvailableCredit: number;
+}
+
 export interface OrderRepositoryInterface {
   createOrder(order: Order): Promise<Order>;
   findOrderById(id: string): Promise<Order | null>;
@@ -11,5 +17,15 @@ export interface OrderRepositoryInterface {
   updateOrderPaymentGatewayId(
     orderId: string,
     paymentGatewayId: string,
+  ): Promise<void>;
+  markCreditRestored(orderId: string): Promise<void>;
+  findAbandonedOrders(hoursThreshold: number): Promise<Order[]>;
+  cancelOrderAtomically(
+    orderId: string,
+    userId: string,
+  ): Promise<CancelOrderResult>;
+  updateItemFulfillmentStatus(
+    itemId: string,
+    fulfillmentStatus: string,
   ): Promise<void>;
 }

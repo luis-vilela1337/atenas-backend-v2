@@ -65,6 +65,9 @@ export class User {
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   creditValue?: string;
 
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  creditReserved?: string;
+
   @Column({ type: 'varchar', length: 255, nullable: true })
   profileImage?: string;
 
@@ -113,4 +116,11 @@ export class User {
     nullable: true,
   })
   updatedAt?: Date;
+
+  @Column({
+    name: 'last_login_at',
+    type: 'timestamp with time zone',
+    nullable: true,
+  })
+  lastLoginAt?: Date;
 }
