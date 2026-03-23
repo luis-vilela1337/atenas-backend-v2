@@ -70,7 +70,7 @@ export class OrderItem {
     type: 'timestamp with time zone',
     nullable: true,
   })
-  finalizadoEm?: Date;
+  completedAt?: Date;
 
   @OneToMany(() => OrderItemDetail, (detail) => detail.orderItem, {
     cascade: true,

@@ -323,7 +323,7 @@ export class OrderRepository implements OrderRepositoryInterface {
   async updateItemFulfillmentStatus(
     itemId: string,
     fulfillmentStatus: string,
-    finalizadoEm?: Date,
+    completedAt?: Date,
   ): Promise<void> {
     this.logger.log(
       `Updating order item ${itemId} fulfillment status to: ${fulfillmentStatus}`,
@@ -332,7 +332,7 @@ export class OrderRepository implements OrderRepositoryInterface {
     try {
       await this.orderItemRepo.update(itemId, {
         fulfillmentStatus: fulfillmentStatus as any,
-        ...(finalizadoEm !== undefined && { finalizadoEm }),
+        ...(completedAt !== undefined && { completedAt }),
       });
     } catch (error) {
       this.logger.error(
@@ -568,7 +568,7 @@ export class OrderRepository implements OrderRepositoryInterface {
           itemPrice: Number(item.itemPrice),
           quantity: item.quantity,
           fulfillmentStatus: item.fulfillmentStatus,
-          finalizadoEm: item.finalizadoEm,
+          completedAt: item.completedAt,
           details:
             item.details?.map((detail) => ({
               id: detail.id,

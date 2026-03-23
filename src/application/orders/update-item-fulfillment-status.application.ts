@@ -17,7 +17,7 @@ export interface UpdateItemFulfillmentStatusApplicationResult {
   orderItemId: string;
   fulfillmentStatus: FulfillmentStatus;
   productType: string;
-  finalizadoEm?: Date;
+  completedAt?: Date;
 }
 
 @Injectable()
@@ -78,7 +78,7 @@ export class UpdateItemFulfillmentStatusApplication {
       orderItemId: input.orderItemId,
       fulfillmentStatus: input.fulfillmentStatus,
       productType: result.productType,
-      finalizadoEm: result.finalizadoEm,
+      completedAt: result.completedAt,
     };
   }
 

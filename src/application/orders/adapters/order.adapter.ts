@@ -163,8 +163,8 @@ export class OrderAdapter {
           itemPrice: item.itemPrice,
           quantity: item.quantity,
           fulfillmentStatus: item.fulfillmentStatus,
-          finalizadoEm: item.finalizadoEm
-            ? item.finalizadoEm.toISOString()
+          completedAt: item.completedAt
+            ? item.completedAt.toISOString()
             : undefined,
           createdAt: order.createdAt.toISOString(),
           details,

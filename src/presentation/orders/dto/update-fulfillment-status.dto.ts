@@ -53,5 +53,5 @@ export class UpdateFulfillmentStatusResponseDto {
     description: 'Data de finalização do item',
     required: false,
   })
-  finalizadoEm?: Date;
+  completedAt?: Date;
 }

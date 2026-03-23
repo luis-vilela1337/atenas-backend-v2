@@ -22,7 +22,7 @@ export class UpdateItemFulfillmentStatusUseCase {
 
   async execute(
     input: UpdateItemFulfillmentStatusInput,
-  ): Promise<{ productType: string; finalizadoEm?: Date }> {
+  ): Promise<{ productType: string; completedAt?: Date }> {
     const order = await this.orderRepository.findOrderById(input.orderId);
     if (!order) {
       throw new Error(`Order with ID ${input.orderId} not found`);
@@ -50,18 +50,18 @@ export class UpdateItemFulfillmentStatusUseCase {
       input.fulfillmentStatus,
     );
 
-    let finalizadoEm: Date | undefined;
+    let completedAt: Date | undefined;
     if (
       input.fulfillmentStatus === FulfillmentStatus.DELIVERED ||
       input.fulfillmentStatus === FulfillmentStatus.SENT
     ) {
-      finalizadoEm = new Date();
+      completedAt = new Date();
     }
 
     await this.orderRepository.updateItemFulfillmentStatus(
       input.orderItemId,
       input.fulfillmentStatus,
-      finalizadoEm,
+      completedAt,
     );
 
     const updatedOrder = await this.orderRepository.findOrderById(
@@ -82,7 +82,7 @@ export class UpdateItemFulfillmentStatusUseCase {
       }
     }
 
-    return { productType: item.productType, finalizadoEm };
+    return { productType: item.productType, completedAt };
   }
 
   private validateTransition(

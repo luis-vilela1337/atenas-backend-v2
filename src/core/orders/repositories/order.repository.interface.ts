@@ -27,6 +27,6 @@ export interface OrderRepositoryInterface {
   updateItemFulfillmentStatus(
     itemId: string,
     fulfillmentStatus: string,
-    finalizadoEm?: Date,
+    completedAt?: Date,
   ): Promise<void>;
 }

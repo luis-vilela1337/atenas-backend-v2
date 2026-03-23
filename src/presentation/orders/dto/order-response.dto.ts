@@ -75,7 +75,7 @@ export class OrderItemDto {
     required: false,
     description: 'Data de finalização do item (quando status é DELIVERED ou SENT)',
   })
-  finalizadoEm?: string;
+  completedAt?: string;
 
   @ApiProperty()
   createdAt: string;
