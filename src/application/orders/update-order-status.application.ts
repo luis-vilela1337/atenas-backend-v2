@@ -38,7 +38,7 @@ export class UpdateOrderStatusApplication {
     });
 
     if (input.status === OrderStatus.COMPLETED) {
-      await this.sendCompletionEmails(input.orderId, input.driveLink);
+      await this.sendCompletionEmails(input.orderId);
     }
 
     return {
@@ -48,10 +48,7 @@ export class UpdateOrderStatusApplication {
     };
   }
 
-  private async sendCompletionEmails(
-    orderId: string,
-    driveLink?: string,
-  ): Promise<void> {
+  private async sendCompletionEmails(orderId: string): Promise<void> {
     try {
       // Fetch order with items
       const order = await this.orderRepository.findOrderById(orderId);
@@ -67,38 +64,10 @@ export class UpdateOrderStatusApplication {
         return;
       }
 
-      // Check product types in order items
-      const hasDigitalFiles = order.items.some(
-        (item) => item.productType === 'DIGITAL_FILES',
-      );
       const hasPhysicalProducts = order.items.some(
         (item) =>
           item.productType === 'ALBUM' || item.productType === 'GENERIC',
       );
-
-      // Send email for digital files
-      if (hasDigitalFiles) {
-        if (!driveLink) {
-          this.logger.warn(
-            `Order ${orderId} contains digital files but no drive link was provided`,
-          );
-        } else {
-          await this.mailerSendService.sendDigitalFilesCompletedEmail(
-            {
-              email: user.email,
-              name: user.name,
-            },
-            {
-              orderId: order.id,
-              displayId: order.displayId?.toString(),
-            },
-            driveLink,
-          );
-          this.logger.log(
-            `Digital files completion email sent for order ${orderId} to ${user.email}`,
-          );
-        }
-      }
 
       // Send email for physical products
       if (hasPhysicalProducts) {

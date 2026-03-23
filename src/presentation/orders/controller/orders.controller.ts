@@ -270,6 +270,7 @@ export class OrdersController {
         orderId,
         orderItemId: itemId,
         fulfillmentStatus: dto.fulfillmentStatus,
+        driveLink: dto.driveLink,
       });
     } catch (error) {
       if (error.message?.includes('not found')) {

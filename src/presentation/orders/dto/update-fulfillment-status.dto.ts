@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional, IsUrl } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { FulfillmentStatus } from '@core/orders/entities/order.entity';
 
@@ -11,6 +11,16 @@ export class UpdateFulfillmentStatusDto {
   @IsEnum(FulfillmentStatus)
   @IsNotEmpty()
   fulfillmentStatus: FulfillmentStatus;
+
+  @ApiProperty({
+    description:
+      'Link do Google Drive para download de arquivos digitais (obrigatório quando fulfillmentStatus é SENT e o item é DIGITAL_FILES)',
+    example: 'https://drive.google.com/file/d/1234567890/view',
+    required: false,
+  })
+  @IsOptional()
+  @IsUrl()
+  driveLink?: string;
 }
 
 export class UpdateFulfillmentStatusResponseDto {

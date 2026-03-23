@@ -17,6 +17,7 @@ export class UpdateOrderStatusDto {
       'Link do Google Drive para download de arquivos digitais (obrigatório quando status é COMPLETED e pedido contém arquivos digitais)',
     example: 'https://drive.google.com/file/d/1234567890/view',
     required: false,
+    deprecated: true,
   })
   @IsOptional()
   @IsUrl()
