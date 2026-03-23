@@ -69,6 +69,7 @@ describe('CreateOrderUseCase - Cart Integration', () => {
       markCreditRestored: jest.fn(),
       findAbandonedOrders: jest.fn(),
       cancelOrderAtomically: jest.fn(),
+      updateItemFulfillmentStatus: jest.fn(),
     };
 
     mercadoPagoRepository = {
@@ -140,15 +141,20 @@ describe('CreateOrderUseCase - Cart Integration', () => {
         ...mockInput,
         cartItems: [{ ...mockInput.cartItems[0], totalPrice: 0 }],
       };
-      institutionProductRepository.findByProductAndInstitution.mockResolvedValue({
-        id: 'inst-product-1',
-        flag: 'GENERIC',
-        details: {
-          events: [{ id: 'event-1', valorPhoto: 0, valorPack: 0 }],
-        },
-      } as any);
+      institutionProductRepository.findByProductAndInstitution.mockResolvedValue(
+        {
+          id: 'inst-product-1',
+          flag: 'GENERIC',
+          details: {
+            events: [{ id: 'event-1', valorPhoto: 0, valorPack: 0 }],
+          },
+        } as any,
+      );
       configService.get.mockReturnValue('https://seudominio.com/success');
-      orderRepository.createOrder.mockResolvedValue({ ...mockOrder, totalAmount: 0 });
+      orderRepository.createOrder.mockResolvedValue({
+        ...mockOrder,
+        totalAmount: 0,
+      });
       cartRepository.clearByUserId.mockResolvedValue(undefined);
 
       // Act
@@ -164,15 +170,20 @@ describe('CreateOrderUseCase - Cart Integration', () => {
         ...mockInput,
         cartItems: [{ ...mockInput.cartItems[0], totalPrice: 0 }],
       };
-      institutionProductRepository.findByProductAndInstitution.mockResolvedValue({
-        id: 'inst-product-1',
-        flag: 'GENERIC',
-        details: {
-          events: [{ id: 'event-1', valorPhoto: 0, valorPack: 0 }],
-        },
-      } as any);
+      institutionProductRepository.findByProductAndInstitution.mockResolvedValue(
+        {
+          id: 'inst-product-1',
+          flag: 'GENERIC',
+          details: {
+            events: [{ id: 'event-1', valorPhoto: 0, valorPack: 0 }],
+          },
+        } as any,
+      );
       configService.get.mockReturnValue('https://seudominio.com/success');
-      orderRepository.createOrder.mockResolvedValue({ ...mockOrder, totalAmount: 0 });
+      orderRepository.createOrder.mockResolvedValue({
+        ...mockOrder,
+        totalAmount: 0,
+      });
       cartRepository.clearByUserId.mockRejectedValue(new Error('DB Error'));
 
       // Act
@@ -242,18 +253,25 @@ describe('CreateOrderUseCase - Cart Integration', () => {
         ...mockInput,
         cartItems: [{ ...mockInput.cartItems[0], totalPrice: 0 }],
       };
-      institutionProductRepository.findByProductAndInstitution.mockResolvedValue({
-        id: 'inst-product-1',
-        flag: 'GENERIC',
-        details: {
-          events: [{ id: 'event-1', valorPhoto: 0, valorPack: 0 }],
-        },
-      } as any);
+      institutionProductRepository.findByProductAndInstitution.mockResolvedValue(
+        {
+          id: 'inst-product-1',
+          flag: 'GENERIC',
+          details: {
+            events: [{ id: 'event-1', valorPhoto: 0, valorPack: 0 }],
+          },
+        } as any,
+      );
       configService.get.mockReturnValue('https://seudominio.com/success');
-      orderRepository.createOrder.mockResolvedValue({ ...mockOrder, totalAmount: 0 });
+      orderRepository.createOrder.mockResolvedValue({
+        ...mockOrder,
+        totalAmount: 0,
+      });
 
       // Act & Assert - Should not throw
-      await expect(useCaseWithoutCart.execute(freeInput)).resolves.toBeDefined();
+      await expect(
+        useCaseWithoutCart.execute(freeInput),
+      ).resolves.toBeDefined();
     });
   });
 });

@@ -20,6 +20,7 @@ import { AddCreditRestoredToOrder1736848800000 } from '@infrastructure/data/migr
 import { AddCreditReservedToUser1737050000000 } from '@infrastructure/data/migrations/1737050000000-AddCreditReservedToUser';
 import { CreateCartTable1770872400000 } from '../migrations/1770872400000-CreateCartTable';
 import { AddFulfillmentStatusToOrderItems1774072800000 } from '@infrastructure/data/migrations/1774072800000-AddFulfillmentStatusToOrderItems';
+import { Generated1774277631077 } from '@infrastructure/data/migrations/1774277631077-generated';
 
 export const migrations = [
   Generated1747237005972,
@@ -40,6 +41,7 @@ export const migrations = [
   AddCreditReservedToUser1737050000000,
   CreateCartTable1770872400000,
   AddFulfillmentStatusToOrderItems1774072800000,
+  Generated1774277631077,
 ];
 
 const envVars = (cs: ConfigService) => ({

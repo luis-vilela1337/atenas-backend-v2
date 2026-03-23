@@ -37,9 +37,7 @@ export class MercadoPagoService implements MercadoPagoRepositoryInterface {
     this.preference = new Preference(this.client);
   }
 
-  async getPreferenceCheckoutUrl(
-    preferenceId: string,
-  ): Promise<string | null> {
+  async getPreferenceCheckoutUrl(preferenceId: string): Promise<string | null> {
     try {
       const response = await this.preference.get({ preferenceId });
       return response.init_point || null;

@@ -38,4 +38,10 @@ export class UpdateFulfillmentStatusResponseDto {
     example: 'ALBUM',
   })
   productType: string;
+
+  @ApiProperty({
+    description: 'Data de finalização do item',
+    required: false,
+  })
+  finalizadoEm?: Date;
 }

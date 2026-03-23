@@ -1,4 +1,7 @@
-import { ProcessWebhookUseCase, ProcessWebhookInput } from './process-webhook.usecase';
+import {
+  ProcessWebhookUseCase,
+  ProcessWebhookInput,
+} from './process-webhook.usecase';
 import { WebhookRepositoryInterface } from '../repositories/webhook.repository.interface';
 import { OrderRepositoryInterface } from '../../orders/repositories/order.repository.interface';
 import { UserSQLRepository } from '../../../infra/data/sql/repositories/user.repository';
@@ -44,6 +47,7 @@ describe('ProcessWebhookUseCase - Cart Integration', () => {
       markCreditRestored: jest.fn(),
       findAbandonedOrders: jest.fn(),
       cancelOrderAtomically: jest.fn(),
+      updateItemFulfillmentStatus: jest.fn(),
     };
 
     userRepository = {

@@ -62,6 +62,7 @@ export interface OrderItem {
   quantity: number;
   fulfillmentStatus: FulfillmentStatus;
   details: OrderItemDetail[];
+  finalizadoEm?: Date;
 }
 
 export interface OrderItemDetail {

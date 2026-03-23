@@ -4,7 +4,12 @@ import { OrderRepositoryInterface } from '../repositories/order.repository.inter
 import { MercadoPagoRepositoryInterface } from '../../mercado-pago/repositories/mercado-pago.repository.interface';
 import { UserSQLRepository } from '../../../infra/data/sql/repositories/user.repository';
 import { InstitutionProductSQLRepository } from '../../../infra/data/sql/repositories/institution-product.repostitoy';
-import { CreateOrderInput, Order, OrderStatus } from '../entities/order.entity';
+import {
+  CreateOrderInput,
+  Order,
+  OrderStatus,
+  FulfillmentStatus,
+} from '../entities/order.entity';
 
 describe('CreateOrderUseCase', () => {
   let useCase: CreateOrderUseCase;
@@ -67,6 +72,7 @@ describe('CreateOrderUseCase', () => {
       markCreditRestored: jest.fn(),
       findAbandonedOrders: jest.fn(),
       cancelOrderAtomically: jest.fn(),
+      updateItemFulfillmentStatus: jest.fn(),
     };
 
     mercadoPagoRepository = {
@@ -296,10 +302,7 @@ describe('CreateOrderUseCase', () => {
         'user-123',
       );
       // Should reserve partial credit (50) before using Mercado Pago
-      expect(userRepository.reserveCredit).toHaveBeenCalledWith(
-        'user-123',
-        50,
-      );
+      expect(userRepository.reserveCredit).toHaveBeenCalledWith('user-123', 50);
       expect(orderRepository.createOrder).toHaveBeenCalledWith(
         expect.objectContaining({
           paymentStatus: OrderStatus.PENDING,
@@ -416,6 +419,7 @@ describe('CreateOrderUseCase', () => {
             itemPrice: 50, // Unit price
             quantity: 2,
             details: [],
+            fulfillmentStatus: FulfillmentStatus.ORDER_RECEIVED,
           },
         ],
       });
@@ -527,6 +531,7 @@ describe('CreateOrderUseCase', () => {
             itemPrice: 25, // Unit price
             quantity: 3,
             details: [],
+            fulfillmentStatus: FulfillmentStatus.ORDER_RECEIVED,
           },
           {
             id: 'item-2',
@@ -536,6 +541,7 @@ describe('CreateOrderUseCase', () => {
             itemPrice: 50, // Unit price
             quantity: 2,
             details: [],
+            fulfillmentStatus: FulfillmentStatus.ORDER_RECEIVED,
           },
         ],
       });

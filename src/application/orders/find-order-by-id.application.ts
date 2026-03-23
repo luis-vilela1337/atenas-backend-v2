@@ -22,16 +22,17 @@ export class FindOrderByIdApplication {
     }
 
     let checkoutUrl: string | undefined;
-    if (
-      order.paymentStatus === OrderStatus.PENDING &&
-      order.paymentGatewayId
-    ) {
+    if (order.paymentStatus === OrderStatus.PENDING && order.paymentGatewayId) {
       checkoutUrl =
         (await this.mercadoPagoService.getPreferenceCheckoutUrl(
           order.paymentGatewayId,
         )) || undefined;
     }
 
-    return OrderAdapter.toOrderDto(order, this.imageStorageService, checkoutUrl);
+    return OrderAdapter.toOrderDto(
+      order,
+      this.imageStorageService,
+      checkoutUrl,
+    );
   }
 }

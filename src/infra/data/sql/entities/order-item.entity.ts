@@ -65,6 +65,13 @@ export class OrderItem {
   @Index('idx_order_item_fulfillment_status')
   fulfillmentStatus!: FulfillmentStatus;
 
+  @Column({
+    name: 'finalizado_em',
+    type: 'timestamp with time zone',
+    nullable: true,
+  })
+  finalizadoEm?: Date;
+
   @OneToMany(() => OrderItemDetail, (detail) => detail.orderItem, {
     cascade: true,
     eager: false,
