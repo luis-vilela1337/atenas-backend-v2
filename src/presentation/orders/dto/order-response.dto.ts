@@ -71,6 +71,12 @@ export class OrderItemDto {
   @ApiProperty({ enum: FulfillmentStatus })
   fulfillmentStatus: FulfillmentStatus;
 
+  @ApiProperty({
+    required: false,
+    description: 'Data de finalização do item (quando status é DELIVERED ou SENT)',
+  })
+  finalizadoEm?: string;
+
   @ApiProperty()
   createdAt: string;
 
