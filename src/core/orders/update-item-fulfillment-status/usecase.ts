@@ -2,8 +2,10 @@ import { Injectable } from '@nestjs/common';
 import {
   FulfillmentStatus,
   FULFILLMENT_TRANSITIONS,
+  OrderStatus,
 } from '../entities/order.entity';
 import { OrderRepository } from '@infrastructure/data/sql/repositories/order.repository';
+import { UpdateOrderStatusUseCase } from '../update-order-status/usecase';
 
 export interface UpdateItemFulfillmentStatusInput {
   orderId: string;
@@ -13,7 +15,10 @@ export interface UpdateItemFulfillmentStatusInput {
 
 @Injectable()
 export class UpdateItemFulfillmentStatusUseCase {
-  constructor(private readonly orderRepository: OrderRepository) {}
+  constructor(
+    private readonly orderRepository: OrderRepository,
+    private readonly updateOrderStatusUseCase: UpdateOrderStatusUseCase,
+  ) {}
 
   async execute(
     input: UpdateItemFulfillmentStatusInput,
@@ -58,6 +63,24 @@ export class UpdateItemFulfillmentStatusUseCase {
       input.fulfillmentStatus,
       finalizadoEm,
     );
+
+    const updatedOrder = await this.orderRepository.findOrderById(
+      input.orderId,
+    );
+    if (updatedOrder && updatedOrder.paymentStatus === OrderStatus.APPROVED) {
+      const allCompleted = updatedOrder.items.every(
+        (i) =>
+          i.fulfillmentStatus === FulfillmentStatus.DELIVERED ||
+          i.fulfillmentStatus === FulfillmentStatus.SENT,
+      );
+
+      if (allCompleted) {
+        await this.updateOrderStatusUseCase.execute({
+          orderId: input.orderId,
+          paymentStatus: OrderStatus.COMPLETED,
+        });
+      }
+    }
 
     return { productType: item.productType, finalizadoEm };
   }
