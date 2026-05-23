@@ -60,5 +60,5 @@ EXPOSE ${PORT}
 # Use non-root user
 USER node
 
-# Use the same command as your start:prod script
-CMD ["node", "dist/main"]
+# Run migrations then start the app
+CMD ["sh", "-c", "npx typeorm migration:run -d ./dist/infra/data/sql/database.config.js && node dist/main"]
