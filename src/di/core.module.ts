@@ -40,6 +40,7 @@ import { UpdateProfileUseCase } from '@core/profile/update-profile.usecase';
 import { GetCartUseCase } from '@core/cart/get-cart.usecase';
 import { UpdateCartUseCase } from '@core/cart/update-cart.usecase';
 import { ClearCartUseCase } from '@core/cart/clear-cart.usecase';
+import { GetDashboardUseCase } from '@core/dashboard/get-dashboard.usecase';
 
 @Module({
   imports: [InfraModule],
@@ -94,6 +95,8 @@ import { ClearCartUseCase } from '@core/cart/clear-cart.usecase';
     GetCartUseCase,
     UpdateCartUseCase,
     ClearCartUseCase,
+    // dashboard
+    GetDashboardUseCase,
   ],
   exports: [
     //user
@@ -146,6 +149,8 @@ import { ClearCartUseCase } from '@core/cart/clear-cart.usecase';
     GetCartUseCase,
     UpdateCartUseCase,
     ClearCartUseCase,
+    // dashboard
+    GetDashboardUseCase,
   ],
 })
 export class CoreModule {}

@@ -45,6 +45,7 @@ import { UpdateProfileApplication } from '@application/profile/update-profile.ap
 import { GetCartApplication } from '@application/cart/get-cart.application';
 import { UpdateCartApplication } from '@application/cart/update-cart.application';
 import { ClearCartApplication } from '@application/cart/clear-cart.application';
+import { GetDashboardApplication } from '@application/dashboard/get-dashboard.application';
 
 @Module({
   imports: [
@@ -105,6 +106,8 @@ import { ClearCartApplication } from '@application/cart/clear-cart.application';
     GetCartApplication,
     UpdateCartApplication,
     ClearCartApplication,
+    // dashboard
+    GetDashboardApplication,
   ],
   exports: [
     //user
@@ -158,6 +161,8 @@ import { ClearCartApplication } from '@application/cart/clear-cart.application';
     GetCartApplication,
     UpdateCartApplication,
     ClearCartApplication,
+    // dashboard
+    GetDashboardApplication,
   ],
 })
 export class ApplicationModule {}

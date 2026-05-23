@@ -28,6 +28,7 @@ import { MailerSendService } from '@infrastructure/services/mailersend.service';
 import { PasswordResetCodeRepository } from '@infrastructure/data/sql/repositories/password-reset-code.repository';
 import { CancelAbandonedOrdersJob } from '@infrastructure/jobs/cancel-abandoned-orders.job';
 import { CartSQLRepository } from '@infrastructure/data/sql/repositories/cart.repository';
+import { DashboardRepository } from '@infrastructure/data/sql/repositories/dashboard.repository';
 import { CleanupAbandonedCartsJob } from '@infrastructure/jobs/cleanup-abandoned-carts.job';
 
 @Module({
@@ -80,6 +81,11 @@ import { CleanupAbandonedCartsJob } from '@infrastructure/jobs/cleanup-abandoned
       provide: 'CartRepositoryInterface',
       useClass: CartSQLRepository,
     },
+    DashboardRepository,
+    {
+      provide: 'DashboardRepositoryInterface',
+      useClass: DashboardRepository,
+    },
     // Strategies
     JwtCustomStrategy,
     JwtRefreshStrategy,
@@ -113,6 +119,8 @@ import { CleanupAbandonedCartsJob } from '@infrastructure/jobs/cleanup-abandoned
     'WebhookRepositoryInterface',
     'OrderRepositoryInterface',
     'CartRepositoryInterface',
+    DashboardRepository,
+    'DashboardRepositoryInterface',
     // Strategies
     JwtCustomStrategy,
     JwtRefreshStrategy,

@@ -14,6 +14,7 @@ import { MercadoPagoController } from '@presentation/mercado-pago/controller/mer
 import { OrdersController } from '@presentation/orders/controller/orders.controller';
 import { ProfileController } from '@presentation/profile/controller';
 import { CartController } from '@presentation/cart/controller/cart.controller';
+import { DashboardController } from '@presentation/dashboard/controller/dashboard.controller';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { CartController } from '@presentation/cart/controller/cart.controller';
     OrdersController,
     ProfileController,
     CartController,
+    DashboardController,
   ],
 })
 export class PresentationModule {}
