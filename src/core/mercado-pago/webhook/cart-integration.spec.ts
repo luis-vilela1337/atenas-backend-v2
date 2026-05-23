@@ -48,6 +48,7 @@ describe('ProcessWebhookUseCase - Cart Integration', () => {
       findAbandonedOrders: jest.fn(),
       cancelOrderAtomically: jest.fn(),
       updateItemFulfillmentStatus: jest.fn(),
+      updateOrderPaymentSnapshot: jest.fn(),
     };
 
     userRepository = {

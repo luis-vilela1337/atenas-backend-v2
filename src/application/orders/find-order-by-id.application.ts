@@ -4,6 +4,7 @@ import { OrderDto } from '@presentation/orders/dto/order-response.dto';
 import { OrderAdapter } from './adapters/order.adapter';
 import { ImageStorageService } from '@infrastructure/services/image-storage.service';
 import { MercadoPagoService } from '@infrastructure/services/mercado-pago.service';
+import { UserSQLRepository } from '@infrastructure/data/sql/repositories/user.repository';
 import { OrderStatus } from '@core/orders/entities/order.entity';
 
 @Injectable()
@@ -12,6 +13,7 @@ export class FindOrderByIdApplication {
     private readonly findOrderByIdUseCase: FindOrderByIdUseCase,
     private readonly imageStorageService: ImageStorageService,
     private readonly mercadoPagoService: MercadoPagoService,
+    private readonly userRepository: UserSQLRepository,
   ) {}
 
   async execute(id: string): Promise<OrderDto | null> {
@@ -29,10 +31,14 @@ export class FindOrderByIdApplication {
         )) || undefined;
     }
 
+    const user = await this.userRepository.findById(order.userId);
+    const studentName = user?.name;
+
     return OrderAdapter.toOrderDto(
       order,
       this.imageStorageService,
       checkoutUrl,
+      studentName,
     );
   }
 }

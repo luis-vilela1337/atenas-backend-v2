@@ -84,6 +84,12 @@ export class Order {
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   creditUsed?: number;
 
+  @Column({ type: 'jsonb', nullable: true, name: 'payer_snapshot' })
+  payerSnapshot?: Record<string, unknown>;
+
+  @Column({ type: 'jsonb', nullable: true, name: 'payment_snapshot' })
+  paymentSnapshot?: Record<string, unknown>;
+
   @Column({ type: 'boolean', default: false, name: 'credit_restored' })
   creditRestored = false;
 

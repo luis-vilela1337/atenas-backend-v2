@@ -6,7 +6,7 @@ import {
 } from '../entities/webhook-notification.entity';
 import { WebhookRepositoryInterface } from '../repositories/webhook.repository.interface';
 import { OrderRepositoryInterface } from '../../orders/repositories/order.repository.interface';
-import { OrderStatus } from '../../orders/entities/order.entity';
+import { OrderStatus, PaymentSnapshot } from '../../orders/entities/order.entity';
 import { UserSQLRepository } from '../../../infra/data/sql/repositories/user.repository';
 import { CartRepositoryInterface } from '../../cart/repositories/cart.repository.interface';
 
@@ -126,6 +126,7 @@ export class ProcessWebhookUseCase {
         : undefined,
       dateCreated: new Date(paymentDetails.date_created),
       lastModified: new Date(paymentDetails.date_last_updated),
+      rawPaymentDetails: paymentDetails,
     };
 
     await this.webhookRepository.updatePaymentStatus(paymentId, paymentStatus);
@@ -175,6 +176,20 @@ export class ProcessWebhookUseCase {
       if (!order) {
         this.logger.warn(`Order not found for external reference: ${orderId}`);
         return;
+      }
+
+      if (paymentStatus.rawPaymentDetails) {
+        try {
+          const snapshot = this.buildPaymentSnapshot(paymentStatus);
+          await this.orderRepository.updateOrderPaymentSnapshot(
+            order.id,
+            snapshot,
+          );
+        } catch (snapshotError) {
+          this.logger.warn(
+            `Failed to save payment snapshot for order ${order.id}: ${snapshotError.message}`,
+          );
+        }
       }
 
       const orderStatus = this.mapPaymentStatusToOrderStatus(
@@ -228,6 +243,39 @@ export class ProcessWebhookUseCase {
       const message = error instanceof Error ? error.message : String(error);
       this.logger.error(`Error updating order status: ${message}`);
     }
+  }
+
+  private buildPaymentSnapshot(paymentStatus: PaymentStatus): PaymentSnapshot {
+    const raw = paymentStatus.rawPaymentDetails;
+    const transactionDetails = raw?.transaction_details;
+    const totalPaid = transactionDetails?.total_paid_amount
+      ? Number(transactionDetails.total_paid_amount)
+      : undefined;
+    const netReceived = transactionDetails?.net_received_amount
+      ? Number(transactionDetails.net_received_amount)
+      : undefined;
+
+    return {
+      paymentId: String(paymentStatus.paymentId),
+      status: paymentStatus.status,
+      statusDetail: paymentStatus.statusDetail,
+      methodId: raw?.payment_method_id ?? undefined,
+      methodType: raw?.payment_type_id ?? undefined,
+      installments: raw?.installments ?? undefined,
+      transactionAmount: paymentStatus.transactionAmount
+        ? Number(paymentStatus.transactionAmount)
+        : undefined,
+      totalPaidAmount: totalPaid,
+      netReceivedAmount: netReceived,
+      installmentAmount: transactionDetails?.installment_amount
+        ? Number(transactionDetails.installment_amount)
+        : undefined,
+      payerEmail: raw?.payer?.email ?? undefined,
+      payerCpf:
+        raw?.payer?.identification?.type === 'CPF'
+          ? raw.payer.identification.number
+          : undefined,
+    };
   }
 
   private mapPaymentStatusToOrderStatus(

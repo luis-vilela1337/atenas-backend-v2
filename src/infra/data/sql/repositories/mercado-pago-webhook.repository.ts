@@ -145,6 +145,8 @@ export class MercadoPagoWebhookRepository
         payer: response.payer,
         payment_method_id: response.payment_method_id,
         payment_type_id: response.payment_type_id,
+        installments: response.installments,
+        transaction_details: response.transaction_details,
       };
     } catch (error) {
       this.logger.error(`Error getting payment details: ${error.message}`);

@@ -8,10 +8,12 @@ import {
   CartItem,
   SelectionDetails,
   Order,
+  PaymentSnapshot,
 } from '@core/orders/entities/order.entity';
 import { ListOrdersQueryDto } from '@presentation/orders/dto/list-orders-query.dto';
 import { OrderListResponseDto } from '@presentation/orders/dto/order-list-response.dto';
 import { OrderDto } from '@presentation/orders/dto/order-response.dto';
+import { OrderReportDto } from '@presentation/orders/dto/order-report.dto';
 import {
   FindOrdersInput,
   FindOrdersResult,
@@ -125,6 +127,7 @@ export class OrderAdapter {
     order: Order,
     imageStorageService: ImageStorageService,
     checkoutUrl?: string,
+    studentName?: string,
   ): Promise<OrderDto> {
     // Debug log
     console.log('[OrderAdapter] Processing order:', {
@@ -172,6 +175,8 @@ export class OrderAdapter {
       }),
     );
 
+    const report = this.buildReport(order, studentName);
+
     return {
       id: order.id,
       displayId: order.displayId,
@@ -197,6 +202,121 @@ export class OrderAdapter {
       updatedAt:
         order.updatedAt?.toISOString() || order.createdAt.toISOString(),
       items,
+      report,
     };
+  }
+
+  private static buildReport(
+    order: Order,
+    studentName?: string,
+  ): OrderReportDto {
+    const payer = order.payerSnapshot;
+    const payment = order.paymentSnapshot;
+    const creditUsed = order.creditUsed ? Number(order.creditUsed) : 0;
+
+    const provider = this.resolvePaymentProvider(order, payment);
+    const description = this.buildPaymentDescription(
+      provider,
+      payment,
+      creditUsed,
+      order.totalAmount,
+    );
+
+    const totalPaid = payment?.totalPaidAmount ?? null;
+    const netReceived = payment?.netReceivedAmount ?? null;
+    const mercadoPagoFee =
+      totalPaid != null && netReceived != null
+        ? Math.round((totalPaid - netReceived) * 100) / 100
+        : null;
+
+    return {
+      saleDate: order.createdAt.toISOString(),
+      contractNumber: order.contractNumber || '',
+      student: {
+        name: studentName || '',
+      },
+      buyer: {
+        name: payer?.name || '',
+        cpf: payment?.payerCpf || null,
+        email: payment?.payerEmail || payer?.email || null,
+        phone: payer?.phone || null,
+      },
+      amounts: {
+        orderAmount: Number(order.totalAmount),
+        atenasCreditUsed: creditUsed,
+        mercadoPagoFee,
+        netReceivedAmount: netReceived,
+        totalPaidAmount: totalPaid,
+      },
+      payment: {
+        provider,
+        status: payment?.status || order.paymentStatus,
+        methodId: payment?.methodId || null,
+        methodType: payment?.methodType || null,
+        installments: payment?.installments || null,
+        installmentAmount: payment?.installmentAmount || null,
+        description,
+      },
+      delivery: order.shippingAddress
+        ? {
+            zipCode: order.shippingAddress.zipCode,
+            street: order.shippingAddress.street,
+            number: order.shippingAddress.number,
+            complement: order.shippingAddress.complement || null,
+            neighborhood: order.shippingAddress.neighborhood,
+            city: order.shippingAddress.city,
+            state: order.shippingAddress.state,
+            phone: payer?.phone || null,
+            email: payment?.payerEmail || payer?.email || null,
+          }
+        : null,
+    };
+  }
+
+  private static resolvePaymentProvider(
+    order: Order,
+    payment?: PaymentSnapshot,
+  ): 'MERCADO_PAGO' | 'CREDIT' | 'FREE' | 'UNKNOWN' {
+    if (Number(order.totalAmount) === 0) return 'FREE';
+    const creditUsed = order.creditUsed ? Number(order.creditUsed) : 0;
+    if (creditUsed >= Number(order.totalAmount) && !order.paymentGatewayId)
+      return 'CREDIT';
+    if (payment?.methodId || order.paymentGatewayId) return 'MERCADO_PAGO';
+    return 'UNKNOWN';
+  }
+
+  private static buildPaymentDescription(
+    provider: string,
+    payment?: PaymentSnapshot,
+    creditUsed?: number,
+    totalAmount?: number,
+  ): string {
+    if (provider === 'FREE') return 'Gratuito';
+    if (
+      provider === 'CREDIT' &&
+      creditUsed &&
+      totalAmount &&
+      creditUsed >= totalAmount
+    )
+      return 'Crédito Atenas';
+
+    if (!payment?.methodType) {
+      if (payment?.status === 'pending' || !payment) return 'Pendente';
+      return 'Mercado Pago';
+    }
+
+    if (payment.methodType === 'credit_card') {
+      const installments = payment.installments || 1;
+      return `${installments}x cartão de crédito`;
+    }
+    if (payment.methodType === 'debit_card') return 'Cartão de débito';
+    if (
+      payment.methodId === 'pix' ||
+      payment.methodType === 'bank_transfer'
+    )
+      return 'Pix';
+    if (payment.methodType === 'ticket') return 'Boleto';
+
+    return 'Mercado Pago';
   }
 }

@@ -7,6 +7,7 @@ import {
   ShippingAddress,
   OrderStatus,
   FulfillmentStatus,
+  PayerSnapshot,
 } from '../entities/order.entity';
 import { BadRequestException, HttpException } from '@nestjs/common';
 import { OrderRepositoryInterface } from '../repositories/order.repository.interface';
@@ -160,6 +161,14 @@ export class CreateOrderUseCase {
     const contractNumber = await this.generateContractNumber(input.userId);
     const contractUniqueId = `${contractNumber}-${Date.now()}`;
 
+    const payerSnapshot: PayerSnapshot = {
+      name: `${input.payer.firstName} ${input.payer.lastName}`,
+      email: input.payer.email,
+      phone: input.payer.phone
+        ? `${input.payer.phone.areaCode}${input.payer.phone.number}`
+        : undefined,
+    };
+
     const orderData: Partial<Order> = {
       userId: input.userId,
       totalAmount,
@@ -168,6 +177,7 @@ export class CreateOrderUseCase {
       contractUniqueId,
       shippingAddress: input.shippingDetails,
       creditUsed,
+      payerSnapshot,
       items: input.cartItems.map((item) => ({
         id: '',
         productId: item.productId,
