@@ -28,6 +28,7 @@ export interface PaymentStatus {
   dateApproved?: Date;
   dateCreated: Date;
   lastModified: Date;
+  rawPaymentDetails?: any;
 }
 
 export interface WebhookProcessingResult {

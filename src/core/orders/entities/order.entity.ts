@@ -197,6 +197,27 @@ export const FULFILLMENT_STEPS: Record<
   ],
 };
 
+export interface PayerSnapshot {
+  name: string;
+  email: string;
+  phone?: string;
+}
+
+export interface PaymentSnapshot {
+  paymentId: string;
+  status: string;
+  statusDetail?: string;
+  methodId?: string;
+  methodType?: string;
+  installments?: number;
+  transactionAmount?: number;
+  totalPaidAmount?: number;
+  netReceivedAmount?: number;
+  installmentAmount?: number;
+  payerEmail?: string;
+  payerCpf?: string;
+}
+
 export interface Order {
   id: string;
   displayId: number;
@@ -210,6 +231,8 @@ export interface Order {
   items: OrderItem[];
   creditUsed?: number;
   creditRestored?: boolean;
+  payerSnapshot?: PayerSnapshot;
+  paymentSnapshot?: PaymentSnapshot;
   createdAt: Date;
   updatedAt?: Date;
 }

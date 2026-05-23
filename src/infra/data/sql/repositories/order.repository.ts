@@ -8,6 +8,7 @@ import {
 import {
   Order as OrderEntity,
   OrderStatus,
+  PaymentSnapshot,
 } from '@core/orders/entities/order.entity';
 import {
   FindOrdersInput,
@@ -47,6 +48,7 @@ export class OrderRepository implements OrderRepositoryInterface {
         contractUniqueId: orderData.contractUniqueId,
         shippingAddress: orderData.shippingAddress,
         creditUsed: orderData.creditUsed,
+        payerSnapshot: orderData.payerSnapshot as unknown as Record<string, unknown>,
       });
 
       const savedOrder = await this.orderRepo.save(order);
@@ -546,6 +548,27 @@ export class OrderRepository implements OrderRepositoryInterface {
     }
   }
 
+  async updateOrderPaymentSnapshot(
+    orderId: string,
+    paymentSnapshot: PaymentSnapshot,
+  ): Promise<void> {
+    this.logger.log(`Updating payment snapshot for order ${orderId}`);
+
+    try {
+      await this.orderRepo.update(orderId, {
+        paymentSnapshot: paymentSnapshot as unknown as Record<string, unknown>,
+        updatedAt: new Date(),
+      });
+    } catch (error) {
+      this.logger.error(
+        `Error updating payment snapshot: ${error.message}`,
+      );
+      throw new Error(
+        `Failed to update payment snapshot: ${error.message}`,
+      );
+    }
+  }
+
   private mapToEntity(order: Order): OrderEntity {
     return {
       id: order.id,
@@ -559,6 +582,8 @@ export class OrderRepository implements OrderRepositoryInterface {
       shippingAddress: order.shippingAddress,
       creditUsed: order.creditUsed ? Number(order.creditUsed) : undefined,
       creditRestored: order.creditRestored,
+      payerSnapshot: order.payerSnapshot as unknown as OrderEntity['payerSnapshot'],
+      paymentSnapshot: order.paymentSnapshot as unknown as OrderEntity['paymentSnapshot'],
       items:
         order.items?.map((item) => ({
           id: item.id,

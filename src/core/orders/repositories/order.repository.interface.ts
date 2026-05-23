@@ -1,4 +1,4 @@
-import { Order, OrderStatus } from '../entities/order.entity';
+import { Order, OrderStatus, PaymentSnapshot } from '../entities/order.entity';
 import { FindOrdersInput, FindOrdersResult } from '../dto/find-orders.dto';
 
 export interface CancelOrderResult {
@@ -28,5 +28,9 @@ export interface OrderRepositoryInterface {
     itemId: string,
     fulfillmentStatus: string,
     completedAt?: Date,
+  ): Promise<void>;
+  updateOrderPaymentSnapshot(
+    orderId: string,
+    paymentSnapshot: PaymentSnapshot,
   ): Promise<void>;
 }

@@ -70,6 +70,7 @@ describe('CreateOrderUseCase - Cart Integration', () => {
       findAbandonedOrders: jest.fn(),
       cancelOrderAtomically: jest.fn(),
       updateItemFulfillmentStatus: jest.fn(),
+      updateOrderPaymentSnapshot: jest.fn(),
     };
 
     mercadoPagoRepository = {

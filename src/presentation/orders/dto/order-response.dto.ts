@@ -3,6 +3,7 @@ import {
   OrderStatus,
   FulfillmentStatus,
 } from '@core/orders/entities/order.entity';
+import { OrderReportDto } from './order-report.dto';
 
 export class ShippingAddressDto {
   @ApiProperty()
@@ -132,4 +133,7 @@ export class OrderDto {
 
   @ApiProperty({ type: [OrderItemDto] })
   items: OrderItemDto[];
+
+  @ApiProperty({ type: OrderReportDto, required: false })
+  report?: OrderReportDto;
 }
