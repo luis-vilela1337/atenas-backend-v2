@@ -88,6 +88,10 @@ export class MercadoPagoWebhookService implements WebhookRepositoryInterface {
     }
   }
 
+  async findPaymentIdByOrderId(_orderId: string): Promise<string | null> {
+    return null;
+  }
+
   async getMerchantOrderDetails(merchantOrderId: string): Promise<any> {
     try {
       this.logger.log(`Getting merchant order details for: ${merchantOrderId}`);
