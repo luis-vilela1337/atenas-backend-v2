@@ -11,4 +11,5 @@ export interface WebhookRepositoryInterface {
   updatePaymentStatus(paymentId: string, status: PaymentStatus): Promise<void>;
   getPaymentDetails(paymentId: string): Promise<any>;
   getMerchantOrderDetails(merchantOrderId: string): Promise<any>;
+  findPaymentIdByOrderId(orderId: string): Promise<string | null>;
 }

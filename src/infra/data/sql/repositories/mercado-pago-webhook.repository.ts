@@ -154,6 +154,14 @@ export class MercadoPagoWebhookRepository
     }
   }
 
+  async findPaymentIdByOrderId(orderId: string): Promise<string | null> {
+    const record = await this.paymentHistoryRepository.findOne({
+      where: { externalReference: orderId },
+      order: { createdAt: 'DESC' },
+    });
+    return record?.paymentId ?? null;
+  }
+
   async getMerchantOrderDetails(merchantOrderId: string): Promise<any> {
     try {
       this.logger.log(`Getting merchant order details for: ${merchantOrderId}`);
