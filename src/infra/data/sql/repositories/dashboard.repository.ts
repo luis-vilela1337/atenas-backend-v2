@@ -30,7 +30,7 @@ export class DashboardRepository implements DashboardRepositoryInterface {
     let institutionFilter = '';
     if (institutionId) {
       params.push(institutionId);
-      institutionFilter = `AND o."contractUniqueId" = $${params.length}`;
+      institutionFilter = `AND o."userId" IN (SELECT u.id FROM users u WHERE u.institution_id = $${params.length})`;
     }
 
     const result = await this.orderRepo.query(
@@ -54,7 +54,7 @@ export class DashboardRepository implements DashboardRepositoryInterface {
     let institutionFilter = '';
     if (institutionId) {
       params.push(institutionId);
-      institutionFilter = `AND o."contractUniqueId" = $${params.length}`;
+      institutionFilter = `AND o."userId" IN (SELECT u.id FROM users u WHERE u.institution_id = $${params.length})`;
     }
 
     const result = await this.orderRepo.query(
@@ -77,7 +77,7 @@ export class DashboardRepository implements DashboardRepositoryInterface {
     let institutionFilter = '';
     if (institutionId) {
       params.push(institutionId);
-      institutionFilter = `AND o."contractUniqueId" = $${params.length}`;
+      institutionFilter = `AND o."userId" IN (SELECT u.id FROM users u WHERE u.institution_id = $${params.length})`;
     }
 
     const result = await this.orderRepo.query(
@@ -121,7 +121,7 @@ export class DashboardRepository implements DashboardRepositoryInterface {
     let institutionFilter = '';
     if (institutionId) {
       params.push(institutionId);
-      institutionFilter = `AND o."contractUniqueId" = $${params.length}`;
+      institutionFilter = `AND o."userId" IN (SELECT u.id FROM users u WHERE u.institution_id = $${params.length})`;
     }
 
     const dateExpr =
@@ -158,7 +158,7 @@ export class DashboardRepository implements DashboardRepositoryInterface {
     let institutionFilter = '';
     if (institutionId) {
       params.push(institutionId);
-      institutionFilter = `AND o."contractUniqueId" = $${params.length}`;
+      institutionFilter = `AND o."userId" IN (SELECT u.id FROM users u WHERE u.institution_id = $${params.length})`;
     }
 
     const result = await this.orderRepo.query(
@@ -186,7 +186,7 @@ export class DashboardRepository implements DashboardRepositoryInterface {
     let institutionFilter = '';
     if (institutionId) {
       params.push(institutionId);
-      institutionFilter = `AND o."contractUniqueId" = $${params.length}`;
+      institutionFilter = `AND o."userId" IN (SELECT u.id FROM users u WHERE u.institution_id = $${params.length})`;
     }
 
     const result = await this.orderRepo.query(
@@ -216,7 +216,7 @@ export class DashboardRepository implements DashboardRepositoryInterface {
     let institutionFilter = '';
     if (institutionId) {
       params.push(institutionId);
-      institutionFilter = `AND o."contractUniqueId" = $${params.length}`;
+      institutionFilter = `AND o."userId" IN (SELECT u.id FROM users u WHERE u.institution_id = $${params.length})`;
     }
     params.push(limit);
 
@@ -305,7 +305,7 @@ export class DashboardRepository implements DashboardRepositoryInterface {
     let whereClause = '';
     if (institutionId) {
       params.push(institutionId);
-      whereClause = `WHERE o."contractUniqueId" = $${params.length}`;
+      whereClause = `WHERE u.institution_id = $${params.length}`;
     }
     params.push(limit);
 
