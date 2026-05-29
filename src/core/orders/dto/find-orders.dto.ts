@@ -1,5 +1,6 @@
 export interface FindOrdersFilter {
   userId?: string;
+  institutionId?: string;
   paymentStatus?:
     | 'PENDING'
     | 'APPROVED'

@@ -94,6 +94,7 @@ export class OrderAdapter {
     return {
       filter: {
         userId: query.userId,
+        institutionId: query.institutionId,
         paymentStatus: query.paymentStatus,
       },
       pagination: {

@@ -396,6 +396,14 @@ export class OrderRepository implements OrderRepositoryInterface {
         });
       }
 
+      if (filter?.institutionId) {
+        queryBuilder
+          .innerJoin('users', 'user', 'user.id = order."userId"')
+          .andWhere('user.institution_id = :institutionId', {
+            institutionId: filter.institutionId,
+          });
+      }
+
       if (filter?.paymentStatus) {
         queryBuilder.andWhere('order.paymentStatus = :paymentStatus', {
           paymentStatus: filter.paymentStatus,

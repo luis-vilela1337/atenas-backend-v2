@@ -51,4 +51,12 @@ export class ListOrdersQueryDto {
   @IsOptional()
   @IsUUID()
   userId?: string;
+
+  @ApiProperty({
+    description: 'Filtrar por ID da instituição',
+    required: false,
+  })
+  @IsOptional()
+  @IsUUID()
+  institutionId?: string;
 }
